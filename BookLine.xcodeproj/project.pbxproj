@@ -18,13 +18,23 @@
 		9831A02C295AE39D00437B26 /* EndPoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9831A02B295AE39D00437B26 /* EndPoint.swift */; };
 		9831A036295AE91400437B26 /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 9831A035295AE91400437B26 /* Alamofire */; };
 		9831A039295AE93A00437B26 /* Toast in Frameworks */ = {isa = PBXBuildFile; productRef = 9831A038295AE93A00437B26 /* Toast */; };
-		9831A049295AED6200437B26 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 9831A048295AED6200437B26 /* SnapKit */; };
 		9831A04B295AF14900437B26 /* BaseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9831A04A295AF14900437B26 /* BaseView.swift */; };
 		9831A04D295AF15200437B26 /* BaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9831A04C295AF15200437B26 /* BaseViewController.swift */; };
 		9831A04F295AF45400437B26 /* CategoryListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9831A04E295AF45400437B26 /* CategoryListView.swift */; };
 		9831A051295AF45B00437B26 /* CategoryListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9831A050295AF45B00437B26 /* CategoryListViewController.swift */; };
 		983D17AC295B029900D265EA /* UIColor+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 983D17AB295B029900D265EA /* UIColor+Extension.swift */; };
 		983D17AF295B06FC00D265EA /* CategoryListViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 983D17AE295B06FC00D265EA /* CategoryListViewCell.swift */; };
+		983D17D5295B42A900D265EA /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 983D17D4295B42A900D265EA /* SnapKit */; };
+		98B16555295BFE6D007D24CF /* RealmModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98B16554295BFE6D007D24CF /* RealmModel.swift */; };
+		98B1655A295C1511007D24CF /* Realm in Frameworks */ = {isa = PBXBuildFile; productRef = 98B16559295C1511007D24CF /* Realm */; };
+		98B1655C295C1511007D24CF /* RealmSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 98B1655B295C1511007D24CF /* RealmSwift */; };
+		98B16560295C1FD6007D24CF /* EntireBookListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98B1655F295C1FD6007D24CF /* EntireBookListView.swift */; };
+		98B16562295C1FE2007D24CF /* EntireBookListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98B16561295C1FE2007D24CF /* EntireBookListViewController.swift */; };
+		98B16564295C22C3007D24CF /* EntireBookListViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98B16563295C22C3007D24CF /* EntireBookListViewCell.swift */; };
+		98B16568295C2ACE007D24CF /* BaseTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98B16567295C2ACE007D24CF /* BaseTableViewCell.swift */; };
+		98B1656A295C3560007D24CF /* EachBookListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98B16569295C3560007D24CF /* EachBookListView.swift */; };
+		98B1656C295C3570007D24CF /* EachBookListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98B1656B295C3570007D24CF /* EachBookListViewController.swift */; };
+		98B1656E295C357C007D24CF /* EachBookListViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98B1656D295C357C007D24CF /* EachBookListViewCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -45,6 +55,14 @@
 		9831A050295AF45B00437B26 /* CategoryListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryListViewController.swift; sourceTree = "<group>"; };
 		983D17AB295B029900D265EA /* UIColor+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Extension.swift"; sourceTree = "<group>"; };
 		983D17AE295B06FC00D265EA /* CategoryListViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryListViewCell.swift; sourceTree = "<group>"; };
+		98B16554295BFE6D007D24CF /* RealmModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealmModel.swift; sourceTree = "<group>"; };
+		98B1655F295C1FD6007D24CF /* EntireBookListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EntireBookListView.swift; sourceTree = "<group>"; };
+		98B16561295C1FE2007D24CF /* EntireBookListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EntireBookListViewController.swift; sourceTree = "<group>"; };
+		98B16563295C22C3007D24CF /* EntireBookListViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EntireBookListViewCell.swift; sourceTree = "<group>"; };
+		98B16567295C2ACE007D24CF /* BaseTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseTableViewCell.swift; sourceTree = "<group>"; };
+		98B16569295C3560007D24CF /* EachBookListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EachBookListView.swift; sourceTree = "<group>"; };
+		98B1656B295C3570007D24CF /* EachBookListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EachBookListViewController.swift; sourceTree = "<group>"; };
+		98B1656D295C357C007D24CF /* EachBookListViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EachBookListViewCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -52,8 +70,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				983D17D5295B42A900D265EA /* SnapKit in Frameworks */,
 				9831A039295AE93A00437B26 /* Toast in Frameworks */,
-				9831A049295AED6200437B26 /* SnapKit in Frameworks */,
+				98B1655A295C1511007D24CF /* Realm in Frameworks */,
+				98B1655C295C1511007D24CF /* RealmSwift in Frameworks */,
 				9831A036295AE91400437B26 /* Alamofire in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -67,6 +87,7 @@
 				9831A026295AE2EA00437B26 /* .gitignore */,
 				9831A00D2957232300437B26 /* BookLine */,
 				9831A00C2957232300437B26 /* Products */,
+				983D17D6295B42B900D265EA /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -81,6 +102,7 @@
 		9831A00D2957232300437B26 /* BookLine */ = {
 			isa = PBXGroup;
 			children = (
+				98B16553295BFE60007D24CF /* Realm */,
 				983D17AA295B028300D265EA /* Extension */,
 				9831A02F295AE61400437B26 /* Scene */,
 				9831A02E295AE55000437B26 /* CustomView */,
@@ -111,6 +133,7 @@
 			children = (
 				9831A04A295AF14900437B26 /* BaseView.swift */,
 				9831A04C295AF15200437B26 /* BaseViewController.swift */,
+				98B16567295C2ACE007D24CF /* BaseTableViewCell.swift */,
 			);
 			path = BaseView;
 			sourceTree = "<group>";
@@ -146,6 +169,10 @@
 		9831A031295AE67E00437B26 /* BookList */ = {
 			isa = PBXGroup;
 			children = (
+				98B1655F295C1FD6007D24CF /* EntireBookListView.swift */,
+				98B16561295C1FE2007D24CF /* EntireBookListViewController.swift */,
+				98B16569295C3560007D24CF /* EachBookListView.swift */,
+				98B1656B295C3570007D24CF /* EachBookListViewController.swift */,
 			);
 			path = BookList;
 			sourceTree = "<group>";
@@ -176,8 +203,25 @@
 			isa = PBXGroup;
 			children = (
 				983D17AE295B06FC00D265EA /* CategoryListViewCell.swift */,
+				98B16563295C22C3007D24CF /* EntireBookListViewCell.swift */,
+				98B1656D295C357C007D24CF /* EachBookListViewCell.swift */,
 			);
 			path = Cell;
+			sourceTree = "<group>";
+		};
+		983D17D6295B42B900D265EA /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		98B16553295BFE60007D24CF /* Realm */ = {
+			isa = PBXGroup;
+			children = (
+				98B16554295BFE6D007D24CF /* RealmModel.swift */,
+			);
+			path = Realm;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -199,7 +243,9 @@
 			packageProductDependencies = (
 				9831A035295AE91400437B26 /* Alamofire */,
 				9831A038295AE93A00437B26 /* Toast */,
-				9831A048295AED6200437B26 /* SnapKit */,
+				983D17D4295B42A900D265EA /* SnapKit */,
+				98B16559295C1511007D24CF /* Realm */,
+				98B1655B295C1511007D24CF /* RealmSwift */,
 			);
 			productName = BookLine;
 			productReference = 9831A00B2957232300437B26 /* BookLine.app */;
@@ -232,7 +278,8 @@
 			packageReferences = (
 				9831A034295AE91400437B26 /* XCRemoteSwiftPackageReference "Alamofire" */,
 				9831A037295AE93A00437B26 /* XCRemoteSwiftPackageReference "Toast-Swift" */,
-				9831A047295AED6200437B26 /* XCRemoteSwiftPackageReference "SnapKit" */,
+				983D17D3295B42A900D265EA /* XCRemoteSwiftPackageReference "SnapKit" */,
+				98B16558295C1511007D24CF /* XCRemoteSwiftPackageReference "realm-swift" */,
 			);
 			productRefGroup = 9831A00C2957232300437B26 /* Products */;
 			projectDirPath = "";
@@ -262,16 +309,24 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				98B16568295C2ACE007D24CF /* BaseTableViewCell.swift in Sources */,
 				9831A0132957232300437B26 /* ViewController.swift in Sources */,
+				98B16555295BFE6D007D24CF /* RealmModel.swift in Sources */,
 				9831A00F2957232300437B26 /* AppDelegate.swift in Sources */,
+				98B16560295C1FD6007D24CF /* EntireBookListView.swift in Sources */,
 				9831A051295AF45B00437B26 /* CategoryListViewController.swift in Sources */,
+				98B1656C295C3570007D24CF /* EachBookListViewController.swift in Sources */,
 				9831A02C295AE39D00437B26 /* EndPoint.swift in Sources */,
+				98B1656E295C357C007D24CF /* EachBookListViewCell.swift in Sources */,
+				98B16562295C1FE2007D24CF /* EntireBookListViewController.swift in Sources */,
 				9831A04B295AF14900437B26 /* BaseView.swift in Sources */,
 				983D17AF295B06FC00D265EA /* CategoryListViewCell.swift in Sources */,
 				9831A029295AE36A00437B26 /* APIKey.swift in Sources */,
 				9831A04D295AF15200437B26 /* BaseViewController.swift in Sources */,
 				9831A04F295AF45400437B26 /* CategoryListView.swift in Sources */,
 				9831A0112957232300437B26 /* SceneDelegate.swift in Sources */,
+				98B16564295C22C3007D24CF /* EntireBookListViewCell.swift in Sources */,
+				98B1656A295C3560007D24CF /* EachBookListView.swift in Sources */,
 				983D17AC295B029900D265EA /* UIColor+Extension.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -508,12 +563,20 @@
 				minimumVersion = 5.0.0;
 			};
 		};
-		9831A047295AED6200437B26 /* XCRemoteSwiftPackageReference "SnapKit" */ = {
+		983D17D3295B42A900D265EA /* XCRemoteSwiftPackageReference "SnapKit" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/SnapKit/SnapKit.git";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 5.0.0;
+				minimumVersion = 5.6.0;
+			};
+		};
+		98B16558295C1511007D24CF /* XCRemoteSwiftPackageReference "realm-swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/realm/realm-swift.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 10.0.0;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
@@ -529,10 +592,20 @@
 			package = 9831A037295AE93A00437B26 /* XCRemoteSwiftPackageReference "Toast-Swift" */;
 			productName = Toast;
 		};
-		9831A048295AED6200437B26 /* SnapKit */ = {
+		983D17D4295B42A900D265EA /* SnapKit */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 9831A047295AED6200437B26 /* XCRemoteSwiftPackageReference "SnapKit" */;
+			package = 983D17D3295B42A900D265EA /* XCRemoteSwiftPackageReference "SnapKit" */;
 			productName = SnapKit;
+		};
+		98B16559295C1511007D24CF /* Realm */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 98B16558295C1511007D24CF /* XCRemoteSwiftPackageReference "realm-swift" */;
+			productName = Realm;
+		};
+		98B1655B295C1511007D24CF /* RealmSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 98B16558295C1511007D24CF /* XCRemoteSwiftPackageReference "realm-swift" */;
+			productName = RealmSwift;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
