@@ -60,6 +60,7 @@ extension EachBookListViewController: UITableViewDelegate, UITableViewDataSource
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "EachBookListViewCell", for: indexPath) as? EachBookListViewCell else { return UITableViewCell() }
+        cell.backgroundColor = .clear
         
         cell.bookName.text = "저승 가는 길에는 목욕탕이 있다"
         cell.bookAuthor.text = "마카롱"

@@ -16,6 +16,10 @@ class BaseTableViewCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
+    static var identifier: String {
+        String(describing: self)
+    }
+    
     func configureUI() { }
     
     func setConstraints() { }

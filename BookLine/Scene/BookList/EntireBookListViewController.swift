@@ -11,6 +11,9 @@ import RealmSwift
 class EntireBookListViewController: BaseViewController {
     var mainView = EntireBookListView()
     
+    var bookLocalRealm = try! Realm()
+    var bookList : Results<BookData>!
+    
     override func loadView() {
         self.view = mainView
     }
@@ -21,6 +24,8 @@ class EntireBookListViewController: BaseViewController {
         mainView.tableView.dataSource = self
         mainView.tableView.delegate = self
         mainView.tableView.register(EntireBookListViewCell.self, forCellReuseIdentifier: "EntireBookListViewCell")
+        
+        bookList = bookLocalRealm.objects(BookData.self).sorted(byKeyPath: "lastUpdate")
         
         navigationAttribute()
     }
@@ -37,7 +42,14 @@ class EntireBookListViewController: BaseViewController {
     }
     
     @objc func plusButtonClicked() {
-        //책검색화면으로 이동
+//        책검색화면으로 이동
+//        let task = BookData(lastUpdate: Date(), categorySortCode: "1", ISBN: "\(Int.random(in: 1...10))", rating: 1.1, review: "1", memo: "1", title: "1", author: "1", publisher: "1", pubdate: Date(), linkURL: "1", imageURL: "1") //Realm 레코드 생성
+//
+//        try! bookLocalRealm.write {
+//            bookLocalRealm.add(task) //경로에 레코드 추가
+//            print("Realm Succeed. localRealm is located at: ", bookLocalRealm.configuration.fileURL!)
+//        }
+//        mainView.tableView.reloadData()
     }
 }
 
@@ -47,7 +59,8 @@ extension EntireBookListViewController: UITableViewDelegate, UITableViewDataSour
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: "EntireBookListViewCell", for: indexPath) as? EntireBookListViewCell else { return UITableViewCell() }
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: EntireBookListViewCell.identifier, for: indexPath) as? EntireBookListViewCell else { return UITableViewCell() }
+        cell.backgroundColor = .clear
         
         cell.bookName.text = "저승 가는 길에는 목욕탕이 있다"
         cell.bookAuthor.text = "마카롱"

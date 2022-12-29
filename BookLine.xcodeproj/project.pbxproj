@@ -35,6 +35,7 @@
 		98B1656A295C3560007D24CF /* EachBookListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98B16569295C3560007D24CF /* EachBookListView.swift */; };
 		98B1656C295C3570007D24CF /* EachBookListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98B1656B295C3570007D24CF /* EachBookListViewController.swift */; };
 		98B1656E295C357C007D24CF /* EachBookListViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98B1656D295C357C007D24CF /* EachBookListViewCell.swift */; };
+		98B16570295C4B6D007D24CF /* CategoryListCreator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98B1656F295C4B6D007D24CF /* CategoryListCreator.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -63,6 +64,7 @@
 		98B16569295C3560007D24CF /* EachBookListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EachBookListView.swift; sourceTree = "<group>"; };
 		98B1656B295C3570007D24CF /* EachBookListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EachBookListViewController.swift; sourceTree = "<group>"; };
 		98B1656D295C357C007D24CF /* EachBookListViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EachBookListViewCell.swift; sourceTree = "<group>"; };
+		98B1656F295C4B6D007D24CF /* CategoryListCreator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryListCreator.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -162,6 +164,7 @@
 			children = (
 				9831A04E295AF45400437B26 /* CategoryListView.swift */,
 				9831A050295AF45B00437B26 /* CategoryListViewController.swift */,
+				98B1656F295C4B6D007D24CF /* CategoryListCreator.swift */,
 			);
 			path = CategoryList;
 			sourceTree = "<group>";
@@ -319,6 +322,7 @@
 				9831A02C295AE39D00437B26 /* EndPoint.swift in Sources */,
 				98B1656E295C357C007D24CF /* EachBookListViewCell.swift in Sources */,
 				98B16562295C1FE2007D24CF /* EntireBookListViewController.swift in Sources */,
+				98B16570295C4B6D007D24CF /* CategoryListCreator.swift in Sources */,
 				9831A04B295AF14900437B26 /* BaseView.swift in Sources */,
 				983D17AF295B06FC00D265EA /* CategoryListViewCell.swift in Sources */,
 				9831A029295AE36A00437B26 /* APIKey.swift in Sources */,

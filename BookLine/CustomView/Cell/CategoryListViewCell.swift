@@ -8,7 +8,13 @@
 import UIKit
 import SnapKit
 
+protocol CellDelegate: NSObject {
+    
+    var value: Date { get }
+}
+
 class CategoryListViewCell: BaseTableViewCell {
+    
     let categoryThumbnail: UIImageView = {
         let view = UIImageView()
         view.image = UIImage(systemName: "star.fill")
@@ -19,6 +25,8 @@ class CategoryListViewCell: BaseTableViewCell {
         let view = UILabel()
         return view
     }()
+    
+    weak var cellDelegate: CellDelegate?
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -53,5 +61,9 @@ class CategoryListViewCell: BaseTableViewCell {
             make.leadingMargin.equalTo(categoryThumbnail.snp.trailing).offset(30)
             make.width.equalTo(self).multipliedBy(0.7)
         }
+    }
+    
+    public func configureCell(text: String) {
+        categoryName.text = text + (cellDelegate?.value.description ?? "")
     }
 }
