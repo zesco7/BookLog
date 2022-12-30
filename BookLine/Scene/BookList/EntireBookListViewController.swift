@@ -23,9 +23,10 @@ class EntireBookListViewController: BaseViewController {
         
         mainView.tableView.dataSource = self
         mainView.tableView.delegate = self
-        mainView.tableView.register(EntireBookListViewCell.self, forCellReuseIdentifier: "EntireBookListViewCell")
+        mainView.tableView.register(EntireBookListViewCell.self, forCellReuseIdentifier: EntireBookListViewCell.identifier)
         
-        bookList = bookLocalRealm.objects(BookData.self).sorted(byKeyPath: "lastUpdate")
+        bookList = bookLocalRealm.objects(BookData.self).sorted(byKeyPath: "lastUpdate", ascending: true)
+        print("Realm Succeed. localRealm is located at: ", bookLocalRealm.configuration.fileURL!)
         
         navigationAttribute()
     }
@@ -42,34 +43,59 @@ class EntireBookListViewController: BaseViewController {
     }
     
     @objc func plusButtonClicked() {
-//        책검색화면으로 이동
-//        let task = BookData(lastUpdate: Date(), categorySortCode: "1", ISBN: "\(Int.random(in: 1...10))", rating: 1.1, review: "1", memo: "1", title: "1", author: "1", publisher: "1", pubdate: Date(), linkURL: "1", imageURL: "1") //Realm 레코드 생성
-//
-//        try! bookLocalRealm.write {
-//            bookLocalRealm.add(task) //경로에 레코드 추가
-//            print("Realm Succeed. localRealm is located at: ", bookLocalRealm.configuration.fileURL!)
-//        }
-//        mainView.tableView.reloadData()
+        //책검색화면으로 이동
+        let record = BookData(lastUpdate: Date(), categorySortCode: "1", ISBN: "\(Int.random(in: 1...1000))", rating: 1.1, review: "1", memo: "1", title: "1", author: "1", publisher: "1", pubdate: Date(), linkURL: "1", imageURL: "1") //Realm 레코드 생성
+        
+        try! bookLocalRealm.write {
+            bookLocalRealm.add(record) //경로에 레코드 추가
+            print("Realm Succeed. localRealm is located at: ", bookLocalRealm.configuration.fileURL!)
+            mainView.tableView.reloadData()
+        }
     }
 }
 
 extension EntireBookListViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 10
+        return bookList.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: EntireBookListViewCell.identifier, for: indexPath) as? EntireBookListViewCell else { return UITableViewCell() }
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: EntireBookListViewCell.identifier , for: indexPath) as? EntireBookListViewCell else { return UITableViewCell() }
         cell.backgroundColor = .clear
         
-        cell.bookName.text = "저승 가는 길에는 목욕탕이 있다"
-        cell.bookAuthor.text = "마카롱"
-        cell.bookRating.text = "5.0"
-        cell.bookReview.text = "우주 안에 무한한 소우주가 존재하듯 인간의 사념도 수 갈래의 하늘과 땅을 만들고, 어느 저승도 그렇게 탄생했다. 이 이야기로 죽음 너머의 한 세계를 소개하려 한다."
+        cell.bookName.text = bookList[indexPath.row].title
+        cell.bookAuthor.text = bookList[indexPath.row].author
+        cell.bookRating.text = "\(bookList[indexPath.row].rating!)"
+        cell.bookReview.text = bookList[indexPath.row].review
         return cell
     }
     
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 120
+    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        let deleteMemo = UIContextualAction(style: .normal, title: nil) { action, view, completionHandler in
+            let alert = UIAlertController(title: "삭제하시겠습니까?", message: nil, preferredStyle: .alert)
+            let ok = UIAlertAction(title: "삭제", style: .destructive) { _ in
+                try! self.bookLocalRealm.write {
+                    self.bookLocalRealm.delete(self.bookList[indexPath.row])
+                    self.mainView.tableView.reloadData()
+                    print("Realm Deleted")
+                }
+            }
+            let cancel = UIAlertAction(title: "취소", style: .cancel)
+            alert.addAction(ok)
+            alert.addAction(cancel)
+            self.present(alert, animated: true)
+        }
+        deleteMemo.image = UIImage(systemName: "trash.fill")
+        deleteMemo.backgroundColor = .red
+        return UISwipeActionsConfiguration(actions: [deleteMemo])
     }
-}
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let vc = BookMemoViewController()
+        self.navigationController?.pushViewController(vc, animated: true)
+    }
+        
+        func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+            return 120
+        }
+    }

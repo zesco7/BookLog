@@ -36,6 +36,8 @@
 		98B1656C295C3570007D24CF /* EachBookListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98B1656B295C3570007D24CF /* EachBookListViewController.swift */; };
 		98B1656E295C357C007D24CF /* EachBookListViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98B1656D295C357C007D24CF /* EachBookListViewCell.swift */; };
 		98B16570295C4B6D007D24CF /* CategoryListCreator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98B1656F295C4B6D007D24CF /* CategoryListCreator.swift */; };
+		98B16572295EE05B007D24CF /* BookMemoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98B16571295EE05B007D24CF /* BookMemoView.swift */; };
+		98B16574295EE064007D24CF /* BookMemoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98B16573295EE064007D24CF /* BookMemoViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -65,6 +67,8 @@
 		98B1656B295C3570007D24CF /* EachBookListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EachBookListViewController.swift; sourceTree = "<group>"; };
 		98B1656D295C357C007D24CF /* EachBookListViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EachBookListViewCell.swift; sourceTree = "<group>"; };
 		98B1656F295C4B6D007D24CF /* CategoryListCreator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryListCreator.swift; sourceTree = "<group>"; };
+		98B16571295EE05B007D24CF /* BookMemoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookMemoView.swift; sourceTree = "<group>"; };
+		98B16573295EE064007D24CF /* BookMemoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookMemoViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -190,6 +194,8 @@
 		9831A033295AE7FE00437B26 /* BookMemo */ = {
 			isa = PBXGroup;
 			children = (
+				98B16571295EE05B007D24CF /* BookMemoView.swift */,
+				98B16573295EE064007D24CF /* BookMemoViewController.swift */,
 			);
 			path = BookMemo;
 			sourceTree = "<group>";
@@ -330,6 +336,8 @@
 				9831A04F295AF45400437B26 /* CategoryListView.swift in Sources */,
 				9831A0112957232300437B26 /* SceneDelegate.swift in Sources */,
 				98B16564295C22C3007D24CF /* EntireBookListViewCell.swift in Sources */,
+				98B16572295EE05B007D24CF /* BookMemoView.swift in Sources */,
+				98B16574295EE064007D24CF /* BookMemoViewController.swift in Sources */,
 				98B1656A295C3560007D24CF /* EachBookListView.swift in Sources */,
 				983D17AC295B029900D265EA /* UIColor+Extension.swift in Sources */,
 			);

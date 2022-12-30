@@ -20,7 +20,7 @@ class EachBookListViewController: BaseViewController {
         
         mainView.tableView.dataSource = self
         mainView.tableView.delegate = self
-        mainView.tableView.register(EachBookListViewCell.self, forCellReuseIdentifier: "EachBookListViewCell")
+        mainView.tableView.register(EachBookListViewCell.self, forCellReuseIdentifier: EachBookListViewCell.identifier)
         
         navigationAttribute()
     }
@@ -59,7 +59,7 @@ extension EachBookListViewController: UITableViewDelegate, UITableViewDataSource
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: "EachBookListViewCell", for: indexPath) as? EachBookListViewCell else { return UITableViewCell() }
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: EachBookListViewCell.identifier, for: indexPath) as? EachBookListViewCell else { return UITableViewCell() }
         cell.backgroundColor = .clear
         
         cell.bookName.text = "저승 가는 길에는 목욕탕이 있다"

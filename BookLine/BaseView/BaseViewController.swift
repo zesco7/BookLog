@@ -12,9 +12,19 @@ class BaseViewController: UIViewController {
         super.viewDidLoad()
         
         attribute()
+        hideKeyboard()
     }
     
     func attribute() {
-        
+        view.backgroundColor = .backgroundColorBeige
+    }
+    
+    func hideKeyboard() {
+        let tap = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+        view.addGestureRecognizer(tap)
+    }
+    
+    @objc func dismissKeyboard() {
+        view.endEditing(true)
     }
 }

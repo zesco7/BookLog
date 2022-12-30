@@ -8,13 +8,12 @@
 import UIKit
 import SnapKit
 
-protocol CellDelegate: NSObject {
-    
-    var value: Date { get }
-}
+//protocol CellDelegate: NSObject {
+//
+//    var value: Date { get }
+//}
 
 class CategoryListViewCell: BaseTableViewCell {
-    
     let categoryThumbnail: UIImageView = {
         let view = UIImageView()
         view.image = UIImage(systemName: "star.fill")
@@ -26,7 +25,7 @@ class CategoryListViewCell: BaseTableViewCell {
         return view
     }()
     
-    weak var cellDelegate: CellDelegate?
+//    weak var cellDelegate: CellDelegate?
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -63,7 +62,7 @@ class CategoryListViewCell: BaseTableViewCell {
         }
     }
     
-    public func configureCell(text: String) {
-        categoryName.text = text + (cellDelegate?.value.description ?? "")
-    }
+//    public func configureCell(text: String) {
+//        categoryName.text = text + (cellDelegate?.value.description ?? "")
+//    }
 }

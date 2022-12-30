@@ -11,7 +11,7 @@ import RealmSwift
 class BookData: Object { //테이블이름: BookData, 컬럼이름: ~~(@persisted var ~~)
     @Persisted var lastUpdate = Date()
     @Persisted var categorySortCode: String
-    @Persisted(primaryKey: true) var ISBN: String //PK선언(realm에서 제공하는 objectId가 기본값으로 사용됨)
+    @Persisted(primaryKey: true) var ISBN: String
     @Persisted var rating: Double?
     @Persisted var review: String?
     @Persisted var memo: String?
@@ -27,6 +27,7 @@ class BookData: Object { //테이블이름: BookData, 컬럼이름: ~~(@persiste
         self.init()
         self.lastUpdate = lastUpdate
         self.categorySortCode = categorySortCode
+        self.ISBN = ISBN
         self.rating = rating
         self.review = review
         self.memo = memo
