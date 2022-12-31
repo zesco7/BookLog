@@ -29,6 +29,11 @@ class EntireBookListViewController: BaseViewController {
         print("Realm Succeed. localRealm is located at: ", bookLocalRealm.configuration.fileURL!)
         
         navigationAttribute()
+        
+    }
+    
+    func dateFormatter() {
+        //날짜표시형식 변경필요(한국시간)
     }
     
     func navigationAttribute() {
@@ -44,7 +49,7 @@ class EntireBookListViewController: BaseViewController {
     
     @objc func plusButtonClicked() {
         //책검색화면으로 이동
-        let record = BookData(lastUpdate: Date(), categorySortCode: "1", ISBN: "\(Int.random(in: 1...1000))", rating: 1.1, review: "1", memo: "1", title: "1", author: "1", publisher: "1", pubdate: Date(), linkURL: "1", imageURL: "1") //Realm 레코드 생성
+        let record = BookData(lastUpdate: Date(), categorySortCode: "1", ISBN: "\(Int.random(in: 1...1000))", rating: 1.1, review: "1", memo: "1", title: "\(Int.random(in: 1...1000))", author: "1", publisher: "1", pubdate: Date(), linkURL: "1", imageURL: "1") //Realm 레코드 생성
         
         try! bookLocalRealm.write {
             bookLocalRealm.add(record) //경로에 레코드 추가
@@ -92,6 +97,8 @@ extension EntireBookListViewController: UITableViewDelegate, UITableViewDataSour
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let vc = BookMemoViewController()
+        vc.bookTitle = bookList[indexPath.row].title
+        vc.bookWriter = bookList[indexPath.row].author
         self.navigationController?.pushViewController(vc, animated: true)
     }
         

@@ -27,9 +27,8 @@ class BookMemoView: BaseView {
         return view
     }()
 
-    let bookName : UILabel = {
+    var bookName : UILabel = {
         let view = UILabel()
-        view.text = "책이름~~~~~~~~~~~~~~~~~~~~~~~~~"
         return view
     }()
     
@@ -39,9 +38,8 @@ class BookMemoView: BaseView {
         return view
     }()
 
-    let bookAuthor : UILabel = {
+    var bookAuthor : UILabel = {
         let view = UILabel()
-        view.text = "저자이름~~~~~~~~~~~~~~~~~~~~~~~~~"
         return view
     }()
 
@@ -53,6 +51,55 @@ class BookMemoView: BaseView {
 
     let starRatingSlider : UISlider = {
         let view = UISlider()
+        view.minimumValue = 0
+        view.maximumValue = 5
+        view.minimumTrackTintColor = .clear
+        view.maximumTrackTintColor = .clear
+        view.thumbTintColor = .clear
+        
+        return view
+    }()
+    
+    let star1 : UIImageView = {
+        let view = UIImageView()
+        view.image = UIImage(systemName: "star")
+        view.tag = 1
+        return view
+    }()
+    
+    let star2 : UIImageView = {
+        let view = UIImageView()
+        view.image = UIImage(systemName: "star")
+        view.tag = 2
+        return view
+    }()
+    
+    let star3 : UIImageView = {
+        let view = UIImageView()
+        view.image = UIImage(systemName: "star")
+        view.tag = 3
+        return view
+    }()
+    
+    let star4 : UIImageView = {
+        let view = UIImageView()
+        view.image = UIImage(systemName: "star")
+        view.tag = 4
+        return view
+    }()
+    
+    let star5 : UIImageView = {
+        let view = UIImageView()
+        view.image = UIImage(systemName: "star")
+        view.tag = 5
+        return view
+    }()
+    
+    lazy var starStackView : UIStackView = {
+        let view = UIStackView(arrangedSubviews: [star1, star2, star3, star4, star5])
+        view.axis = .horizontal
+        view.distribution = .fill
+        view.alignment = .fill
         return view
     }()
 
@@ -81,7 +128,7 @@ class BookMemoView: BaseView {
     }()
     
     override func configureUI() {
-        [lastUpdateDateLabel, lastUpdateDate, bookNameLabel, bookName, bookAuthorLabel, bookAuthor, starRatingLabel, starRatingSlider, commentLabel, commentTextView, divisionLine, memoTextView].forEach {
+        [lastUpdateDateLabel, lastUpdateDate, bookNameLabel, bookName, bookAuthorLabel, bookAuthor, starRatingLabel, starRatingSlider, commentLabel, commentTextView, divisionLine, memoTextView, star1, star2, star3, star4, star5].forEach {
             self.addSubview($0)
         }
     }
@@ -137,12 +184,47 @@ class BookMemoView: BaseView {
         }
 
         starRatingSlider.snp.makeConstraints { make in
-            make.topMargin.equalTo(bookAuthorLabel).offset(30)
+            make.topMargin.equalTo(bookAuthorLabel).offset(35)
             make.leadingMargin.equalTo(starRatingLabel.snp.trailing).offset(10)
-            make.trailingMargin.equalTo(self).offset(-10)
+            make.trailingMargin.equalTo(star5.snp.trailing).offset(0)
             make.height.equalTo(20)
         }
-
+        
+        star1.snp.makeConstraints { make in
+            make.topMargin.equalTo(starRatingSlider.snp.top).offset(0)
+            make.leadingMargin.equalTo(starRatingLabel.snp.trailing).offset(10)
+            make.width.equalTo(30)
+            make.height.equalTo(30)
+        }
+        
+        star2.snp.makeConstraints { make in
+            make.topMargin.equalTo(starRatingSlider.snp.top).offset(0)
+            make.leadingMargin.equalTo(star1.snp.trailing).offset(0)
+            make.width.equalTo(30)
+            make.height.equalTo(30)
+        }
+        
+        star3.snp.makeConstraints { make in
+            make.topMargin.equalTo(starRatingSlider.snp.top).offset(0)
+            make.leadingMargin.equalTo(star2.snp.trailing).offset(0)
+            make.width.equalTo(30)
+            make.height.equalTo(30)
+        }
+        
+        star4.snp.makeConstraints { make in
+            make.topMargin.equalTo(starRatingSlider.snp.top).offset(0)
+            make.leadingMargin.equalTo(star3.snp.trailing).offset(0)
+            make.width.equalTo(30)
+            make.height.equalTo(30)
+        }
+        
+        star5.snp.makeConstraints { make in
+            make.topMargin.equalTo(starRatingSlider.snp.top).offset(0)
+            make.leadingMargin.equalTo(star4.snp.trailing).offset(0)
+            make.width.equalTo(30)
+            make.height.equalTo(30)
+        }
+    
         commentLabel.snp.makeConstraints { make in
             make.topMargin.equalTo(starRatingLabel).offset(30)
             make.width.equalTo(self).multipliedBy(0.3)
