@@ -29,7 +29,6 @@ class EntireBookListViewController: BaseViewController {
         print("Realm Succeed. localRealm is located at: ", bookLocalRealm.configuration.fileURL!)
         
         navigationAttribute()
-        
     }
     
     func dateFormatter() {
@@ -44,7 +43,11 @@ class EntireBookListViewController: BaseViewController {
     }
     
     @objc func sortButtonClicked() {
-        //제목순, 별점순, 최종작성날짜순 선택목록 표시
+        //iOS14미만: actionSheet
+        actionSheetForSort()
+        
+        //iOS14+: UImenu
+        uiMenuForSort()
     }
     
     @objc func plusButtonClicked() {
@@ -59,6 +62,41 @@ class EntireBookListViewController: BaseViewController {
 //            print("Realm Succeed. localRealm is located at: ", bookLocalRealm.configuration.fileURL!)
 //            mainView.tableView.reloadData()
 //        }
+    }
+    
+    func actionSheetForSort() {
+        let actionSheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        let sortBytitle = UIAlertAction(title: "제목순", style: .default) { _ in
+            //realm제목순 정렬 후 reloadData
+        }
+        let sortByRating = UIAlertAction(title: "별점순", style: .default) { _ in
+            //realm별점순 정렬 후 reloadData
+        }
+        let sortByLastUpdate = UIAlertAction(title: "최종날짜순", style: .default) { _ in
+            //realm제목순 정렬 후 reloadData
+        }
+        let cancel = UIAlertAction(title: "취소", style: .cancel)
+        actionSheet.addAction(sortBytitle)
+        actionSheet.addAction(sortByRating)
+        actionSheet.addAction(sortByLastUpdate)
+        actionSheet.addAction(cancel)
+        present(actionSheet, animated: true)
+    }
+    
+    func uiMenuForSort() {
+        //제목순, 별점순, 최종작성날짜순 선택목록 표시
+        let sortBytitle = UIAction(title: "제목순") { _ in
+            //realm제목순 정렬 후 reloadData
+        }
+        
+        let sortByRating = UIAction(title: "별점순") { _ in
+            //realm제목순 정렬 후 reloadData
+        }
+        
+        let sortByLastUpdate = UIAction(title: "최종날짜순") { _ in
+            //realm제목순 정렬 후 reloadData
+        }
+        let menu = UIMenu(title: "정렬기준 선택", children: [sortBytitle, sortByRating, sortByLastUpdate])
     }
 }
 
