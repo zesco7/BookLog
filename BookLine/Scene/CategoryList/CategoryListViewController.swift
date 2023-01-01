@@ -29,12 +29,12 @@ class CategoryListViewController: BaseViewController {
         super.viewDidLoad()
          
         noEditNavigationAttribute()
-        
         categoryList = categoryLocalRealm.objects(CategoryData.self).sorted(byKeyPath: "categorySortCode", ascending: true)
     }
     
     func noEditNavigationAttribute() {
         self.navigationItem.title = "카테고리"
+        self.navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.black]
         let editButton = UIBarButtonItem(title: "편집", style: .plain, target: self, action: #selector(editButtonClicked))
         let addButton = UIBarButtonItem(image: UIImage(systemName: "plus"), style: .plain, target: self, action: #selector(addButtonClicked))
         self.navigationItem.rightBarButtonItems = [addButton, editButton]
@@ -93,50 +93,52 @@ extension CategoryListViewController: UITableViewDelegate, UITableViewDataSource
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if section == 0 {
             return defaultCategoryTitle.count
-        } else if section == 1 {
-            return categoryList.count
         } else {
-            return 0
+            return categoryList.count
         }
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: CategoryListViewCell.identifier, for: indexPath) as? CategoryListViewCell else { return UITableViewCell() }
         cell.backgroundColor = .clear
-        
         if indexPath.section == 0 {
-            cell.categoryName.text = defaultCategoryTitle[0]
+            cell.categoryName.text = "\(defaultCategoryTitle[indexPath.row])"
         } else {
-            //cell.configureCell(text: "\(categoryList[indexPath.row].category)")
-            //        cell.cellDelegate = self
             cell.categoryName.text = "\(categoryList[indexPath.row].category)"
         }
         return cell
     }
     
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-        let deleteMemo = UIContextualAction(style: .normal, title: nil) { action, view, completionHandler in
-            try! self.categoryLocalRealm.write {
-                self.categoryLocalRealm.delete(self.categoryList[indexPath.row])
-                self.mainView.tableView.reloadData() //note변수에 didSet있는데 왜 reloadData가 안될까?
-                print("Realm Deleted")
+        if indexPath.section == 0 {
+            return nil
+        } else {
+            let deleteMemo = UIContextualAction(style: .normal, title: nil) { action, view, completionHandler in
+                try! self.categoryLocalRealm.write {
+                    self.categoryLocalRealm.delete(self.categoryList[indexPath.row])
+                    self.mainView.tableView.reloadData() //note변수에 didSet있는데 왜 reloadData가 안될까?
+                    print("Realm Deleted")
+                }
             }
+            deleteMemo.image = UIImage(systemName: "trash.fill")
+            deleteMemo.backgroundColor = .red
+            return UISwipeActionsConfiguration(actions: [deleteMemo])
         }
-        deleteMemo.image = UIImage(systemName: "trash.fill")
-        deleteMemo.backgroundColor = .red
-        return UISwipeActionsConfiguration(actions: [deleteMemo])
+    }
+    
+    func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
+        return indexPath.section != 0
     }
     
     func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
-        //<모든 책> 카테고리는 이동 안되게 처리 예정
+        
     }
     
     func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {
-        //<모든 책> 카테고리는 editing적용 안되게 처리 예정
-        if indexPath.section == 1 {
-            return .delete
-        } else {
+        if indexPath.section == 0 {
             return .none
+        } else {
+            return .delete
         }
     }
     
@@ -145,8 +147,14 @@ extension CategoryListViewController: UITableViewDelegate, UITableViewDataSource
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let vc = EntireBookListViewController()
-        self.navigationController?.pushViewController(vc, animated: true)
+        if indexPath.section == 0 {
+            let vc = EntireBookListViewController()
+            self.navigationController?.pushViewController(vc, animated: true)
+        } else {
+            let vc = EachBookListViewController()
+            vc.navigationTitle = categoryList[indexPath.row].category
+            self.navigationController?.pushViewController(vc, animated: true)
+        }
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {

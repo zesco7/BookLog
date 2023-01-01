@@ -1,17 +1,16 @@
 //
-//  EachBookListViewCell.swift
+//  BookSearchViewCell.swift
 //  BookLine
 //
-//  Created by Mac Pro 15 on 2022/12/28.
+//  Created by Mac Pro 15 on 2023/01/01.
 //
 
 import UIKit
-import SnapKit
 
-class EachBookListViewCell: BaseTableViewCell {
+class BookSearchViewCell: BaseTableViewCell {
     let bookImage: UIImageView = {
        let view = UIImageView()
-        view.image = UIImage(systemName: "heart")
+        view.image = UIImage(systemName: "star")
         return view
     }()
     
@@ -22,17 +21,6 @@ class EachBookListViewCell: BaseTableViewCell {
     
     let bookAuthor: UILabelFontAttribute = {
        let view = UILabelFontAttribute()
-        return view
-    }()
-    
-    let bookRating: UILabelFontAttribute = {
-       let view = UILabelFontAttribute()
-        return view
-    }()
-    
-    let bookReview: UILabelFontAttribute = {
-       let view = UILabelFontAttribute()
-        view.numberOfLines = 0
         return view
     }()
     
@@ -48,7 +36,7 @@ class EachBookListViewCell: BaseTableViewCell {
     }
     
     override func configureUI() {
-        [bookImage, bookName, bookAuthor, bookRating, bookReview].forEach {
+        [bookImage, bookName, bookAuthor].forEach {
             self.addSubview($0)
         }
     }
@@ -62,7 +50,7 @@ class EachBookListViewCell: BaseTableViewCell {
         }
         
         bookName.snp.makeConstraints { make in
-            make.topMargin.equalTo(10)
+            make.centerY.equalTo(self).offset(-30)
             make.height.equalTo(self).multipliedBy(0.15)
             make.leadingMargin.equalTo(bookImage.snp.trailing).offset(10)
             make.width.equalTo(self).multipliedBy(0.7)
@@ -70,20 +58,6 @@ class EachBookListViewCell: BaseTableViewCell {
         
         bookAuthor.snp.makeConstraints { make in
             make.topMargin.equalTo(bookName.snp.bottom).offset(10)
-            make.height.equalTo(self).multipliedBy(0.15)
-            make.leadingMargin.equalTo(bookImage.snp.trailing).offset(10)
-            make.width.equalTo(self).multipliedBy(0.7)
-        }
-
-        bookRating.snp.makeConstraints { make in
-            make.topMargin.equalTo(bookAuthor.snp.bottom).offset(10)
-            make.height.equalTo(self).multipliedBy(0.15)
-            make.leadingMargin.equalTo(bookImage.snp.trailing).offset(10)
-            make.width.equalTo(self).multipliedBy(0.7)
-        }
-
-        bookReview.snp.makeConstraints { make in
-            make.topMargin.equalTo(bookRating.snp.bottom).offset(10)
             make.height.equalTo(self).multipliedBy(0.15)
             make.leadingMargin.equalTo(bookImage.snp.trailing).offset(10)
             make.width.equalTo(self).multipliedBy(0.7)

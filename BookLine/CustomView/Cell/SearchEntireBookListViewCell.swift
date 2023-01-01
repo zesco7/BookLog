@@ -1,17 +1,17 @@
 //
-//  EachBookListViewCell.swift
+//  SearchEntireBookListViewCell.swift
 //  BookLine
 //
-//  Created by Mac Pro 15 on 2022/12/28.
+//  Created by Mac Pro 15 on 2023/01/01.
 //
 
 import UIKit
 import SnapKit
 
-class EachBookListViewCell: BaseTableViewCell {
+class SearchEntireBookListViewCell: BaseTableViewCell {
     let bookImage: UIImageView = {
        let view = UIImageView()
-        view.image = UIImage(systemName: "heart")
+        view.image = UIImage(systemName: "star")
         return view
     }()
     
@@ -89,4 +89,6 @@ class EachBookListViewCell: BaseTableViewCell {
             make.width.equalTo(self).multipliedBy(0.7)
         }
     }
+
 }
+

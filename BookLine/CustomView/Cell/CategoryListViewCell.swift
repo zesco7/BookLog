@@ -22,6 +22,7 @@ class CategoryListViewCell: BaseTableViewCell {
     
     let categoryName: UILabel = {
         let view = UILabel()
+        view.textColor = .black
         return view
     }()
     

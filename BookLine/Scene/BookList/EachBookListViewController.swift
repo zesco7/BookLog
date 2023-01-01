@@ -10,6 +10,7 @@ import RealmSwift
 
 class EachBookListViewController: BaseViewController {
     var mainView = EachBookListView()
+    var navigationTitle: String?
     
     override func loadView() {
         self.view = mainView
@@ -26,7 +27,7 @@ class EachBookListViewController: BaseViewController {
     }
     
     func navigationAttribute() {
-        //self.navigationItem.title = "모든 책" //realm에 저장한 카테고리 이름이 네비타이틀로 사용됨
+        self.navigationItem.title = navigationTitle
         let sortButton = UIBarButtonItem(title: "정렬", style: .plain, target: self, action: #selector(sortButtonClicked))
         let plusButton = UIBarButtonItem(image: UIImage(systemName: "plus"), style: .plain, target: self, action: #selector(plusButtonClicked))
         self.navigationItem.rightBarButtonItems = [plusButton, sortButton]
@@ -44,12 +45,29 @@ class EachBookListViewController: BaseViewController {
     func actionSheetForBookSearch() {
         let actionSheet = UIAlertController(title: "원하는 책을 찾아보세요", message: nil, preferredStyle: .actionSheet)
         let searchingForNewBook = UIAlertAction(title: "새 책 찾기", style: .default) //새 책 찾기 선택시 책검색화면으로 이동
-        let searchingForSavedBook = UIAlertAction(title: "저장된 책에서 찾기", style: .default) //저장된 책찾기 선택시 "모든 책" 카테고리로 이동
+        let searchingForSavedBook = UIAlertAction(title: "저장된 책에서 찾기", style: .default) { _ in
+            self.bookTransferNavigationAttribute()
+            let vc = SearchEntireBookListViewController()
+            let navi = UINavigationController(rootViewController: vc)
+            self.present(navi, animated: true)
+        }
         let cancel = UIAlertAction(title: "취소", style: .cancel)
         actionSheet.addAction(searchingForNewBook)
         actionSheet.addAction(searchingForSavedBook)
         actionSheet.addAction(cancel)
         present(actionSheet, animated: true)
+    }
+    
+    func bookTransferNavigationAttribute() {
+        let vc = CategoryListViewController()
+        self.navigationItem.title = vc.defaultCategoryTitle[0]
+        self.navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.black]
+        let completionButton = UIBarButtonItem(title: "완료", style: .plain, target: self, action: #selector(completionButtonClicked))
+        self.navigationItem.rightBarButtonItem = completionButton
+    }
+    
+    @objc func completionButtonClicked() {
+        
     }
 }
 

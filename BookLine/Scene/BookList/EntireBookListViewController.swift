@@ -49,13 +49,16 @@ class EntireBookListViewController: BaseViewController {
     
     @objc func plusButtonClicked() {
         //책검색화면으로 이동
-        let record = BookData(lastUpdate: Date(), categorySortCode: "1", ISBN: "\(Int.random(in: 1...1000))", rating: 1.1, review: "1", memo: "1", title: "\(Int.random(in: 1...1000))", author: "1", publisher: "1", pubdate: Date(), linkURL: "1", imageURL: "1") //Realm 레코드 생성
+        let vc = BookSearchViewController()
+        self.navigationController?.pushViewController(vc, animated: true)
         
-        try! bookLocalRealm.write {
-            bookLocalRealm.add(record) //경로에 레코드 추가
-            print("Realm Succeed. localRealm is located at: ", bookLocalRealm.configuration.fileURL!)
-            mainView.tableView.reloadData()
-        }
+//        let record = BookData(lastUpdate: Date(), categorySortCode: "1", ISBN: "\(Int.random(in: 1...1000))", rating: 1.1, review: "1", memo: "1", title: "\(Int.random(in: 1...1000))", author: "1", publisher: "1", pubdate: Date(), linkURL: "1", imageURL: "1") //Realm 레코드 생성
+//
+//        try! bookLocalRealm.write {
+//            bookLocalRealm.add(record) //경로에 레코드 추가
+//            print("Realm Succeed. localRealm is located at: ", bookLocalRealm.configuration.fileURL!)
+//            mainView.tableView.reloadData()
+//        }
     }
 }
 

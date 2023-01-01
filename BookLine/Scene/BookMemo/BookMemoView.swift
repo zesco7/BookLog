@@ -9,42 +9,42 @@ import UIKit
 import SnapKit
 
 class BookMemoView: BaseView {
-    let lastUpdateDateLabel : UILabel = {
-        let view = UILabel()
+    let lastUpdateDateLabel : UILabelFontAttribute = {
+        let view = UILabelFontAttribute()
         view.text = "최종 수정일"
         return view
     }()
     
-    let lastUpdateDate : UILabel = {
-        let view = UILabel()
+    let lastUpdateDate : UILabelFontAttribute = {
+        let view = UILabelFontAttribute()
         view.text = "\(Date())"
         return view
     }()
     
-    let bookNameLabel : UILabel = {
-        let view = UILabel()
+    let bookNameLabel : UILabelFontAttribute = {
+        let view = UILabelFontAttribute()
         view.text = "제목"
         return view
     }()
 
-    var bookName : UILabel = {
-        let view = UILabel()
+    var bookName : UILabelFontAttribute = {
+        let view = UILabelFontAttribute()
         return view
     }()
     
-    let bookAuthorLabel : UILabel = {
-        let view = UILabel()
+    let bookAuthorLabel : UILabelFontAttribute = {
+        let view = UILabelFontAttribute()
         view.text = "저자"
         return view
     }()
 
-    var bookAuthor : UILabel = {
-        let view = UILabel()
+    var bookAuthor : UILabelFontAttribute = {
+        let view = UILabelFontAttribute()
         return view
     }()
 
-    let starRatingLabel : UILabel = {
-        let view = UILabel()
+    let starRatingLabel : UILabelFontAttribute = {
+        let view = UILabelFontAttribute()
         view.text = "별점"
         return view
     }()
@@ -103,8 +103,8 @@ class BookMemoView: BaseView {
         return view
     }()
 
-    let commentLabel : UILabel = {
-        let view = UILabel()
+    let commentLabel : UILabelFontAttribute = {
+        let view = UILabelFontAttribute()
         view.text = "한줄평"
         return view
     }()

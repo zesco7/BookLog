@@ -15,23 +15,23 @@ class EntireBookListViewCell: BaseTableViewCell {
         return view
     }()
     
-    let bookName: UILabel = {
-       let view = UILabel()
+    let bookName: UILabelFontAttribute = {
+       let view = UILabelFontAttribute()
         return view
     }()
     
-    let bookAuthor: UILabel = {
-       let view = UILabel()
+    let bookAuthor: UILabelFontAttribute = {
+       let view = UILabelFontAttribute()
         return view
     }()
     
-    let bookRating: UILabel = {
-       let view = UILabel()
+    let bookRating: UILabelFontAttribute = {
+       let view = UILabelFontAttribute()
         return view
     }()
     
-    let bookReview: UILabel = {
-       let view = UILabel()
+    let bookReview: UILabelFontAttribute = {
+       let view = UILabelFontAttribute()
         view.numberOfLines = 0
         return view
     }()
