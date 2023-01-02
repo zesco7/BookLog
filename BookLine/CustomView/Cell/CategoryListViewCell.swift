@@ -48,16 +48,14 @@ class CategoryListViewCell: BaseTableViewCell {
     override func setConstraints() {
         categoryThumbnail.snp.makeConstraints { make in
             make.centerY.equalTo(self)
-            make.topMargin.equalTo(10)
-            make.bottomMargin.equalTo(10)
+            make.height.equalTo(self)
             make.leadingMargin.equalTo(10)
             make.width.equalTo(self).multipliedBy(0.2)
         }
         
         categoryName.snp.makeConstraints { make in
             make.centerY.equalTo(self)
-            make.topMargin.equalTo(10)
-            make.bottomMargin.equalTo(10)
+            make.height.equalTo(self)
             make.leadingMargin.equalTo(categoryThumbnail.snp.trailing).offset(30)
             make.width.equalTo(self).multipliedBy(0.7)
         }

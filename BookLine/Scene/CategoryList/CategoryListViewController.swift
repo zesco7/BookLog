@@ -30,6 +30,7 @@ class CategoryListViewController: BaseViewController {
          
         noEditNavigationAttribute()
         categoryList = categoryLocalRealm.objects(CategoryData.self).sorted(byKeyPath: "categorySortCode", ascending: true)
+        print("Realm Succeed. categoryLocalRealm is located at: ", self.categoryLocalRealm.configuration.fileURL!)
     }
     
     func noEditNavigationAttribute() {
@@ -131,7 +132,7 @@ extension CategoryListViewController: UITableViewDelegate, UITableViewDataSource
     }
     
     func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
-        
+        //첫행은 순서변경적용 안되도록 처리예정
     }
     
     func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {

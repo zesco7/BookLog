@@ -12,6 +12,9 @@ class EachBookListViewController: BaseViewController {
     var mainView = EachBookListView()
     var navigationTitle: String?
     
+    var eachBookLocalRealm = try! Realm()
+    var eachBookList : Results<BookData>!
+    
     override func loadView() {
         self.view = mainView
     }
@@ -22,8 +25,15 @@ class EachBookListViewController: BaseViewController {
         mainView.tableView.dataSource = self
         mainView.tableView.delegate = self
         mainView.tableView.register(EachBookListViewCell.self, forCellReuseIdentifier: EachBookListViewCell.identifier)
-        
         navigationAttribute()
+        
+        //eachBookList초기화: categorySortCode기준으로 필터링해서 카테고리에 해당하는 책만 화면표시
+        eachBookList = eachBookLocalRealm.objects(BookData.self).sorted(byKeyPath: "lastUpdate", ascending: true)
+        //eachBookLocalRealm.objects(BookData.self).filter("categorySortCode == ''").sorted(byKeyPath: "lastUpdate", ascending: true)
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        mainView.tableView.reloadData()
     }
     
     func navigationAttribute() {
@@ -34,7 +44,51 @@ class EachBookListViewController: BaseViewController {
     }
     
     @objc func sortButtonClicked() {
-        //제목순, 별점순, 최종작성날짜순 선택목록 표시
+        //iOS14미만: actionSheet
+        actionSheetForSort()
+        
+        //iOS14+: UImenu
+        uiMenuForSort()
+    }
+    
+    func actionSheetForSort() {
+        let actionSheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        let sortBytitle = UIAlertAction(title: "제목순", style: .default) { _ in
+            self.eachBookList = self.eachBookLocalRealm.objects(BookData.self).sorted(byKeyPath: "title", ascending: true)
+            self.mainView.tableView.reloadData()
+        }
+        let sortByRating = UIAlertAction(title: "별점순", style: .default) { _ in
+            self.eachBookList = self.eachBookLocalRealm.objects(BookData.self).sorted(byKeyPath: "rating", ascending: true)
+            self.mainView.tableView.reloadData()
+        }
+        let sortByLastUpdate = UIAlertAction(title: "최종날짜순", style: .default) { _ in
+            self.eachBookList = self.eachBookLocalRealm.objects(BookData.self).sorted(byKeyPath: "lastUpdate", ascending: true)
+            self.mainView.tableView.reloadData()
+        }
+        let cancel = UIAlertAction(title: "취소", style: .cancel)
+        actionSheet.addAction(sortBytitle)
+        actionSheet.addAction(sortByRating)
+        actionSheet.addAction(sortByLastUpdate)
+        actionSheet.addAction(cancel)
+        present(actionSheet, animated: true)
+    }
+    
+    func uiMenuForSort() {
+        let sortBytitle = UIAction(title: "제목순") { _ in
+            self.eachBookList = self.eachBookLocalRealm.objects(BookData.self).sorted(byKeyPath: "title", ascending: true)
+            self.mainView.tableView.reloadData()
+        }
+        
+        let sortByRating = UIAction(title: "별점순") { _ in
+            self.eachBookList = self.eachBookLocalRealm.objects(BookData.self).sorted(byKeyPath: "rating", ascending: true)
+            self.mainView.tableView.reloadData()
+        }
+        
+        let sortByLastUpdate = UIAction(title: "최종날짜순") { _ in
+            self.eachBookList = self.eachBookLocalRealm.objects(BookData.self).sorted(byKeyPath: "lastUpdate", ascending: true)
+            self.mainView.tableView.reloadData()
+        }
+        let menu = UIMenu(title: "정렬기준 선택", children: [sortBytitle, sortByRating, sortByLastUpdate])
     }
     
     @objc func plusButtonClicked() {
@@ -44,7 +98,10 @@ class EachBookListViewController: BaseViewController {
     
     func actionSheetForBookSearch() {
         let actionSheet = UIAlertController(title: "원하는 책을 찾아보세요", message: nil, preferredStyle: .actionSheet)
-        let searchingForNewBook = UIAlertAction(title: "새 책 찾기", style: .default) //새 책 찾기 선택시 책검색화면으로 이동
+        let searchingForNewBook = UIAlertAction(title: "새 책 찾기", style: .default) { _ in
+            let vc = BookSearchViewController()
+            self.navigationController?.pushViewController(vc, animated: true)
+        }
         let searchingForSavedBook = UIAlertAction(title: "저장된 책에서 찾기", style: .default) { _ in
             self.bookTransferNavigationAttribute()
             let vc = SearchEntireBookListViewController()
@@ -73,17 +130,17 @@ class EachBookListViewController: BaseViewController {
 
 extension EachBookListViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 10
+        return eachBookList.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: EachBookListViewCell.identifier, for: indexPath) as? EachBookListViewCell else { return UITableViewCell() }
         cell.backgroundColor = .clear
         
-        cell.bookName.text = "저승 가는 길에는 목욕탕이 있다"
-        cell.bookAuthor.text = "마카롱"
-        cell.bookRating.text = "5.0"
-        cell.bookReview.text = "우주 안에 무한한 소우주가 존재하듯 인간의 사념도 수 갈래의 하늘과 땅을 만들고, 어느 저승도 그렇게 탄생했다. 이 이야기로 죽음 너머의 한 세계를 소개하려 한다."
+        cell.bookName.text = eachBookList[indexPath.row].title
+        cell.bookAuthor.text = eachBookList[indexPath.row].author
+        cell.bookRating.text = "\(eachBookList[indexPath.row].rating!)"
+        cell.bookReview.text = eachBookList[indexPath.row].review
         return cell
     }
     

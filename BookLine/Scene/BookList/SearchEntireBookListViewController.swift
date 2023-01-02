@@ -55,6 +55,7 @@ extension SearchEntireBookListViewController: UITableViewDelegate, UITableViewDa
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        print(indexPath.row)
         
     }
         
