@@ -13,6 +13,7 @@ class EntireBookListViewController: BaseViewController {
     
     var entireBookLocalRealm = try! Realm()
     var entireBookList : Results<BookData>!
+    var categorySortCode : String?
     
     override func loadView() {
         self.view = mainView
@@ -26,7 +27,6 @@ class EntireBookListViewController: BaseViewController {
         mainView.tableView.register(EntireBookListViewCell.self, forCellReuseIdentifier: EntireBookListViewCell.identifier)
         
         entireBookList = entireBookLocalRealm.objects(BookData.self).sorted(byKeyPath: "lastUpdate", ascending: true)
-        
         navigationAttribute()
     }
     
@@ -56,6 +56,7 @@ class EntireBookListViewController: BaseViewController {
     @objc func plusButtonClicked() {
         //카테고리 구분코드 전달 + 책검색화면으로 이동
         let vc = BookSearchViewController()
+        vc.categorySortCode = ""
         self.navigationController?.pushViewController(vc, animated: true)
     }
     

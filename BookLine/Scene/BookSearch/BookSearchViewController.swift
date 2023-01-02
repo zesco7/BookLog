@@ -13,6 +13,7 @@ class BookSearchViewController: BaseViewController {
     var bookSearchLocalRealm = try! Realm()
     var bookSearchResults : Results<BookData>!
     var categorySortCodeForBookSearch : [String] = []
+    var categorySortCode : String?
     
     override func loadView() {
         self.view = mainView
@@ -25,9 +26,11 @@ class BookSearchViewController: BaseViewController {
         mainView.tableView.delegate = self
         mainView.tableView.register(EntireBookListViewCell.self, forCellReuseIdentifier: EntireBookListViewCell.identifier)
         bookSearchResults = bookSearchLocalRealm.objects(BookData.self)
-        print(bookSearchLocalRealm.configuration.fileURL!)
         navigationAttribute()
         //hideKeyboard()
+    }
+    override func viewWillAppear(_ animated: Bool) {
+        print("카테고리구분:", categorySortCode)
     }
     
     func navigationAttribute() {
@@ -94,7 +97,8 @@ extension BookSearchViewController: UITableViewDelegate, UITableViewDataSource {
 extension BookSearchViewController: UISearchBarDelegate {
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         //서치바 입력내용으로 네트워크통신요청 후 받은데이터 bookSearchResults에 넣어서 셀재사용 처리
-        let record = BookData(lastUpdate: Date(), ISBN: "\(Int.random(in: 1...1000))", rating: 1.1, review: "1", memo: "1", title: "\(Int.random(in: 1...1000))", author: "1", publisher: "1", pubdate: Date(), linkURL: "1", imageURL: "1") //Realm 레코드 생성
+        let record = BookData(lastUpdate: Date(), categorySortCode: categorySortCode!, ISBN: "\(Int.random(in: 1...1000))", rating: 1.1, review: "1", memo: "1", title: "\(Int.random(in: 1...1000))", author: "1", publisher: "1", pubdate: Date(), linkURL: "1", imageURL: "1") //Realm 레코드 생성
+        
         try! self.bookSearchLocalRealm.write({
             self.bookSearchLocalRealm.add(record)
             self.mainView.tableView.reloadData()

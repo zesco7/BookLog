@@ -14,6 +14,7 @@ class EachBookListViewController: BaseViewController {
     
     var eachBookLocalRealm = try! Realm()
     var eachBookList : Results<BookData>!
+    var categorySortCode : String?
     
     override func loadView() {
         self.view = mainView
@@ -26,13 +27,14 @@ class EachBookListViewController: BaseViewController {
         mainView.tableView.delegate = self
         mainView.tableView.register(EachBookListViewCell.self, forCellReuseIdentifier: EachBookListViewCell.identifier)
         navigationAttribute()
+        print(categorySortCode)
         
         //eachBookList초기화: categorySortCode기준으로 필터링해서 카테고리에 해당하는 책만 화면표시
-        eachBookList = eachBookLocalRealm.objects(BookData.self).sorted(byKeyPath: "lastUpdate", ascending: true)
-        //eachBookLocalRealm.objects(BookData.self).filter("categorySortCode == ''").sorted(byKeyPath: "lastUpdate", ascending: true)
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {
+        eachBookList = eachBookLocalRealm.objects(BookData.self).filter("categorySortCode == '\(categorySortCode!)'").sorted(byKeyPath: "lastUpdate", ascending: true)
         mainView.tableView.reloadData()
     }
     
@@ -100,11 +102,13 @@ class EachBookListViewController: BaseViewController {
         let actionSheet = UIAlertController(title: "원하는 책을 찾아보세요", message: nil, preferredStyle: .actionSheet)
         let searchingForNewBook = UIAlertAction(title: "새 책 찾기", style: .default) { _ in
             let vc = BookSearchViewController()
+            vc.categorySortCode = self.categorySortCode!
             self.navigationController?.pushViewController(vc, animated: true)
         }
         let searchingForSavedBook = UIAlertAction(title: "저장된 책에서 찾기", style: .default) { _ in
             self.bookTransferNavigationAttribute()
             let vc = SearchEntireBookListViewController()
+            vc.categorySortCode = self.categorySortCode!
             let navi = UINavigationController(rootViewController: vc)
             self.present(navi, animated: true)
         }

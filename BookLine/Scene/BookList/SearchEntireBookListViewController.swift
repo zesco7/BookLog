@@ -6,15 +6,18 @@
 //
 
 import UIKit
+import RealmSwift
 
 class SearchEntireBookListViewController: BaseViewController {
     var mainView = SearchEntireBookListView()
+    var searchEntireBookLocalRealm = try! Realm()
+    var searchEntireBookList : Results<BookData>!
+    var categorySortCode : String?
     
     override func loadView() {
         self.view = mainView
     }
     
-    var bookList = ["1", "2"]
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -24,15 +27,18 @@ class SearchEntireBookListViewController: BaseViewController {
         mainView.tableView.allowsMultipleSelection = true
         navigationAttribute()
         
+        searchEntireBookList = searchEntireBookLocalRealm.objects(BookData.self).sorted(byKeyPath: "lastUpdate", ascending: true)
+        
     }
     
     func navigationAttribute() {
-        self.navigationItem.title = "ㅎㅎㅎ"
+        self.navigationItem.title = UserDefaults.standard.string(forKey: "defaultCategoryTitle")
         let completionButton = UIBarButtonItem(title: "완료", style: .plain, target: self, action: #selector(completionButtonClicked))
         self.navigationItem.rightBarButtonItem = completionButton
     }
     
     @objc func completionButtonClicked() {
+        self.mainView.tableView.reloadData()
         self.dismiss(animated: true)
     }
     
@@ -40,26 +46,34 @@ class SearchEntireBookListViewController: BaseViewController {
 
 extension SearchEntireBookListViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return bookList.count
+        return searchEntireBookList.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: SearchEntireBookListViewCell.identifier , for: indexPath) as? SearchEntireBookListViewCell else { return UITableViewCell() }
         cell.backgroundColor = .clear
         
-        cell.bookName.text = bookList[indexPath.row]
-//        cell.bookAuthor.text = bookList[indexPath.row].author
-//        cell.bookRating.text = "\(bookList[indexPath.row].rating!)"
-//        cell.bookReview.text = bookList[indexPath.row].review
+        cell.bookName.text = searchEntireBookList[indexPath.row].title
+        cell.bookAuthor.text = searchEntireBookList[indexPath.row].author
+        cell.bookRating.text = "\(searchEntireBookList[indexPath.row].rating!)"
+        cell.bookReview.text = searchEntireBookList[indexPath.row].review
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        print(indexPath.row)
+        let record = searchEntireBookList[indexPath.row]
+        print(record)
+        try! self.searchEntireBookLocalRealm.write({
+            record.categorySortCode = self.categorySortCode!
+        })
+        print("searchBarTapped")
+    }
+    
+    func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
         
     }
-        
-        func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-            return 120
-        }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 120
     }
+}

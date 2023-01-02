@@ -28,6 +28,7 @@ class CategoryListViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
          
+        UserDefaults.standard.set(defaultCategoryTitle[0], forKey: "defaultCategoryTitle")
         noEditNavigationAttribute()
         categoryList = categoryLocalRealm.objects(CategoryData.self).sorted(byKeyPath: "categorySortCode", ascending: true)
         print("Realm Succeed. categoryLocalRealm is located at: ", self.categoryLocalRealm.configuration.fileURL!)
@@ -107,6 +108,7 @@ extension CategoryListViewController: UITableViewDelegate, UITableViewDataSource
         } else {
             cell.categoryName.text = "\(categoryList[indexPath.row].category)"
         }
+        
         return cell
     }
     
@@ -148,12 +150,15 @@ extension CategoryListViewController: UITableViewDelegate, UITableViewDataSource
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let categorySortCode = categoryList[indexPath.row].categorySortCode
         if indexPath.section == 0 {
             let vc = EntireBookListViewController()
             self.navigationController?.pushViewController(vc, animated: true)
         } else {
             let vc = EachBookListViewController()
+            vc.categorySortCode = "\(categorySortCode)"
             vc.navigationTitle = categoryList[indexPath.row].category
+            print(categorySortCode)
             self.navigationController?.pushViewController(vc, animated: true)
         }
     }
