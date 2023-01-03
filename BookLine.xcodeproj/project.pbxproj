@@ -45,6 +45,8 @@
 		98CB9D1829618C8B00958583 /* BookSearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98CB9D1729618C8B00958583 /* BookSearchView.swift */; };
 		98CB9D1A29618C9600958583 /* BookSearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98CB9D1929618C9600958583 /* BookSearchViewController.swift */; };
 		98CB9D1C29618D2A00958583 /* BookSearchViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98CB9D1B29618D2A00958583 /* BookSearchViewCell.swift */; };
+		98EC520B296434B200DACC1C /* APIManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98EC520A296434B200DACC1C /* APIManager.swift */; };
+		98EC520D29643BE400DACC1C /* Codable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98EC520C29643BE400DACC1C /* Codable.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -83,6 +85,8 @@
 		98CB9D1729618C8B00958583 /* BookSearchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookSearchView.swift; sourceTree = "<group>"; };
 		98CB9D1929618C9600958583 /* BookSearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookSearchViewController.swift; sourceTree = "<group>"; };
 		98CB9D1B29618D2A00958583 /* BookSearchViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookSearchViewCell.swift; sourceTree = "<group>"; };
+		98EC520A296434B200DACC1C /* APIManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIManager.swift; sourceTree = "<group>"; };
+		98EC520C29643BE400DACC1C /* Codable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Codable.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -128,8 +132,8 @@
 				9831A02E295AE55000437B26 /* CustomView */,
 				9831A02D295AE53900437B26 /* BaseView */,
 				9831A02A295AE37900437B26 /* Network */,
-				9831A00E2957232300437B26 /* AppDelegate.swift */,
 				9831A0102957232300437B26 /* SceneDelegate.swift */,
+				9831A00E2957232300437B26 /* AppDelegate.swift */,
 				9831A0122957232300437B26 /* ViewController.swift */,
 				9831A0142957232300437B26 /* Main.storyboard */,
 				9831A0172957232500437B26 /* Assets.xcassets */,
@@ -144,6 +148,8 @@
 			children = (
 				9831A028295AE36A00437B26 /* APIKey.swift */,
 				9831A02B295AE39D00437B26 /* EndPoint.swift */,
+				98EC520A296434B200DACC1C /* APIManager.swift */,
+				98EC520C29643BE400DACC1C /* Codable.swift */,
 			);
 			path = Network;
 			sourceTree = "<group>";
@@ -359,6 +365,7 @@
 				98CB9D1829618C8B00958583 /* BookSearchView.swift in Sources */,
 				98CB9D12296188C800958583 /* SearchEntireBookListView.swift in Sources */,
 				98B1656E295C357C007D24CF /* EachBookListViewCell.swift in Sources */,
+				98EC520B296434B200DACC1C /* APIManager.swift in Sources */,
 				98B16562295C1FE2007D24CF /* EntireBookListViewController.swift in Sources */,
 				98CB9D1A29618C9600958583 /* BookSearchViewController.swift in Sources */,
 				98B16570295C4B6D007D24CF /* CategoryListCreator.swift in Sources */,
@@ -375,6 +382,7 @@
 				98B16572295EE05B007D24CF /* BookMemoView.swift in Sources */,
 				98B16574295EE064007D24CF /* BookMemoViewController.swift in Sources */,
 				98B1656A295C3560007D24CF /* EachBookListView.swift in Sources */,
+				98EC520D29643BE400DACC1C /* Codable.swift in Sources */,
 				983D17AC295B029900D265EA /* UIColor+Extension.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

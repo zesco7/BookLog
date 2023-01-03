@@ -29,8 +29,14 @@ class BookSearchViewController: BaseViewController {
         navigationAttribute()
         //hideKeyboard()
     }
+    
     override func viewWillAppear(_ animated: Bool) {
         print("카테고리구분:", categorySortCode)
+    }
+    
+    func requestBookInformation() {
+        //초기화는 세부설정 할때 사용
+        URLSession.init(configuration: <#T##URLSessionConfiguration#>)
     }
     
     func navigationAttribute() {
