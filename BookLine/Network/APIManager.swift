@@ -15,10 +15,12 @@ enum APIError {
 }
 
 class APIManager {
-    static func requestBookInformation(query: String, display: Int, completion: @escaping (BookInfo?, APIError?) -> Void) {
-        let url = URL(string: "\(EndPoint.naverBookResultsURL)query=\(query)&display=\(display)&start=1)")!
-        let urlRequest = URLRequest(url: url)
-        //urlRequest.setValue(<#T##value: String?##String?#>, forHTTPHeaderField: <#T##String#>)
+    static func requestBookInformation(query: String, completion: @escaping (BookInfo?, APIError?) -> Void) {
+        let text = query.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!
+        let url = URL(string: "\(EndPoint.naverBookResultsURL)query=\(text)&display=10&start=1)")!
+        var urlRequest = URLRequest(url: url)
+        urlRequest.setValue("tfYqqDDQUPRUW3CIm5x4", forHTTPHeaderField: "X-Naver-Client-Id")
+        urlRequest.setValue("NAoG26YRAW", forHTTPHeaderField: "X-Naver-Client-Secret")
         
         URLSession.shared.dataTask(with: urlRequest) { data, urlResponse, error in
             guard error == nil else {
@@ -41,13 +43,14 @@ class APIManager {
             
             guard urlResponse.statusCode == 200 else {
                 print("Invalid Response")
+                print(urlResponse)
                 completion(nil, .failedRequest)
                 return
             }
             
             do {
                 let result = try JSONDecoder().decode(BookInfo.self, from: data)
-                completion(result, nil )
+                completion(result, nil)
             } catch {
                 print(error)
                 completion(nil, .invalidData)

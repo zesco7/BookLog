@@ -50,14 +50,14 @@ class BookSearchViewCell: BaseTableViewCell {
         }
         
         bookName.snp.makeConstraints { make in
-            make.centerY.equalTo(self).offset(-30)
+            make.centerY.equalTo(self).multipliedBy(0.7)
             make.height.equalTo(self).multipliedBy(0.15)
             make.leadingMargin.equalTo(bookImage.snp.trailing).offset(10)
             make.width.equalTo(self).multipliedBy(0.7)
         }
         
         bookAuthor.snp.makeConstraints { make in
-            make.topMargin.equalTo(bookName.snp.bottom).offset(10)
+            make.topMargin.equalTo(bookName.snp.bottom).offset(30)
             make.height.equalTo(self).multipliedBy(0.15)
             make.leadingMargin.equalTo(bookImage.snp.trailing).offset(10)
             make.width.equalTo(self).multipliedBy(0.7)

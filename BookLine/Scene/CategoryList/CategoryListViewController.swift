@@ -103,6 +103,8 @@ extension CategoryListViewController: UITableViewDelegate, UITableViewDataSource
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: CategoryListViewCell.identifier, for: indexPath) as? CategoryListViewCell else { return UITableViewCell() }
         cell.backgroundColor = .clear
+        
+        //전체목록: 기본사진, 각 카테고리: 해당 카테고리 첫번째 레코드 이미지로 카테고리목록화면 표시예정
         if indexPath.section == 0 {
             cell.categoryName.text = "\(defaultCategoryTitle[indexPath.row])"
         } else {

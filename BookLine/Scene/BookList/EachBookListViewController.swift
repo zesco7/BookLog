@@ -139,8 +139,9 @@ extension EachBookListViewController: UITableViewDelegate, UITableViewDataSource
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: EachBookListViewCell.identifier, for: indexPath) as? EachBookListViewCell else { return UITableViewCell() }
+        let url = URL(string: eachBookList[indexPath.row].imageURL)
         cell.backgroundColor = .clear
-        
+        cell.bookImage.kf.setImage(with: url)
         cell.bookName.text = eachBookList[indexPath.row].title
         cell.bookAuthor.text = eachBookList[indexPath.row].author
         cell.bookRating.text = "\(eachBookList[indexPath.row].rating!)"
