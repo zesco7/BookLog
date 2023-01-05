@@ -21,12 +21,13 @@ class EntireBookListViewController: BaseViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         mainView.tableView.dataSource = self
         mainView.tableView.delegate = self
         mainView.tableView.register(EntireBookListViewCell.self, forCellReuseIdentifier: EntireBookListViewCell.identifier)
         
+        print(entireBookList)
         entireBookList = entireBookLocalRealm.objects(BookData.self).sorted(byKeyPath: "lastUpdate", ascending: true)
+        print(entireBookList.count)
         navigationAttribute()
     }
     
@@ -103,7 +104,11 @@ class EntireBookListViewController: BaseViewController {
 
 extension EntireBookListViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return entireBookList.count
+        print(#function)
+        //guard let entireBookList = entireBookList else { return 0 }
+        let entireBookList = entireBookList?.count ?? 0
+        //return entireBookList.count
+        return entireBookList
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {

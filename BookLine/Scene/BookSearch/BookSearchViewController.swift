@@ -15,6 +15,7 @@ class BookSearchViewController: BaseViewController {
     var bookSearchResults : Results<BookData>!
     var categorySortCodeForBookSearch : [String] = []
     var categorySortCode : String?
+    var bookInfoArray : BookInfo?
     
     override func loadView() {
         self.view = mainView
@@ -67,11 +68,11 @@ class BookSearchViewController: BaseViewController {
             let linkURL = UserDefaults.standard.string(forKey: "linkURL")
             let imageURL = UserDefaults.standard.string(forKey: "imageURL")
             
-            //선택한 row의 값이 바뀌도록 어떻게? 첫번째 값만 계속바뀜.
-            let record = self.bookSearchLocalRealm.objects(BookData.self).first
+            //rating, review, memo 값 처리 예정
+            let record = BookData(lastUpdate: Date(), categorySortCode: self.categorySortCode!, ISBN: isbn!, rating: 1.1, review: "1", memo: "1", title: title!, author: author!, publisher: publisher!, pubdate: Date(), linkURL: linkURL!, imageURL: imageURL!)
             
             try! self.bookSearchLocalRealm.write({
-                record?.categorySortCode = self.categorySortCode!
+                self.bookSearchLocalRealm.add(record)
                 self.mainView.tableView.reloadData()
             })
         }
@@ -84,21 +85,34 @@ class BookSearchViewController: BaseViewController {
 
 extension BookSearchViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return bookSearchResults.count
+        print(#function)
+        //guard let bookInfoArray = bookInfoArray?.items else { return 0 }
+        let bookInfoArray = bookInfoArray?.items.count ?? 0
+        return bookInfoArray
+        //print("numberOfRowsInSection", bookInfoArray.count)
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: BookSearchViewCell.identifier , for: indexPath) as? BookSearchViewCell else { return UITableViewCell() }
-        let url = URL(string: bookSearchResults[indexPath.row].imageURL)
+        let url = URL(string: (bookInfoArray?.items[indexPath.row].image)!)
         cell.backgroundColor = .clear
         cell.bookImage.kf.setImage(with: url)
-        cell.bookName.text = "\(bookSearchResults[indexPath.row].title)"
-        cell.bookAuthor.text = "\(bookSearchResults[indexPath.row].author)"
+        cell.bookName.text = bookInfoArray?.items[indexPath.row].title
+        cell.bookAuthor.text = bookInfoArray?.items[indexPath.row].author
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let items = bookInfoArray?.items[indexPath.row]
+        UserDefaults.standard.set(items?.isbn, forKey: "isbn")
+        UserDefaults.standard.set(items?.title, forKey: "title")
+        UserDefaults.standard.set(items?.author, forKey: "author")
+        UserDefaults.standard.set(items?.publisher, forKey: "publisher")
+        UserDefaults.standard.set(items?.pubdate, forKey: "pubdate")
+        UserDefaults.standard.set(items?.link, forKey: "linkURL")
+        UserDefaults.standard.set(items?.image, forKey: "imageURL")
         alertForBookSearch()
+        
 //        let categorySortCode = self.bookSearchLocalRealm.objects(BookData.self).first!
 //        print(categorySortCode.categorySortCode.first[indexPath.row])
     }
@@ -112,34 +126,13 @@ extension BookSearchViewController: UISearchBarDelegate {
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         //서치바 입력내용으로 네트워크통신요청 후 받은데이터 bookSearchResults에 넣어서 셀재사용 처리
         APIManager.requestBookInformation(query: searchBar.text!) { bookInfo, apiError in
-            dump(bookInfo!)
-            //하위 struct에 접근 어떻게?
-            //구조체를 통채로 배열에 넣는거 어떻게?
-            UserDefaults.standard.set(bookInfo?.items.first?.isbn, forKey: "isbn")
-            UserDefaults.standard.set(bookInfo?.items.first?.title, forKey: "title")
-            UserDefaults.standard.set(bookInfo?.items.first?.author, forKey: "author")
-            UserDefaults.standard.set(bookInfo?.items.first?.publisher, forKey: "publisher")
-            UserDefaults.standard.set(bookInfo?.items.first?.pubdate, forKey: "pubdate")
-            UserDefaults.standard.set(bookInfo?.items.first?.link, forKey: "linkURL")
-            UserDefaults.standard.set(bookInfo?.items.first?.image, forKey: "imageURL")
+            self.bookInfoArray = bookInfo.map { $0 }
+            print(self.bookInfoArray)
             
-            let isbn = bookInfo?.items.first?.isbn
-            let title = bookInfo?.items.first?.title
-            let author = bookInfo?.items.first?.author
-            let publisher = bookInfo?.items.first?.publisher
-            let pubdate = bookInfo?.items.first?.pubdate
-            let linkURL = bookInfo?.items.first?.link
-            let imageURL = bookInfo?.items.first?.image
-
             DispatchQueue.main.sync {
-                let record = BookData(lastUpdate: Date(), categorySortCode: "", ISBN: isbn!, rating: 1.1, review: "1", memo: "1", title: title!, author: author!, publisher: publisher!, pubdate: Date(), linkURL: linkURL!, imageURL: imageURL!) //Realm 레코드 생성
-
-                try! self.bookSearchLocalRealm.write({
-                    self.bookSearchLocalRealm.add(record)
-                })
                 self.mainView.tableView.reloadData()
-                print("searchBarTapped")
             }
+                print("searchBarTapped")
         }
     }
     

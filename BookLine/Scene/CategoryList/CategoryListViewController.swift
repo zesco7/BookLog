@@ -27,7 +27,6 @@ class CategoryListViewController: BaseViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-         
         UserDefaults.standard.set(defaultCategoryTitle[0], forKey: "defaultCategoryTitle")
         noEditNavigationAttribute()
         categoryList = categoryLocalRealm.objects(CategoryData.self).sorted(byKeyPath: "categorySortCode", ascending: true)
