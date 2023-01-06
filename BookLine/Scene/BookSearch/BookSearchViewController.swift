@@ -17,6 +17,15 @@ class BookSearchViewController: BaseViewController {
     var categorySortCode : String?
     var bookInfoArray : BookInfo?
     
+    init(categorySortCode: String?) {
+        self.categorySortCode = categorySortCode
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     override func loadView() {
         self.view = mainView
     }
@@ -29,6 +38,7 @@ class BookSearchViewController: BaseViewController {
         mainView.tableView.register(BookSearchViewCell.self, forCellReuseIdentifier: BookSearchViewCell.identifier)
         bookSearchResults = bookSearchLocalRealm.objects(BookData.self)
         navigationAttribute()
+        mainView.tableView.allowsMultipleSelection = true
         //hideKeyboard()
     }
     
@@ -69,12 +79,18 @@ class BookSearchViewController: BaseViewController {
             let imageURL = UserDefaults.standard.string(forKey: "imageURL")
             
             //rating, review, memo 값 처리 예정
-            let record = BookData(lastUpdate: Date(), categorySortCode: self.categorySortCode!, ISBN: isbn!, rating: 1.1, review: "1", memo: "1", title: title!, author: author!, publisher: publisher!, pubdate: Date(), linkURL: linkURL!, imageURL: imageURL!)
-            
-            try! self.bookSearchLocalRealm.write({
-                self.bookSearchLocalRealm.add(record)
-                self.mainView.tableView.reloadData()
-            })
+            if let categorySortCode = self.categorySortCode {
+                let record = BookData(lastUpdate: Date(), categorySortCode: categorySortCode, ISBN: isbn!, rating: 1.1, review: "1", memo: "1", title: title!, author: author!, publisher: publisher!, pubdate: Date(), linkURL: linkURL!, imageURL: imageURL!)
+                try! self.bookSearchLocalRealm.write({
+                    self.bookSearchLocalRealm.add(record)
+                })
+            } else {
+                let record = BookData(lastUpdate: Date(), categorySortCode: "", ISBN: isbn!, rating: 1.1, review: "1", memo: "1", title: title!, author: author!, publisher: publisher!, pubdate: Date(), linkURL: linkURL!, imageURL: imageURL!)
+                try! self.bookSearchLocalRealm.write({
+                    self.bookSearchLocalRealm.add(record)
+                })
+            }
+            self.navigationController?.popViewController(animated: true)
         }
         let cancel = UIAlertAction(title: "취소", style: .cancel)
         alert.addAction(addBook)
@@ -85,11 +101,8 @@ class BookSearchViewController: BaseViewController {
 
 extension BookSearchViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        print(#function)
-        //guard let bookInfoArray = bookInfoArray?.items else { return 0 }
-        let bookInfoArray = bookInfoArray?.items.count ?? 0
-        return bookInfoArray
-        //print("numberOfRowsInSection", bookInfoArray.count)
+        guard let bookInfoArray = bookInfoArray?.items else { return 0 }
+        return bookInfoArray.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -103,6 +116,7 @@ extension BookSearchViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        //multiselection은 배열에 append해서 처리예정
         let items = bookInfoArray?.items[indexPath.row]
         UserDefaults.standard.set(items?.isbn, forKey: "isbn")
         UserDefaults.standard.set(items?.title, forKey: "title")
@@ -112,9 +126,6 @@ extension BookSearchViewController: UITableViewDelegate, UITableViewDataSource {
         UserDefaults.standard.set(items?.link, forKey: "linkURL")
         UserDefaults.standard.set(items?.image, forKey: "imageURL")
         alertForBookSearch()
-        
-//        let categorySortCode = self.bookSearchLocalRealm.objects(BookData.self).first!
-//        print(categorySortCode.categorySortCode.first[indexPath.row])
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -128,11 +139,12 @@ extension BookSearchViewController: UISearchBarDelegate {
         APIManager.requestBookInformation(query: searchBar.text!) { bookInfo, apiError in
             self.bookInfoArray = bookInfo.map { $0 }
             print(self.bookInfoArray)
-            
             DispatchQueue.main.sync {
                 self.mainView.tableView.reloadData()
             }
-                print("searchBarTapped")
+        //검색어 입력하고 결과나오면 서치바 내려가고 네비게이션버바버튼에 완료버튼 생성
+        //완료버튼 누르면 다시 네비게이션바버튼 올라가고 검색어 입력창 활성화
+            print("searchBarTapped")
         }
     }
     

@@ -6,15 +6,19 @@
 //
 
 import UIKit
+import Kingfisher
 import RealmSwift
 import Toast
+
 
 class CategoryListViewController: BaseViewController {
     var mainView = CategoryListView()
     var mainViewCell = CategoryListViewCell()
-
-    let categoryLocalRealm = try! Realm() //Realm테이블에 데이터 CRUD할때 Realm테이블 경로에 접근할 수 있는 객체 생성
+    
+    let categoryLocalRealm = try! Realm()
+    let bookLocalRealm = try! Realm()
     var categoryList: Results<CategoryData>!
+    var bookList: Results<BookData>?
     
     let defaultCategoryTitle = ["모든 책"]
     
@@ -105,6 +109,7 @@ extension CategoryListViewController: UITableViewDelegate, UITableViewDataSource
         
         //전체목록: 기본사진, 각 카테고리: 해당 카테고리 첫번째 레코드 이미지로 카테고리목록화면 표시예정
         if indexPath.section == 0 {
+            //기본사진 cell.categoryThumbnail.image =
             cell.categoryName.text = "\(defaultCategoryTitle[indexPath.row])"
         } else {
             cell.categoryName.text = "\(categoryList[indexPath.row].category)"
@@ -151,15 +156,11 @@ extension CategoryListViewController: UITableViewDelegate, UITableViewDataSource
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let categorySortCode = categoryList[indexPath.row].categorySortCode
         if indexPath.section == 0 {
-            let vc = EntireBookListViewController()
+            let vc = BookListViewController(categorySortCode: nil, navigationTitle: UserDefaults.standard.string(forKey: "defaultCategoryTitle"))
             self.navigationController?.pushViewController(vc, animated: true)
         } else {
-            let vc = EachBookListViewController()
-            vc.categorySortCode = "\(categorySortCode)"
-            vc.navigationTitle = categoryList[indexPath.row].category
-            print(categorySortCode)
+            let vc = BookListViewController(categorySortCode: "\(categoryList[indexPath.row].categorySortCode)", navigationTitle: "\(categoryList[indexPath.row].category)")
             self.navigationController?.pushViewController(vc, animated: true)
         }
     }

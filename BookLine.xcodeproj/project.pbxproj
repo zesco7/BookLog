@@ -28,13 +28,10 @@
 		98B16555295BFE6D007D24CF /* RealmModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98B16554295BFE6D007D24CF /* RealmModel.swift */; };
 		98B1655A295C1511007D24CF /* Realm in Frameworks */ = {isa = PBXBuildFile; productRef = 98B16559295C1511007D24CF /* Realm */; };
 		98B1655C295C1511007D24CF /* RealmSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 98B1655B295C1511007D24CF /* RealmSwift */; };
-		98B16560295C1FD6007D24CF /* EntireBookListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98B1655F295C1FD6007D24CF /* EntireBookListView.swift */; };
-		98B16562295C1FE2007D24CF /* EntireBookListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98B16561295C1FE2007D24CF /* EntireBookListViewController.swift */; };
-		98B16564295C22C3007D24CF /* EntireBookListViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98B16563295C22C3007D24CF /* EntireBookListViewCell.swift */; };
+		98B16560295C1FD6007D24CF /* BookListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98B1655F295C1FD6007D24CF /* BookListView.swift */; };
+		98B16562295C1FE2007D24CF /* BookListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98B16561295C1FE2007D24CF /* BookListViewController.swift */; };
+		98B16564295C22C3007D24CF /* BookListViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98B16563295C22C3007D24CF /* BookListViewCell.swift */; };
 		98B16568295C2ACE007D24CF /* BaseTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98B16567295C2ACE007D24CF /* BaseTableViewCell.swift */; };
-		98B1656A295C3560007D24CF /* EachBookListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98B16569295C3560007D24CF /* EachBookListView.swift */; };
-		98B1656C295C3570007D24CF /* EachBookListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98B1656B295C3570007D24CF /* EachBookListViewController.swift */; };
-		98B1656E295C357C007D24CF /* EachBookListViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98B1656D295C357C007D24CF /* EachBookListViewCell.swift */; };
 		98B16570295C4B6D007D24CF /* CategoryListCreator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98B1656F295C4B6D007D24CF /* CategoryListCreator.swift */; };
 		98B16572295EE05B007D24CF /* BookMemoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98B16571295EE05B007D24CF /* BookMemoView.swift */; };
 		98B16574295EE064007D24CF /* BookMemoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98B16573295EE064007D24CF /* BookMemoViewController.swift */; };
@@ -69,13 +66,10 @@
 		983D17AB295B029900D265EA /* UIColor+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Extension.swift"; sourceTree = "<group>"; };
 		983D17AE295B06FC00D265EA /* CategoryListViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryListViewCell.swift; sourceTree = "<group>"; };
 		98B16554295BFE6D007D24CF /* RealmModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealmModel.swift; sourceTree = "<group>"; };
-		98B1655F295C1FD6007D24CF /* EntireBookListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EntireBookListView.swift; sourceTree = "<group>"; };
-		98B16561295C1FE2007D24CF /* EntireBookListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EntireBookListViewController.swift; sourceTree = "<group>"; };
-		98B16563295C22C3007D24CF /* EntireBookListViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EntireBookListViewCell.swift; sourceTree = "<group>"; };
+		98B1655F295C1FD6007D24CF /* BookListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookListView.swift; sourceTree = "<group>"; };
+		98B16561295C1FE2007D24CF /* BookListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookListViewController.swift; sourceTree = "<group>"; };
+		98B16563295C22C3007D24CF /* BookListViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookListViewCell.swift; sourceTree = "<group>"; };
 		98B16567295C2ACE007D24CF /* BaseTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseTableViewCell.swift; sourceTree = "<group>"; };
-		98B16569295C3560007D24CF /* EachBookListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EachBookListView.swift; sourceTree = "<group>"; };
-		98B1656B295C3570007D24CF /* EachBookListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EachBookListViewController.swift; sourceTree = "<group>"; };
-		98B1656D295C357C007D24CF /* EachBookListViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EachBookListViewCell.swift; sourceTree = "<group>"; };
 		98B1656F295C4B6D007D24CF /* CategoryListCreator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryListCreator.swift; sourceTree = "<group>"; };
 		98B16571295EE05B007D24CF /* BookMemoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookMemoView.swift; sourceTree = "<group>"; };
 		98B16573295EE064007D24CF /* BookMemoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookMemoViewController.swift; sourceTree = "<group>"; };
@@ -199,10 +193,8 @@
 		9831A031295AE67E00437B26 /* BookList */ = {
 			isa = PBXGroup;
 			children = (
-				98B1655F295C1FD6007D24CF /* EntireBookListView.swift */,
-				98B16561295C1FE2007D24CF /* EntireBookListViewController.swift */,
-				98B16569295C3560007D24CF /* EachBookListView.swift */,
-				98B1656B295C3570007D24CF /* EachBookListViewController.swift */,
+				98B1655F295C1FD6007D24CF /* BookListView.swift */,
+				98B16561295C1FE2007D24CF /* BookListViewController.swift */,
 				98CB9D11296188C800958583 /* SearchEntireBookListView.swift */,
 				98CB9D13296188D100958583 /* SearchEntireBookListViewController.swift */,
 			);
@@ -239,8 +231,7 @@
 			isa = PBXGroup;
 			children = (
 				983D17AE295B06FC00D265EA /* CategoryListViewCell.swift */,
-				98B16563295C22C3007D24CF /* EntireBookListViewCell.swift */,
-				98B1656D295C357C007D24CF /* EachBookListViewCell.swift */,
+				98B16563295C22C3007D24CF /* BookListViewCell.swift */,
 				98CB9D15296189B500958583 /* SearchEntireBookListViewCell.swift */,
 				98CB9D1B29618D2A00958583 /* BookSearchViewCell.swift */,
 			);
@@ -361,16 +352,14 @@
 				9831A0132957232300437B26 /* ViewController.swift in Sources */,
 				98B16555295BFE6D007D24CF /* RealmModel.swift in Sources */,
 				9831A00F2957232300437B26 /* AppDelegate.swift in Sources */,
-				98B16560295C1FD6007D24CF /* EntireBookListView.swift in Sources */,
+				98B16560295C1FD6007D24CF /* BookListView.swift in Sources */,
 				9831A051295AF45B00437B26 /* CategoryListViewController.swift in Sources */,
-				98B1656C295C3570007D24CF /* EachBookListViewController.swift in Sources */,
 				9831A02C295AE39D00437B26 /* EndPoint.swift in Sources */,
 				98CB9D16296189B500958583 /* SearchEntireBookListViewCell.swift in Sources */,
 				98CB9D1829618C8B00958583 /* BookSearchView.swift in Sources */,
 				98CB9D12296188C800958583 /* SearchEntireBookListView.swift in Sources */,
-				98B1656E295C357C007D24CF /* EachBookListViewCell.swift in Sources */,
 				98EC520B296434B200DACC1C /* APIManager.swift in Sources */,
-				98B16562295C1FE2007D24CF /* EntireBookListViewController.swift in Sources */,
+				98B16562295C1FE2007D24CF /* BookListViewController.swift in Sources */,
 				98CB9D1A29618C9600958583 /* BookSearchViewController.swift in Sources */,
 				98B16570295C4B6D007D24CF /* CategoryListCreator.swift in Sources */,
 				9831A04B295AF14900437B26 /* BaseView.swift in Sources */,
@@ -382,10 +371,9 @@
 				98CB9D1C29618D2A00958583 /* BookSearchViewCell.swift in Sources */,
 				98CB9D14296188D100958583 /* SearchEntireBookListViewController.swift in Sources */,
 				9831A0112957232300437B26 /* SceneDelegate.swift in Sources */,
-				98B16564295C22C3007D24CF /* EntireBookListViewCell.swift in Sources */,
+				98B16564295C22C3007D24CF /* BookListViewCell.swift in Sources */,
 				98B16572295EE05B007D24CF /* BookMemoView.swift in Sources */,
 				98B16574295EE064007D24CF /* BookMemoViewController.swift in Sources */,
-				98B1656A295C3560007D24CF /* EachBookListView.swift in Sources */,
 				98EC520D29643BE400DACC1C /* Codable.swift in Sources */,
 				983D17AC295B029900D265EA /* UIColor+Extension.swift in Sources */,
 			);

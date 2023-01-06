@@ -1,5 +1,5 @@
 //
-//  EachBookListViewCell.swift
+//  EntireBookListViewCell.swift
 //  BookLine
 //
 //  Created by Mac Pro 15 on 2022/12/28.
@@ -8,10 +8,10 @@
 import UIKit
 import SnapKit
 
-class EachBookListViewCell: BaseTableViewCell {
+class BookListViewCell: BaseTableViewCell {
     let bookImage: UIImageView = {
        let view = UIImageView()
-        view.image = UIImage(systemName: "heart")
+        view.image = UIImage(systemName: "star")
         return view
     }()
     

@@ -8,7 +8,7 @@
 import UIKit
 import SnapKit
 
-class EntireBookListView: BaseView {
+class BookListView: BaseView {
     let tableView: UITableView = {
        let view = UITableView()
         view.backgroundColor = .backgroundColorBeige

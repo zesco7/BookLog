@@ -16,11 +16,17 @@ enum APIError {
 
 class APIManager {
     static func requestBookInformation(query: String, completion: @escaping (BookInfo?, APIError?) -> Void) {
-        let text = query.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!
-        let url = URL(string: "\(EndPoint.naverBookResultsURL)query=\(text)&display=10&start=1)")!
-        var urlRequest = URLRequest(url: url)
+        //페이지네이션 적용예정
+        var urlComponents = URLComponents(string: EndPoint.naverBookResultsURL)
+        urlComponents?.queryItems = [
+            URLQueryItem(name: "query", value: query.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)),
+            URLQueryItem(name: "display", value: "10"),
+            URLQueryItem(name: "start", value: "1")
+        ]
+        var urlRequest = URLRequest(url: (urlComponents?.url)!)
         urlRequest.setValue("tfYqqDDQUPRUW3CIm5x4", forHTTPHeaderField: "X-Naver-Client-Id")
         urlRequest.setValue("NAoG26YRAW", forHTTPHeaderField: "X-Naver-Client-Secret")
+        print(urlComponents?.url)
         
         URLSession.shared.dataTask(with: urlRequest) { data, urlResponse, error in
             guard error == nil else {
