@@ -36,9 +36,6 @@
 		98B16572295EE05B007D24CF /* BookMemoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98B16571295EE05B007D24CF /* BookMemoView.swift */; };
 		98B16574295EE064007D24CF /* BookMemoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98B16573295EE064007D24CF /* BookMemoViewController.swift */; };
 		98CB9D102961588700958583 /* UILabelFontAttribute.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98CB9D0F2961588700958583 /* UILabelFontAttribute.swift */; };
-		98CB9D12296188C800958583 /* SearchEntireBookListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98CB9D11296188C800958583 /* SearchEntireBookListView.swift */; };
-		98CB9D14296188D100958583 /* SearchEntireBookListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98CB9D13296188D100958583 /* SearchEntireBookListViewController.swift */; };
-		98CB9D16296189B500958583 /* SearchEntireBookListViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98CB9D15296189B500958583 /* SearchEntireBookListViewCell.swift */; };
 		98CB9D1829618C8B00958583 /* BookSearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98CB9D1729618C8B00958583 /* BookSearchView.swift */; };
 		98CB9D1A29618C9600958583 /* BookSearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98CB9D1929618C9600958583 /* BookSearchViewController.swift */; };
 		98CB9D1C29618D2A00958583 /* BookSearchViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98CB9D1B29618D2A00958583 /* BookSearchViewCell.swift */; };
@@ -74,9 +71,6 @@
 		98B16571295EE05B007D24CF /* BookMemoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookMemoView.swift; sourceTree = "<group>"; };
 		98B16573295EE064007D24CF /* BookMemoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookMemoViewController.swift; sourceTree = "<group>"; };
 		98CB9D0F2961588700958583 /* UILabelFontAttribute.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UILabelFontAttribute.swift; sourceTree = "<group>"; };
-		98CB9D11296188C800958583 /* SearchEntireBookListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchEntireBookListView.swift; sourceTree = "<group>"; };
-		98CB9D13296188D100958583 /* SearchEntireBookListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchEntireBookListViewController.swift; sourceTree = "<group>"; };
-		98CB9D15296189B500958583 /* SearchEntireBookListViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchEntireBookListViewCell.swift; sourceTree = "<group>"; };
 		98CB9D1729618C8B00958583 /* BookSearchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookSearchView.swift; sourceTree = "<group>"; };
 		98CB9D1929618C9600958583 /* BookSearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookSearchViewController.swift; sourceTree = "<group>"; };
 		98CB9D1B29618D2A00958583 /* BookSearchViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookSearchViewCell.swift; sourceTree = "<group>"; };
@@ -195,8 +189,6 @@
 			children = (
 				98B1655F295C1FD6007D24CF /* BookListView.swift */,
 				98B16561295C1FE2007D24CF /* BookListViewController.swift */,
-				98CB9D11296188C800958583 /* SearchEntireBookListView.swift */,
-				98CB9D13296188D100958583 /* SearchEntireBookListViewController.swift */,
 			);
 			path = BookList;
 			sourceTree = "<group>";
@@ -232,7 +224,6 @@
 			children = (
 				983D17AE295B06FC00D265EA /* CategoryListViewCell.swift */,
 				98B16563295C22C3007D24CF /* BookListViewCell.swift */,
-				98CB9D15296189B500958583 /* SearchEntireBookListViewCell.swift */,
 				98CB9D1B29618D2A00958583 /* BookSearchViewCell.swift */,
 			);
 			path = Cell;
@@ -355,9 +346,7 @@
 				98B16560295C1FD6007D24CF /* BookListView.swift in Sources */,
 				9831A051295AF45B00437B26 /* CategoryListViewController.swift in Sources */,
 				9831A02C295AE39D00437B26 /* EndPoint.swift in Sources */,
-				98CB9D16296189B500958583 /* SearchEntireBookListViewCell.swift in Sources */,
 				98CB9D1829618C8B00958583 /* BookSearchView.swift in Sources */,
-				98CB9D12296188C800958583 /* SearchEntireBookListView.swift in Sources */,
 				98EC520B296434B200DACC1C /* APIManager.swift in Sources */,
 				98B16562295C1FE2007D24CF /* BookListViewController.swift in Sources */,
 				98CB9D1A29618C9600958583 /* BookSearchViewController.swift in Sources */,
@@ -369,7 +358,6 @@
 				9831A04D295AF15200437B26 /* BaseViewController.swift in Sources */,
 				9831A04F295AF45400437B26 /* CategoryListView.swift in Sources */,
 				98CB9D1C29618D2A00958583 /* BookSearchViewCell.swift in Sources */,
-				98CB9D14296188D100958583 /* SearchEntireBookListViewController.swift in Sources */,
 				9831A0112957232300437B26 /* SceneDelegate.swift in Sources */,
 				98B16564295C22C3007D24CF /* BookListViewCell.swift in Sources */,
 				98B16572295EE05B007D24CF /* BookMemoView.swift in Sources */,
