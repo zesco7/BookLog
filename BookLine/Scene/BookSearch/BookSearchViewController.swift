@@ -80,12 +80,12 @@ class BookSearchViewController: BaseViewController {
             
             //rating, review, memo 값 처리 예정
             if let categorySortCode = self.categorySortCode {
-                let record = BookData(lastUpdate: Date(), categorySortCode: categorySortCode, ISBN: isbn!, rating: 1.1, review: "1", memo: "1", title: title!, author: author!, publisher: publisher!, pubdate: Date(), linkURL: linkURL!, imageURL: imageURL!)
+                let record = BookData(lastUpdate: Date(), categorySortCode: categorySortCode, ISBN: isbn!, rating: nil, review: nil, memo: nil, title: title!, author: author!, publisher: publisher!, pubdate: Date(), linkURL: linkURL!, imageURL: imageURL!)
                 try! self.bookSearchLocalRealm.write({
                     self.bookSearchLocalRealm.add(record)
                 })
             } else {
-                let record = BookData(lastUpdate: Date(), categorySortCode: "", ISBN: isbn!, rating: 1.1, review: "1", memo: "1", title: title!, author: author!, publisher: publisher!, pubdate: Date(), linkURL: linkURL!, imageURL: imageURL!)
+                let record = BookData(lastUpdate: Date(), categorySortCode: "", ISBN: isbn!, rating: nil, review: nil, memo: nil, title: title!, author: author!, publisher: publisher!, pubdate: Date(), linkURL: linkURL!, imageURL: imageURL!)
                 try! self.bookSearchLocalRealm.write({
                     self.bookSearchLocalRealm.add(record)
                 })

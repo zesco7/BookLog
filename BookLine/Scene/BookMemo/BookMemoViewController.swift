@@ -6,11 +6,28 @@
 //
 
 import UIKit
+import RealmSwift
 
 class BookMemoViewController: BaseViewController {
     var mainView = BookMemoView()
     var bookTitle: String?
     var bookWriter: String?
+    var bookMemoLocalRealm = try! Realm()
+    var bookMemo: Results<BookData>!
+    var isbn: String
+    var review: String?
+    var memo: String?
+    
+    init(isbn: String, review: String?, memo: String?) {
+        self.isbn = isbn
+        self.review = review
+        self.memo = memo
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     override func loadView() {
         self.view = mainView
@@ -22,9 +39,10 @@ class BookMemoViewController: BaseViewController {
         starRatingSliderAttribute()
         showBookInformation()
         hideKeyboard()
-        
-        //별점, 한줄평, 메모내용 작성하고 pop하면 notificationCenter로 데이터 넘겨서 realm에 저장되도록 처리
-        
+        mainView.memoTextView.delegate = self
+        mainView.commentTextView.delegate = self
+        mainView.commentTextView.text = review
+        mainView.memoTextView.text = memo
     }
     
     func showBookInformation() {
@@ -71,5 +89,11 @@ class BookMemoViewController: BaseViewController {
 
 extension BookMemoViewController: UIToolbarDelegate {
     
+}
+
+extension BookMemoViewController: UITextViewDelegate {
+    func textViewDidChange(_ textView: UITextView) {
+        NotificationCenter.default.post(name: NSNotification.Name("memoContents"), object: nil, userInfo: ["isbn": isbn, "comment": mainView.commentTextView.text, "memo": mainView.memoTextView.text])
+    }
 }
 

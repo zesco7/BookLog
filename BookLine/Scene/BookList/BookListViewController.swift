@@ -35,9 +35,23 @@ class BookListViewController: BaseViewController {
         mainView.tableView.dataSource = self
         mainView.tableView.delegate = self
         mainView.tableView.register(BookListViewCell.self, forCellReuseIdentifier: BookListViewCell.identifier)
-        print(categorySortCode)
-        filterBookList()
+        print(categorySortCode!)
         navigationAttribute()
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(memoContentsReceived(notification:)), name: NSNotification.Name("memoContents"), object: nil)
+    }
+    
+    @objc func memoContentsReceived(notification: NSNotification) {
+        if let isbn = notification.userInfo?["isbn"], let comment = notification.userInfo?["comment"] as? String, let memo = notification.userInfo?["memo"] as? String {
+            bookList = bookLocalRealm.objects(BookData.self).filter("ISBN = '\(isbn)'").sorted(byKeyPath: "lastUpdate", ascending: true)
+            print(bookList!)
+            try! bookLocalRealm.write({
+                bookList.first?.review = comment
+                bookList.first?.memo = memo
+            })
+        } else{
+            print("BookMemo Not Saved")
+        }
     }
     
     func filterBookList(){
@@ -53,6 +67,7 @@ class BookListViewController: BaseViewController {
     }
     
     override func viewWillAppear(_ animated: Bool) {
+        filterBookList()
         mainView.tableView.reloadData()
     }
     
@@ -167,7 +182,7 @@ extension BookListViewController: UITableViewDelegate, UITableViewDataSource {
         cell.bookImage.kf.setImage(with: url)
         cell.bookName.text = bookList[indexPath.row].title
         cell.bookAuthor.text = bookList[indexPath.row].author
-        cell.bookRating.text = "\(bookList[indexPath.row].rating!)"
+        cell.bookRating.text = "\(bookList[indexPath.row].rating)"
         cell.bookReview.text = bookList[indexPath.row].review
         return cell
     }
@@ -193,7 +208,7 @@ extension BookListViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let vc = BookMemoViewController()
+        let vc = BookMemoViewController(isbn: bookList[indexPath.row].ISBN, review: bookList[indexPath.row].review, memo: bookList[indexPath.row].memo)
         vc.bookTitle = bookList[indexPath.row].title
         vc.bookWriter = bookList[indexPath.row].author
         self.navigationController?.pushViewController(vc, animated: true)
