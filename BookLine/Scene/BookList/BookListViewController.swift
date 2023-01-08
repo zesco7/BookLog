@@ -19,6 +19,7 @@ class BookListViewController: BaseViewController {
     init(categorySortCode: String?, navigationTitle: String?) {
         self.categorySortCode = categorySortCode
         self.navigationTitle = navigationTitle
+        //필터링 조건 초기화 boolean
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -35,7 +36,7 @@ class BookListViewController: BaseViewController {
         mainView.tableView.dataSource = self
         mainView.tableView.delegate = self
         mainView.tableView.register(BookListViewCell.self, forCellReuseIdentifier: BookListViewCell.identifier)
-        print(categorySortCode!)
+        print(categorySortCode)
         navigationAttribute()
         
         NotificationCenter.default.addObserver(self, selector: #selector(memoContentsReceived(notification:)), name: NSNotification.Name("memoContents"), object: nil)
