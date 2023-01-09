@@ -15,13 +15,16 @@ enum APIError {
 }
 
 class APIManager {
+    static var startCount = 1
+    static var displayCount = 15
+    
     static func requestBookInformation(query: String, completion: @escaping (BookInfo?, APIError?) -> Void) {
         //페이지네이션 적용예정
         var urlComponents = URLComponents(string: EndPoint.naverBookResultsURL)
         urlComponents?.queryItems = [
             URLQueryItem(name: "query", value: query),
-            URLQueryItem(name: "display", value: "10"),
-            URLQueryItem(name: "start", value: "1")
+            URLQueryItem(name: "display", value: "\(displayCount)"),
+            URLQueryItem(name: "start", value: "\(startCount)")
         ]
  
         var urlRequest = URLRequest(url: (urlComponents?.url)!)

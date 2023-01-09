@@ -15,8 +15,10 @@ class BookSearchViewController: BaseViewController {
     var bookSearchResults : Results<BookData>!
     var categorySortCodeForBookSearch : [String] = []
     var categorySortCode : String?
-    var bookInfoArray : BookInfo?
+    var bookInfoArray : [Item]?
     var multiselectionArray : Array<Item>
+    var searchbarText : String?
+    var totalCount = 0
 
     init(categorySortCode: String?) {
         self.categorySortCode = categorySortCode
@@ -38,6 +40,7 @@ class BookSearchViewController: BaseViewController {
         mainView.tableView.dataSource = self
         mainView.tableView.delegate = self
         mainView.tableView.register(BookSearchViewCell.self, forCellReuseIdentifier: BookSearchViewCell.identifier)
+        mainView.tableView.prefetchDataSource = self
         bookSearchResults = bookSearchLocalRealm.objects(BookData.self)
         navigationAttribute()
         mainView.tableView.allowsMultipleSelection = true
@@ -122,23 +125,23 @@ class BookSearchViewController: BaseViewController {
 
 extension BookSearchViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        guard let bookInfoArray = bookInfoArray?.items else { return 0 }
+        guard let bookInfoArray = bookInfoArray else { return 0 }
         return bookInfoArray.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: BookSearchViewCell.identifier , for: indexPath) as? BookSearchViewCell else { return UITableViewCell() }
-        let url = URL(string: (bookInfoArray?.items[indexPath.row].image)!)
+        let url = URL(string: (bookInfoArray?[indexPath.row].image)!)
         cell.backgroundColor = .clear
         cell.bookImage.kf.setImage(with: url)
-        cell.bookName.text = bookInfoArray?.items[indexPath.row].title
-        cell.bookAuthor.text = bookInfoArray?.items[indexPath.row].author
+        cell.bookName.text = bookInfoArray?[indexPath.row].title
+        cell.bookAuthor.text = bookInfoArray?[indexPath.row].author
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         //multiselection은 배열에 append해서 처리예정
-        guard let items = bookInfoArray?.items[indexPath.row] else { return }
+        guard let items = bookInfoArray?[indexPath.row] else { return }
         multiselectionArray.append(items)
         UserDefaults.standard.set(items.isbn, forKey: "isbn")
         UserDefaults.standard.set(items.title, forKey: "title")
@@ -148,7 +151,7 @@ extension BookSearchViewController: UITableViewDelegate, UITableViewDataSource {
         UserDefaults.standard.set(items.link, forKey: "linkURL")
         UserDefaults.standard.set(items.image, forKey: "imageURL")
         print(multiselectionArray)
-        //alertForBookSearch()
+        alertForBookSearch()
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -156,17 +159,46 @@ extension BookSearchViewController: UITableViewDelegate, UITableViewDataSource {
     }
 }
 
+extension BookSearchViewController: UITableViewDataSourcePrefetching {
+    func tableView(_ tableView: UITableView, prefetchRowsAt indexPaths: [IndexPath]) {
+        guard let bookInfoArray = bookInfoArray else { return }
+        for i in indexPaths {
+            if bookInfoArray.count - 1 == i.row && bookInfoArray.count < self.totalCount {
+                APIManager.startCount += APIManager.displayCount
+                APIManager.requestBookInformation(query: searchbarText!) { [weak self] bookInfo, apiError in
+                    var prefetchedData = bookInfo.map { $0.items }
+                    guard let prefetchedData = prefetchedData else { return }
+                    self!.bookInfoArray?.append(contentsOf: prefetchedData)
+                    DispatchQueue.main.sync {
+                        self!.mainView.tableView.reloadData()
+                    }
+                    print("Pagenation Excuted", self!.bookInfoArray)
+                }
+            }
+            print("===\(indexPaths)")
+        }
+        
+        func tableView(_ tableView: UITableView, cancelPrefetchingForRowsAt indexPaths: [IndexPath]) {
+            print("취소===\(indexPaths)")
+        }
+    }
+}
+
 extension BookSearchViewController: UISearchBarDelegate {
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        //서치바 입력내용으로 네트워크통신요청 후 받은데이터 bookSearchResults에 넣어서 셀재사용 처리
-        APIManager.requestBookInformation(query: searchBar.text!) { bookInfo, apiError in
-            self.bookInfoArray = bookInfo.map { $0 }
-            print(self.bookInfoArray)
+        bookInfoArray?.removeAll()
+        APIManager.startCount = 1
+        UserDefaults.standard.set(searchBar.text, forKey: "searchBarText")
+        searchbarText = UserDefaults.standard.string(forKey: "searchBarText")
+        APIManager.requestBookInformation(query: searchbarText!) { [weak self] bookInfo, apiError in
+            self!.totalCount = (bookInfo?.total)!
+            var data = bookInfo.map { $0.items }
+            guard let data = data else { return }
+            self!.bookInfoArray = data
+            print(self!.bookInfoArray)
             DispatchQueue.main.sync {
-                self.mainView.tableView.reloadData()
+                self!.mainView.tableView.reloadData()
             }
-        //검색어 입력하고 결과나오면 서치바 내려가고 네비게이션버바버튼에 완료버튼 생성
-        //완료버튼 누르면 다시 네비게이션바버튼 올라가고 검색어 입력창 활성화
             print("searchBarTapped")
         }
     }
