@@ -17,7 +17,6 @@ class BookMemoView: BaseView {
     
     let lastUpdateDate : UILabelFontAttribute = {
         let view = UILabelFontAttribute()
-        view.text = "\(Date())"
         return view
     }()
     
@@ -127,8 +126,13 @@ class BookMemoView: BaseView {
         return view
     }()
     
+    let toolBar: UIToolbar = {
+        let view = UIToolbar()
+        return view
+    }()
+    
     override func configureUI() {
-        [lastUpdateDateLabel, lastUpdateDate, bookNameLabel, bookName, bookAuthorLabel, bookAuthor, starRatingLabel, starRatingSlider, commentLabel, commentTextView, divisionLine, memoTextView, star1, star2, star3, star4, star5].forEach {
+        [lastUpdateDateLabel, lastUpdateDate, bookNameLabel, bookName, bookAuthorLabel, bookAuthor, starRatingLabel, starRatingSlider, commentLabel, commentTextView, divisionLine, memoTextView, star1, star2, star3, star4, star5, toolBar].forEach {
             self.addSubview($0)
         }
     }
@@ -251,6 +255,13 @@ class BookMemoView: BaseView {
             make.leadingMargin.equalTo(self).offset(10)
             make.trailingMargin.equalTo(self).offset(-10)
             make.height.equalTo(self)
+        }
+        
+        toolBar.snp.makeConstraints { make in
+            make.width.equalTo(self)
+            make.centerX.equalTo(self)
+            make.height.equalTo(44)
+            make.bottomMargin.equalTo(safeAreaLayoutGuide).offset(-44)
         }
     }
 }

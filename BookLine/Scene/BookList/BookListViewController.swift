@@ -10,6 +10,7 @@ import RealmSwift
 
 class BookListViewController: BaseViewController {
     var mainView = BookListView()
+    var mainViewCell = BookListViewCell()
     
     var bookLocalRealm = try! Realm()
     var bookList : Results<BookData>!
@@ -40,16 +41,30 @@ class BookListViewController: BaseViewController {
         navigationAttribute()
         
         NotificationCenter.default.addObserver(self, selector: #selector(memoContentsReceived(notification:)), name: NSNotification.Name("memoContents"), object: nil)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(ratingReceived(notification:)), name: NSNotification.Name("rating"), object: nil)
     }
     
     @objc func memoContentsReceived(notification: NSNotification) {
-        if let isbn = notification.userInfo?["isbn"], let comment = notification.userInfo?["comment"] as? String, let memo = notification.userInfo?["memo"] as? String {
+        if let isbn = notification.userInfo?["isbn"], let comment = notification.userInfo?["comment"] as? String, let memo = notification.userInfo?["memo"] as? String{
             bookList = bookLocalRealm.objects(BookData.self).filter("ISBN = '\(isbn)'").sorted(byKeyPath: "lastUpdate", ascending: true)
             print(bookList!)
             try! bookLocalRealm.write({
                 bookList.first?.review = comment
                 bookList.first?.memo = memo
             })
+        } else{
+            print("BookMemo Not Saved")
+        }
+    }
+    
+    @objc func ratingReceived(notification: NSNotification) {
+        if let isbn = notification.userInfo?["isbn"] as? String, let starRating = notification.userInfo?["starRating"] as? Float {
+            bookList = bookLocalRealm.objects(BookData.self).filter("ISBN = '\(isbn)'").sorted(byKeyPath: "lastUpdate", ascending: true)
+            try! bookLocalRealm.write({
+                bookList.first?.rating = starRating
+            })
+            print(starRating)
         } else{
             print("BookMemo Not Saved")
         }
@@ -183,7 +198,73 @@ extension BookListViewController: UITableViewDelegate, UITableViewDataSource {
         cell.bookImage.kf.setImage(with: url)
         cell.bookName.text = bookList[indexPath.row].title
         cell.bookAuthor.text = bookList[indexPath.row].author
-        cell.bookRating.text = "\(bookList[indexPath.row].rating)"
+        
+        if bookList[indexPath.row].rating! >= 5 {
+            cell.star1.image = UIImage(systemName: "star.fill")
+            cell.star2.image = UIImage(systemName: "star.fill")
+            cell.star3.image = UIImage(systemName: "star.fill")
+            cell.star4.image = UIImage(systemName: "star.fill")
+            cell.star5.image = UIImage(systemName: "star.fill")
+        } else if
+            bookList[indexPath.row].rating! >= 4.5 {
+            cell.star1.image = UIImage(systemName: "star.fill")
+            cell.star2.image = UIImage(systemName: "star.fill")
+            cell.star3.image = UIImage(systemName: "star.fill")
+            cell.star4.image = UIImage(systemName: "star.fill")
+            cell.star5.image = UIImage(systemName: "star.leadinghalf.filled")
+        } else if bookList[indexPath.row].rating! >= 4 {
+            cell.star1.image = UIImage(systemName: "star.fill")
+            cell.star2.image = UIImage(systemName: "star.fill")
+            cell.star3.image = UIImage(systemName: "star.fill")
+            cell.star4.image = UIImage(systemName: "star.fill")
+            cell.star5.image = UIImage(systemName: "star")
+        } else if bookList[indexPath.row].rating! >= 3.5 {
+            cell.star1.image = UIImage(systemName: "star.fill")
+            cell.star2.image = UIImage(systemName: "star.fill")
+            cell.star3.image = UIImage(systemName: "star.fill")
+            cell.star4.image = UIImage(systemName: "star.leadinghalf.filled")
+            cell.star5.image = UIImage(systemName: "star")
+        } else if bookList[indexPath.row].rating! >= 3 {
+            cell.star1.image = UIImage(systemName: "star.fill")
+            cell.star2.image = UIImage(systemName: "star.fill")
+            cell.star3.image = UIImage(systemName: "star.fill")
+            cell.star4.image = UIImage(systemName: "star")
+            cell.star5.image = UIImage(systemName: "star")
+        } else if bookList[indexPath.row].rating! >= 2.5 {
+            cell.star1.image = UIImage(systemName: "star.fill")
+            cell.star2.image = UIImage(systemName: "star.fill")
+            cell.star3.image = UIImage(systemName: "star.leadinghalf.filled")
+            cell.star4.image = UIImage(systemName: "star")
+            cell.star5.image = UIImage(systemName: "star")
+        } else if bookList[indexPath.row].rating! >= 2 {
+            cell.star1.image = UIImage(systemName: "star.fill")
+            cell.star2.image = UIImage(systemName: "star.fill")
+            cell.star3.image = UIImage(systemName: "star")
+            cell.star4.image = UIImage(systemName: "star")
+            cell.star5.image = UIImage(systemName: "star")
+        } else if bookList[indexPath.row].rating! >= 1.5 {
+            cell.star1.image = UIImage(systemName: "star.fill")
+            cell.star2.image = UIImage(systemName: "star.leadinghalf.filled")
+            cell.star3.image = UIImage(systemName: "star")
+            cell.star4.image = UIImage(systemName: "star")
+            cell.star5.image = UIImage(systemName: "star")
+        } else if bookList[indexPath.row].rating! >= 1 {
+            cell.star1.image = UIImage(systemName: "star.fill")
+            cell.star2.image = UIImage(systemName: "star")
+            cell.star3.image = UIImage(systemName: "star")
+            cell.star4.image = UIImage(systemName: "star")
+            cell.star5.image = UIImage(systemName: "star")
+        } else if bookList[indexPath.row].rating! >= 0.5 {
+            cell.star1.image = UIImage(systemName: "star.leadinghalf.filled")
+            cell.star2.image = UIImage(systemName: "star")
+            cell.star3.image = UIImage(systemName: "star")
+            cell.star4.image = UIImage(systemName: "star")
+            cell.star5.image = UIImage(systemName: "star")
+        } else {
+            print("별점 평가 안함")
+        }
+        
+//        cell.bookRating.text = "\(bookList[indexPath.row].rating!)"
         cell.bookReview.text = bookList[indexPath.row].review
         return cell
     }
@@ -209,7 +290,8 @@ extension BookListViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let vc = BookMemoViewController(isbn: bookList[indexPath.row].ISBN, review: bookList[indexPath.row].review, memo: bookList[indexPath.row].memo)
+        print(bookList[indexPath.row].rating!)
+        let vc = BookMemoViewController(isbn: bookList[indexPath.row].ISBN, lastUpdate: bookList[indexPath.row].lastUpdate, review: bookList[indexPath.row].review, memo: bookList[indexPath.row].memo, bookMemo: bookList[indexPath.row], starRating: bookList[indexPath.row].rating!)
         vc.bookTitle = bookList[indexPath.row].title
         vc.bookWriter = bookList[indexPath.row].author
         self.navigationController?.pushViewController(vc, animated: true)

@@ -12,7 +12,7 @@ class BookData: Object { //테이블이름: BookData, 컬럼이름: ~~(@persiste
     @Persisted var lastUpdate = Date()
     @Persisted var categorySortCode: String
     @Persisted(primaryKey: true) var ISBN: String
-    @Persisted var rating: Double?
+    @Persisted var rating: Float?
     @Persisted var review: String?
     @Persisted var memo: String?
     @Persisted var title: String
@@ -23,7 +23,7 @@ class BookData: Object { //테이블이름: BookData, 컬럼이름: ~~(@persiste
     @Persisted var imageURL: String
     
     //초기화: objectId는 realm에서 자동설정되기 때문에 objectId를 제외한 나머지를 초기화
-    convenience init(lastUpdate: Date, categorySortCode: String, ISBN: String, rating: Double?, review: String?, memo: String?, title: String, author: String, publisher: String, pubdate: Date, linkURL: String, imageURL: String) {
+    convenience init(lastUpdate: Date, categorySortCode: String, ISBN: String, rating: Float?, review: String?, memo: String?, title: String, author: String, publisher: String, pubdate: Date, linkURL: String, imageURL: String) {
         self.init()
         self.lastUpdate = lastUpdate
         self.categorySortCode = categorySortCode

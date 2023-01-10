@@ -101,15 +101,15 @@ class BookSearchViewController: BaseViewController {
             let pubdate = UserDefaults.standard.string(forKey: "pubdate")
             let linkURL = UserDefaults.standard.string(forKey: "linkURL")
             let imageURL = UserDefaults.standard.string(forKey: "imageURL")
-            
+ 
             //rating, review, memo 값 처리 예정
             if let categorySortCode = self.categorySortCode {
-                let record = BookData(lastUpdate: Date(), categorySortCode: categorySortCode, ISBN: isbn!, rating: nil, review: nil, memo: nil, title: title!, author: author!, publisher: publisher!, pubdate: Date(), linkURL: linkURL!, imageURL: imageURL!)
+                let record = BookData(lastUpdate: Date(), categorySortCode: categorySortCode, ISBN: isbn!, rating: 0, review: nil, memo: nil, title: title!, author: author!, publisher: publisher!, pubdate: Date(), linkURL: linkURL!, imageURL: imageURL!)
                 try! self.bookSearchLocalRealm.write({
                     self.bookSearchLocalRealm.add(record)
                 })
             } else {
-                let record = BookData(lastUpdate: Date(), categorySortCode: "", ISBN: isbn!, rating: nil, review: nil, memo: nil, title: title!, author: author!, publisher: publisher!, pubdate: Date(), linkURL: linkURL!, imageURL: imageURL!)
+                let record = BookData(lastUpdate: Date(), categorySortCode: "", ISBN: isbn!, rating: 0, review: nil, memo: nil, title: title!, author: author!, publisher: publisher!, pubdate: Date(), linkURL: linkURL!, imageURL: imageURL!)
                 try! self.bookSearchLocalRealm.write({
                     self.bookSearchLocalRealm.add(record)
                 })
@@ -191,7 +191,8 @@ extension BookSearchViewController: UISearchBarDelegate {
         UserDefaults.standard.set(searchBar.text, forKey: "searchBarText")
         searchbarText = UserDefaults.standard.string(forKey: "searchBarText")
         APIManager.requestBookInformation(query: searchbarText!) { [weak self] bookInfo, apiError in
-            self!.totalCount = (bookInfo?.total)!
+            guard let totalCount = bookInfo?.total else { return self!.totalCount = 500 }
+            self!.totalCount = totalCount
             var data = bookInfo.map { $0.items }
             guard let data = data else { return }
             self!.bookInfoArray = data
