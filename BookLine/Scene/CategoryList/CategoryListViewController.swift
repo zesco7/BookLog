@@ -34,12 +34,18 @@ class CategoryListViewController: BaseViewController {
         UserDefaults.standard.set(defaultCategoryTitle[0], forKey: "defaultCategoryTitle")
         noEditNavigationAttribute()
         categoryList = categoryLocalRealm.objects(CategoryData.self).sorted(byKeyPath: "categorySortCode", ascending: true)
+        bookList = bookLocalRealm.objects(BookData.self)
         print("Realm Succeed. categoryLocalRealm is located at: ", self.categoryLocalRealm.configuration.fileURL!)
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        mainView.tableView.reloadData()
     }
     
     func noEditNavigationAttribute() {
         self.navigationItem.title = "카테고리"
         self.navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.black]
+        self.navigationController!.navigationBar.tintColor = .navigationBar
         let editButton = UIBarButtonItem(title: "편집", style: .plain, target: self, action: #selector(editButtonClicked))
         let addButton = UIBarButtonItem(image: UIImage(systemName: "plus"), style: .plain, target: self, action: #selector(addButtonClicked))
         self.navigationItem.rightBarButtonItems = [addButton, editButton]
@@ -109,12 +115,15 @@ extension CategoryListViewController: UITableViewDelegate, UITableViewDataSource
         
         //전체목록: 기본사진, 각 카테고리: 해당 카테고리 첫번째 레코드 이미지로 카테고리목록화면 표시예정
         if indexPath.section == 0 {
-            //기본사진 cell.categoryThumbnail.image =
+            cell.categoryThumbnail.image = UIImage(named: "bookshelf")
             cell.categoryName.text = "\(defaultCategoryTitle[indexPath.row])"
+            cell.bookCount.text = "총 \(bookList?.count ?? 0) 권"
         } else {
+            cell.categoryThumbnail.image = UIImage(named: "open-book")
             cell.categoryName.text = "\(categoryList[indexPath.row].category)"
+            let categorizedBookList = bookList?.filter("categorySortCode == '\(categoryList![indexPath.row].categorySortCode)'")
+            cell.bookCount.text = "총 \(categorizedBookList?.count ?? 0) 권"
         }
-        
         return cell
     }
     

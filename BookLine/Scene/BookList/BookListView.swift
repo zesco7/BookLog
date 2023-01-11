@@ -15,8 +15,16 @@ class BookListView: BaseView {
         return view
     }()
     
+    var userGuide: UILabelFontAttribute = {
+       let view = UILabelFontAttribute()
+        view.text = "              버튼(+)을 눌러 책을 추가해보세요"
+        return view
+    }()
+    
     override func configureUI() {
-        self.addSubview(tableView)
+        [tableView, userGuide].forEach {
+            self.addSubview($0)
+        }
     }
     
     override func setConstraints() {
@@ -25,6 +33,14 @@ class BookListView: BaseView {
             make.bottomMargin.equalTo(0)
             make.leadingMargin.equalTo(0)
             make.trailingMargin.equalTo(0)
+        }
+        
+        //centerX constraints적용 안되는 이유?
+        userGuide.snp.makeConstraints { make in
+            make.centerX.equalTo(self)
+            make.width.equalTo(self).multipliedBy(0.9)
+            make.centerY.equalTo(self)
+            make.height.equalTo(44)
         }
     }
 }

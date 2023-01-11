@@ -19,7 +19,8 @@ class BookSearchViewController: BaseViewController {
     var multiselectionArray : Array<Item>
     var searchbarText : String?
     var totalCount = 0
-
+    let searchController = UISearchController(searchResultsController: nil)
+    
     init(categorySortCode: String?) {
         self.categorySortCode = categorySortCode
         self.multiselectionArray = []
@@ -52,7 +53,6 @@ class BookSearchViewController: BaseViewController {
     }
     
     func navigationAttribute() {
-        let searchController = UISearchController(searchResultsController: nil)
         self.navigationItem.title = "책 검색하기"
         self.navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.black]
         let addButton = UIBarButtonItem(title: "추가", style: .plain, target: self, action: #selector(addButtonClicked))
@@ -206,5 +206,9 @@ extension BookSearchViewController: UISearchBarDelegate {
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         print("textChanged")
+    }
+    
+    func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
+        searchController.searchBar.showsCancelButton = true
     }
 }

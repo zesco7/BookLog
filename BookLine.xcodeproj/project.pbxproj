@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		981A6731296EC05B006DB6A0 /* StarImageAttribute.swift in Sources */ = {isa = PBXBuildFile; fileRef = 981A6730296EC05B006DB6A0 /* StarImageAttribute.swift */; };
 		9831A00F2957232300437B26 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9831A00E2957232300437B26 /* AppDelegate.swift */; };
 		9831A0112957232300437B26 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9831A0102957232300437B26 /* SceneDelegate.swift */; };
 		9831A0132957232300437B26 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9831A0122957232300437B26 /* ViewController.swift */; };
@@ -45,6 +46,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		981A6730296EC05B006DB6A0 /* StarImageAttribute.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StarImageAttribute.swift; sourceTree = "<group>"; };
 		9831A00B2957232300437B26 /* BookLine.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BookLine.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9831A00E2957232300437B26 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		9831A0102957232300437B26 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -248,6 +250,7 @@
 			isa = PBXGroup;
 			children = (
 				98CB9D0F2961588700958583 /* UILabelFontAttribute.swift */,
+				981A6730296EC05B006DB6A0 /* StarImageAttribute.swift */,
 			);
 			path = Attribute;
 			sourceTree = "<group>";
@@ -355,6 +358,7 @@
 				983D17AF295B06FC00D265EA /* CategoryListViewCell.swift in Sources */,
 				98CB9D102961588700958583 /* UILabelFontAttribute.swift in Sources */,
 				9831A029295AE36A00437B26 /* APIKey.swift in Sources */,
+				981A6731296EC05B006DB6A0 /* StarImageAttribute.swift in Sources */,
 				9831A04D295AF15200437B26 /* BaseViewController.swift in Sources */,
 				9831A04F295AF45400437B26 /* CategoryListView.swift in Sources */,
 				98CB9D1C29618D2A00958583 /* BookSearchViewCell.swift in Sources */,

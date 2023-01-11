@@ -261,7 +261,7 @@ class BookMemoView: BaseView {
             make.width.equalTo(self)
             make.centerX.equalTo(self)
             make.height.equalTo(44)
-            make.bottomMargin.equalTo(safeAreaLayoutGuide).offset(-44)
+            make.bottomMargin.equalTo(0)
         }
     }
 }

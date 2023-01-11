@@ -1,16 +1,15 @@
 //
-//  UILabelFontAttribute.swift
+//  StarImageAttribute.swift
 //  BookLine
 //
-//  Created by Mac Pro 15 on 2023/01/01.
+//  Created by Mac Pro 15 on 2023/01/11.
 //
 
 import UIKit
 
-class UILabelFontAttribute: UILabel {
+class StarImageAttribute: UIImageView {
     override init(frame: CGRect) {
         super.init(frame: frame)
-        
         configureUI()
     }
     
@@ -19,8 +18,7 @@ class UILabelFontAttribute: UILabel {
     }
     
     func configureUI() {
-        self.textColor = .black
-        self.font = .systemFont(ofSize: 15)
-        self.numberOfLines = 0
+        self.image = UIImage(systemName: "star")
+        self.tintColor = .black
     }
 }

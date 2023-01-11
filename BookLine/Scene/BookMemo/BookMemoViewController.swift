@@ -68,10 +68,14 @@ class BookMemoViewController: BaseViewController {
         let deleteButton = UIBarButtonItem(title: "삭제", style: .plain, target: self, action: #selector(deleteButtonClicked))
         let barButtonItems = [saveButton, flexSpace, deleteButton]
         self.mainView.toolBar.setItems(barButtonItems, animated: false)
+        mainView.toolBar.isHidden = false
+        mainView.toolBar.sizeToFit()
+        mainView.commentTextView.inputAccessoryView = mainView.toolBar
+        mainView.memoTextView.inputAccessoryView = mainView.toolBar
     }
     
     @objc func saveButtonClicked() {
-        //realm데이터파일 생성 처리예정
+        //@리팩토링: realm데이터파일 생성 추가예정
     }
     
     @objc func deleteButtonClicked() {

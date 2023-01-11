@@ -16,13 +16,17 @@ import SnapKit
 class CategoryListViewCell: BaseTableViewCell {
     let categoryThumbnail: UIImageView = {
         let view = UIImageView()
-        view.image = UIImage(systemName: "star.fill")
         return view
     }()
     
-    let categoryName: UILabel = {
-        let view = UILabel()
-        view.textColor = .black
+    let categoryName: UILabelFontAttribute = {
+        let view = UILabelFontAttribute()
+        view.font = .systemFont(ofSize: 17, weight: .bold)
+        return view
+    }()
+    
+    let bookCount: UILabelFontAttribute = {
+        let view = UILabelFontAttribute()
         return view
     }()
     
@@ -40,7 +44,7 @@ class CategoryListViewCell: BaseTableViewCell {
     }
     
     override func configureUI() {
-        [categoryThumbnail, categoryName].forEach {
+        [categoryThumbnail, categoryName, bookCount].forEach {
             self.addSubview($0)
         }
     }
@@ -48,14 +52,21 @@ class CategoryListViewCell: BaseTableViewCell {
     override func setConstraints() {
         categoryThumbnail.snp.makeConstraints { make in
             make.centerY.equalTo(self)
-            make.height.equalTo(self)
-            make.leadingMargin.equalTo(10)
-            make.width.equalTo(self).multipliedBy(0.2)
+            make.height.equalTo(self).multipliedBy(0.6)
+            make.leadingMargin.equalTo(20)
+            make.width.equalTo(self).multipliedBy(0.1)
         }
         
         categoryName.snp.makeConstraints { make in
-            make.centerY.equalTo(self)
-            make.height.equalTo(self)
+            make.centerY.equalTo(self).multipliedBy(0.65)
+            make.height.equalTo(self).multipliedBy(0.2)
+            make.leadingMargin.equalTo(categoryThumbnail.snp.trailing).offset(30)
+            make.width.equalTo(self).multipliedBy(0.7)
+        }
+        
+        bookCount.snp.makeConstraints { make in
+            make.topMargin.equalTo(categoryName.snp.bottom).offset(20)
+            make.height.equalTo(self).multipliedBy(0.2)
             make.leadingMargin.equalTo(categoryThumbnail.snp.trailing).offset(30)
             make.width.equalTo(self).multipliedBy(0.7)
         }

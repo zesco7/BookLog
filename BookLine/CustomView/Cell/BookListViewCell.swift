@@ -17,17 +17,22 @@ class BookListViewCell: BaseTableViewCell {
     
     let bookName: UILabelFontAttribute = {
        let view = UILabelFontAttribute()
-        return view
-    }()
-    
-    let divisionLine: UILabel = {
-       let view = UILabel()
-        view.text = "/"
+        view.font = .systemFont(ofSize: 15, weight: .bold)
         return view
     }()
     
     let bookAuthor: UILabelFontAttribute = {
        let view = UILabelFontAttribute()
+        view.font = .systemFont(ofSize: 13)
+        return view
+    }()
+    
+    let bookReview: UILabelFontAttribute = {
+       let view = UILabelFontAttribute()
+        view.font = .systemFont(ofSize: 14)
+        view.backgroundColor = .white
+        view.clipsToBounds = true
+        view.layer.cornerRadius = 3
         return view
     }()
     
@@ -71,12 +76,6 @@ class BookListViewCell: BaseTableViewCell {
         return view
     }()
     
-    let bookReview: UILabelFontAttribute = {
-       let view = UILabelFontAttribute()
-        view.numberOfLines = 0
-        return view
-    }()
-    
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
@@ -89,87 +88,73 @@ class BookListViewCell: BaseTableViewCell {
     }
     
     override func configureUI() {
-        [bookImage, bookName, divisionLine, bookAuthor, star1, star2, star3, star4, star5, bookReview].forEach {
+        [bookImage, bookName, bookAuthor, star1, star2, star3, star4, star5, bookReview].forEach {
             self.addSubview($0)
         }
     }
     
     override func setConstraints() {
         bookImage.snp.makeConstraints { make in
-            make.centerY.equalTo(self)
-            make.height.equalTo(self)
+            make.topMargin.equalTo(0)
+            make.height.equalTo(self).multipliedBy(0.8)
             make.leadingMargin.equalTo(0)
             make.width.equalTo(self).multipliedBy(0.2)
         }
         
         bookName.snp.makeConstraints { make in
-            make.topMargin.equalTo(10)
+            make.topMargin.equalTo(5)
             make.height.equalTo(self).multipliedBy(0.15)
-            make.leadingMargin.equalTo(bookImage.snp.trailing).offset(10)
-            make.width.lessThanOrEqualTo(self).multipliedBy(0.5)
-        }
-        
-        divisionLine.snp.makeConstraints { make in
-            make.topMargin.equalTo(10)
-            make.height.equalTo(self).multipliedBy(0.15)
-            make.leadingMargin.equalTo(bookName.snp.trailing).offset(10)
-            make.width.equalTo(10)
+            make.leadingMargin.equalTo(bookImage.snp.trailing).offset(20)
+            make.width.lessThanOrEqualTo(self).multipliedBy(0.75)
         }
         
         bookAuthor.snp.makeConstraints { make in
-            make.topMargin.equalTo(10)
-            make.height.equalTo(self).multipliedBy(0.15)
-            make.leadingMargin.equalTo(divisionLine.snp.trailing).offset(10)
+            make.topMargin.equalTo(bookName.snp.bottom).offset(12)
+            make.height.equalTo(self).multipliedBy(0.1)
+            make.leadingMargin.equalTo(bookImage.snp.trailing).offset(20)
             make.trailingMargin.equalTo(10)
         }
-
-//        bookRating.snp.makeConstraints { make in
-//            make.topMargin.equalTo(bookAuthor.snp.bottom).offset(10)
-//            make.height.equalTo(self).multipliedBy(0.15)
-//            make.leadingMargin.equalTo(bookImage.snp.trailing).offset(10)
-//            make.width.equalTo(self).multipliedBy(0.7)
-//        }
+        
+        bookReview.snp.makeConstraints { make in
+            make.topMargin.equalTo(bookAuthor.snp.bottom).offset(15)
+            make.width.equalTo(self).multipliedBy(0.7)
+            make.leadingMargin.equalTo(bookImage.snp.trailing).offset(20)
+            make.bottomMargin.equalTo(-5)
+        }
         
         star1.snp.makeConstraints { make in
-            make.topMargin.equalTo(bookAuthor.snp.bottom).offset(20)
-            make.leadingMargin.equalTo(bookImage.snp.trailing).offset(10)
-            make.width.equalTo(30)
-            make.height.equalTo(30)
+            make.width.equalTo(15)
+            make.height.equalTo(15)
+            make.leadingMargin.equalTo(5)
+            make.bottomMargin.equalTo(0)
         }
         
         star2.snp.makeConstraints { make in
-            make.topMargin.equalTo(bookAuthor.snp.bottom).offset(20)
-            make.leadingMargin.equalTo(star1.snp.trailing).offset(0)
-            make.width.equalTo(30)
-            make.height.equalTo(30)
+            make.width.equalTo(15)
+            make.height.equalTo(15)
+            make.leadingMargin.equalTo(star1.snp.trailing).offset(5)
+            make.bottomMargin.equalTo(0)
         }
         
         star3.snp.makeConstraints { make in
-            make.topMargin.equalTo(bookAuthor.snp.bottom).offset(20)
-            make.leadingMargin.equalTo(star2.snp.trailing).offset(0)
-            make.width.equalTo(30)
-            make.height.equalTo(30)
+            make.width.equalTo(15)
+            make.height.equalTo(15)
+            make.leadingMargin.equalTo(star2.snp.trailing).offset(5)
+            make.bottomMargin.equalTo(0)
         }
         
         star4.snp.makeConstraints { make in
-            make.topMargin.equalTo(bookAuthor.snp.bottom).offset(20)
-            make.leadingMargin.equalTo(star3.snp.trailing).offset(0)
-            make.width.equalTo(30)
-            make.height.equalTo(30)
+            make.width.equalTo(15)
+            make.height.equalTo(15)
+            make.leadingMargin.equalTo(star3.snp.trailing).offset(5)
+            make.bottomMargin.equalTo(0)
         }
         
         star5.snp.makeConstraints { make in
-            make.topMargin.equalTo(bookAuthor.snp.bottom).offset(20)
-            make.leadingMargin.equalTo(star4.snp.trailing).offset(0)
-            make.width.equalTo(30)
-            make.height.equalTo(30)
-        }
-
-        bookReview.snp.makeConstraints { make in
-            make.topMargin.equalTo(star1.snp.bottom).offset(20)
-            make.height.equalTo(self).multipliedBy(0.15)
-            make.leadingMargin.equalTo(bookImage.snp.trailing).offset(10)
-            make.width.equalTo(self).multipliedBy(0.7)
+            make.width.equalTo(15)
+            make.height.equalTo(15)
+            make.leadingMargin.equalTo(star4.snp.trailing).offset(5)
+            make.bottomMargin.equalTo(0)
         }
     }
 }
