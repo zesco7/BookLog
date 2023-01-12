@@ -11,7 +11,7 @@ import SnapKit
 class BookMemoView: BaseView {
     let lastUpdateDateLabel : UILabelFontAttribute = {
         let view = UILabelFontAttribute()
-        view.text = "최종 수정일"
+        view.text = "최종 수정"
         return view
     }()
     
@@ -39,6 +39,14 @@ class BookMemoView: BaseView {
 
     var bookAuthor : UILabelFontAttribute = {
         let view = UILabelFontAttribute()
+        return view
+    }()
+    
+    let bookInfoUrlButton : UIButton = {
+        let view = UIButton()
+        view.setTitle("책정보 보기", for: .normal)
+        view.titleLabel?.font = .systemFont(ofSize: 11, weight: .bold)
+        view.setTitleColor(.navigationBar, for: .normal)
         return view
     }()
 
@@ -111,6 +119,7 @@ class BookMemoView: BaseView {
     let commentTextView : UITextView = {
         let view = UITextView()
         view.font = .systemFont(ofSize: 15)
+        view.backgroundColor = .white
         return view
     }()
     
@@ -120,9 +129,22 @@ class BookMemoView: BaseView {
         return view
     }()
     
+    let divisionLine2 : UIView = {
+       let view = UIView()
+        view.backgroundColor = .black
+        return view
+    }()
+    
+    let memoLabel : UILabelFontAttribute = {
+        let view = UILabelFontAttribute()
+        view.text = "메모"
+        return view
+    }()
+    
     let memoTextView: UITextView = {
         let view = UITextView()
         view.font = .systemFont(ofSize: 15)
+        view.backgroundColor = .white
         return view
     }()
     
@@ -132,7 +154,7 @@ class BookMemoView: BaseView {
     }()
     
     override func configureUI() {
-        [lastUpdateDateLabel, lastUpdateDate, bookNameLabel, bookName, bookAuthorLabel, bookAuthor, starRatingLabel, starRatingSlider, commentLabel, commentTextView, divisionLine, memoTextView, star1, star2, star3, star4, star5, toolBar].forEach {
+        [lastUpdateDateLabel, lastUpdateDate, bookNameLabel, bookName, bookAuthorLabel, bookAuthor, bookInfoUrlButton, starRatingLabel, starRatingSlider, commentLabel, commentTextView, divisionLine, divisionLine2, memoLabel, memoTextView, star1, star2, star3, star4, star5, toolBar].forEach {
             self.addSubview($0)
         }
     }
@@ -140,123 +162,143 @@ class BookMemoView: BaseView {
     override func setConstraints() {
         lastUpdateDateLabel.snp.makeConstraints { make in
             make.topMargin.equalTo(10)
-            make.width.equalTo(self).multipliedBy(0.3)
+            make.width.equalTo(self).multipliedBy(0.18)
             make.leadingMargin.equalTo(10)
             make.height.equalTo(20)
         }
         
         lastUpdateDate.snp.makeConstraints { make in
-            make.topMargin.equalTo(10)
+            make.centerY.equalTo(lastUpdateDateLabel.snp.centerY)
             make.leadingMargin.equalTo(lastUpdateDateLabel.snp.trailing).offset(10)
             make.trailingMargin.equalTo(self).offset(-10)
             make.height.equalTo(20)
         }
         
         bookNameLabel.snp.makeConstraints { make in
-            make.topMargin.equalTo(lastUpdateDateLabel).offset(30)
-            make.width.equalTo(self).multipliedBy(0.3)
+            make.topMargin.equalTo(lastUpdateDateLabel).offset(25)
+            make.width.equalTo(self).multipliedBy(0.18)
             make.leadingMargin.equalTo(10)
             make.height.equalTo(20)
         }
         
         bookName.snp.makeConstraints { make in
-            make.topMargin.equalTo(lastUpdateDateLabel).offset(30)
+            make.centerY.equalTo(bookNameLabel.snp.centerY)
             make.leadingMargin.equalTo(bookNameLabel.snp.trailing).offset(10)
             make.trailingMargin.equalTo(self).offset(-10)
             make.height.equalTo(20)
         }
 
         bookAuthorLabel.snp.makeConstraints { make in
-            make.topMargin.equalTo(bookNameLabel).offset(30)
-            make.width.equalTo(self).multipliedBy(0.3)
+            make.topMargin.equalTo(bookNameLabel).offset(25)
+            make.width.equalTo(self).multipliedBy(0.18)
             make.leadingMargin.equalTo(10)
             make.height.equalTo(20)
         }
 
         bookAuthor.snp.makeConstraints { make in
-            make.topMargin.equalTo(bookNameLabel).offset(30)
+            make.centerY.equalTo(bookAuthorLabel.snp.centerY)
             make.leadingMargin.equalTo(bookAuthorLabel.snp.trailing).offset(10)
             make.trailingMargin.equalTo(self).offset(-10)
             make.height.equalTo(20)
         }
-
-        starRatingLabel.snp.makeConstraints { make in
-            make.topMargin.equalTo(bookAuthorLabel).offset(30)
-            make.width.equalTo(self).multipliedBy(0.3)
-            make.leadingMargin.equalTo(10)
+        
+        bookInfoUrlButton.snp.makeConstraints { make in
+            make.width.equalTo(60)
             make.height.equalTo(20)
-        }
-
-        starRatingSlider.snp.makeConstraints { make in
-            make.topMargin.equalTo(bookAuthorLabel).offset(35)
-            make.leadingMargin.equalTo(starRatingLabel.snp.trailing).offset(10)
-            make.trailingMargin.equalTo(star5.snp.trailing).offset(0)
-            make.height.equalTo(20)
-        }
-        
-        star1.snp.makeConstraints { make in
-            make.topMargin.equalTo(starRatingSlider.snp.top).offset(0)
-            make.leadingMargin.equalTo(starRatingLabel.snp.trailing).offset(10)
-            make.width.equalTo(30)
-            make.height.equalTo(30)
-        }
-        
-        star2.snp.makeConstraints { make in
-            make.topMargin.equalTo(starRatingSlider.snp.top).offset(0)
-            make.leadingMargin.equalTo(star1.snp.trailing).offset(0)
-            make.width.equalTo(30)
-            make.height.equalTo(30)
-        }
-        
-        star3.snp.makeConstraints { make in
-            make.topMargin.equalTo(starRatingSlider.snp.top).offset(0)
-            make.leadingMargin.equalTo(star2.snp.trailing).offset(0)
-            make.width.equalTo(30)
-            make.height.equalTo(30)
-        }
-        
-        star4.snp.makeConstraints { make in
-            make.topMargin.equalTo(starRatingSlider.snp.top).offset(0)
-            make.leadingMargin.equalTo(star3.snp.trailing).offset(0)
-            make.width.equalTo(30)
-            make.height.equalTo(30)
-        }
-        
-        star5.snp.makeConstraints { make in
-            make.topMargin.equalTo(starRatingSlider.snp.top).offset(0)
-            make.leadingMargin.equalTo(star4.snp.trailing).offset(0)
-            make.width.equalTo(30)
-            make.height.equalTo(30)
-        }
-    
-        commentLabel.snp.makeConstraints { make in
-            make.topMargin.equalTo(starRatingLabel).offset(30)
-            make.width.equalTo(self).multipliedBy(0.3)
-            make.leadingMargin.equalTo(10)
-            make.height.equalTo(20)
-        }
-
-        commentTextView.snp.makeConstraints { make in
-            make.topMargin.equalTo(commentLabel).offset(30)
-            make.leadingMargin.equalTo(self).offset(10)
             make.trailingMargin.equalTo(self).offset(-10)
-            make.height.equalTo(80)
+            make.bottomMargin.equalTo(divisionLine.snp.top).offset(-15)
         }
         
         divisionLine.snp.makeConstraints { make in
-            make.topMargin.equalTo(commentTextView.snp.bottom).offset(30)
+            make.topMargin.equalTo(bookAuthor.snp.bottom).offset(25)
             make.leadingMargin.equalTo(self).offset(10)
             make.trailingMargin.equalTo(self).offset(-10)
             make.height.equalTo(1)
         }
+
+        starRatingLabel.snp.makeConstraints { make in
+            make.topMargin.equalTo(divisionLine).offset(20)
+            make.width.equalTo(self).multipliedBy(0.18)
+            make.leadingMargin.equalTo(10)
+            make.height.equalTo(15)
+        }
+
+        starRatingSlider.snp.makeConstraints { make in
+            make.topMargin.equalTo(divisionLine).offset(20)
+            make.leadingMargin.equalTo(starRatingLabel.snp.trailing).offset(10)
+            make.trailingMargin.equalTo(star5.snp.trailing).offset(0)
+            make.height.equalTo(20)
+        }
+
+        star1.snp.makeConstraints { make in
+            make.topMargin.equalTo(starRatingSlider.snp.top).offset(0)
+            make.leadingMargin.equalTo(starRatingLabel.snp.trailing).offset(10)
+            make.width.equalTo(25)
+            make.height.equalTo(25)
+        }
+
+        star2.snp.makeConstraints { make in
+            make.topMargin.equalTo(starRatingSlider.snp.top).offset(0)
+            make.leadingMargin.equalTo(star1.snp.trailing).offset(4)
+            make.width.equalTo(25)
+            make.height.equalTo(25)
+        }
+
+        star3.snp.makeConstraints { make in
+            make.topMargin.equalTo(starRatingSlider.snp.top).offset(0)
+            make.leadingMargin.equalTo(star2.snp.trailing).offset(4)
+            make.width.equalTo(25)
+            make.height.equalTo(25)
+        }
+
+        star4.snp.makeConstraints { make in
+            make.topMargin.equalTo(starRatingSlider.snp.top).offset(0)
+            make.leadingMargin.equalTo(star3.snp.trailing).offset(4)
+            make.width.equalTo(25)
+            make.height.equalTo(25)
+        }
+
+        star5.snp.makeConstraints { make in
+            make.topMargin.equalTo(starRatingSlider.snp.top).offset(0)
+            make.leadingMargin.equalTo(star4.snp.trailing).offset(4)
+            make.width.equalTo(25)
+            make.height.equalTo(25)
+        }
         
+        commentLabel.snp.makeConstraints { make in
+            make.topMargin.equalTo(starRatingLabel.snp.bottom).offset(25)
+            make.width.equalTo(self).multipliedBy(0.18)
+            make.leadingMargin.equalTo(10)
+            make.height.equalTo(20)
+        }
+        
+        commentTextView.snp.makeConstraints { make in
+            make.topMargin.equalTo(starRatingLabel.snp.bottom).offset(25)
+            make.width.equalTo(self).multipliedBy(0.71)
+            make.trailingMargin.equalTo(self).offset(-10)
+            make.height.equalTo(80)
+        }
+        
+        divisionLine2.snp.makeConstraints { make in
+            make.topMargin.equalTo(commentTextView.snp.bottom).offset(20)
+            make.leadingMargin.equalTo(self).offset(10)
+            make.trailingMargin.equalTo(self).offset(-10)
+            make.height.equalTo(1)
+        }
+        memoLabel.snp.makeConstraints { make in
+            make.topMargin.equalTo(divisionLine2.snp.bottom).offset(20)
+            make.width.equalTo(self).multipliedBy(0.18)
+            make.leadingMargin.equalTo(10)
+            make.height.equalTo(20)
+        }
+
         memoTextView.snp.makeConstraints { make in
-            make.topMargin.equalTo(divisionLine).offset(30)
+            make.topMargin.equalTo(memoLabel.snp.bottom).offset(20)
             make.leadingMargin.equalTo(self).offset(10)
             make.trailingMargin.equalTo(self).offset(-10)
             make.height.equalTo(self)
         }
-        
+
         toolBar.snp.makeConstraints { make in
             make.width.equalTo(self)
             make.centerX.equalTo(self)

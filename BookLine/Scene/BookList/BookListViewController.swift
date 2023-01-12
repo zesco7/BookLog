@@ -20,7 +20,6 @@ class BookListViewController: BaseViewController {
     init(categorySortCode: String?, navigationTitle: String?) {
         self.categorySortCode = categorySortCode
         self.navigationTitle = navigationTitle
-        //필터링 조건 초기화 boolean
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -39,7 +38,6 @@ class BookListViewController: BaseViewController {
         mainView.tableView.register(BookListViewCell.self, forCellReuseIdentifier: BookListViewCell.identifier)
         print(categorySortCode)
         navigationAttribute()
-        
         NotificationCenter.default.addObserver(self, selector: #selector(memoContentsReceived(notification:)), name: NSNotification.Name("memoContents"), object: nil)
         
         NotificationCenter.default.addObserver(self, selector: #selector(ratingReceived(notification:)), name: NSNotification.Name("rating"), object: nil)
@@ -83,14 +81,11 @@ class BookListViewController: BaseViewController {
     }
     
     override func viewWillAppear(_ animated: Bool) {
+        print(#function)
         filterBookList()
         mainView.tableView.reloadData()
     }
-    
-    func dateFormatter() {
-        //날짜표시형식 변경필요(한국시간)
-    }
-    
+
     func navigationAttribute() {
         self.navigationItem.title = navigationTitle
         let sortButton = UIBarButtonItem(title: "정렬", style: .plain, target: self, action: #selector(sortButtonClicked))
@@ -98,6 +93,10 @@ class BookListViewController: BaseViewController {
         self.navigationItem.rightBarButtonItems = [plusButton, sortButton]
     }
     
+    func modalNavigationAttribute() {
+
+    }
+   
     @objc func sortButtonClicked() {
         //iOS14미만: actionSheet
         sortBookList()
@@ -167,12 +166,14 @@ class BookListViewController: BaseViewController {
             let vc = BookListViewController(categorySortCode: nil, navigationTitle: UserDefaults.standard.string(forKey: "defaultCategoryTitle"))
             guard let categoryCode = self.categorySortCode else { return }
             vc.bookList = vc.bookLocalRealm.objects(BookData.self).filter("categorySortCode != '\(categoryCode)'")
-            print(self.bookList.count)
-            print(vc.bookList.count)
-            print(vc.bookList)
+            vc.mainView.tableView.reloadData()
+            print("self: ", self.bookList.count)
+            print("Vc: ", vc.bookList.count)
+            
             let navi = UINavigationController(rootViewController: vc)
-            let completionButton = UIBarButtonItem(title: "완료", style: .plain, target: navi, action: #selector(self.completionButtonClicked))
             let dummyButton = UIBarButtonItem()
+            let completionButton = UIBarButtonItem(title: "완료", style: .plain, target: vc, action: nil)
+            vc.navigationItem.rightBarButtonItem = completionButton
             navi.navigationItem.rightBarButtonItems = [dummyButton, completionButton]
             self.present(navi, animated: true)
         }
@@ -266,7 +267,11 @@ extension BookListViewController: UITableViewDelegate, UITableViewDataSource {
             cell.star4.image = UIImage(systemName: "star")
             cell.star5.image = UIImage(systemName: "star")
         } else {
-            print("별점 평가 안함")
+            cell.star1.image = UIImage(systemName: "star")
+            cell.star2.image = UIImage(systemName: "star")
+            cell.star3.image = UIImage(systemName: "star")
+            cell.star4.image = UIImage(systemName: "star")
+            cell.star5.image = UIImage(systemName: "star")
         }
         
 //        cell.bookRating.text = "\(bookList[indexPath.row].rating!)"
@@ -295,8 +300,7 @@ extension BookListViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        print(bookList[indexPath.row].rating!)
-        let vc = BookMemoViewController(isbn: bookList[indexPath.row].ISBN, lastUpdate: bookList[indexPath.row].lastUpdate, review: bookList[indexPath.row].review, memo: bookList[indexPath.row].memo, bookMemo: bookList[indexPath.row], starRating: bookList[indexPath.row].rating!)
+        let vc = BookMemoViewController(isbn: bookList[indexPath.row].ISBN, lastUpdate: bookList[indexPath.row].lastUpdate, review: bookList[indexPath.row].review, memo: bookList[indexPath.row].memo, bookMemo: bookList[indexPath.row], starRating: bookList[indexPath.row].rating!, linkURL: bookList[indexPath.row].linkURL)
         vc.bookTitle = bookList[indexPath.row].title
         vc.bookWriter = bookList[indexPath.row].author
         self.navigationController?.pushViewController(vc, animated: true)

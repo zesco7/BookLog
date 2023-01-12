@@ -19,14 +19,17 @@ class BookMemoViewController: BaseViewController {
     var review: String?
     var memo: String?
     var starRating: Float
+    var sliderValue: Float?
+    var linkURL: String
     
-    init(isbn: String, lastUpdate: Date, review: String?, memo: String?, bookMemo: BookData, starRating: Float) {
+    init(isbn: String, lastUpdate: Date, review: String?, memo: String?, bookMemo: BookData, starRating: Float, linkURL: String) {
         self.isbn = isbn
         self.lastUpdate = lastUpdate
         self.review = review
         self.memo = memo
         self.bookMemo = bookMemo
         self.starRating = starRating
+        self.linkURL = linkURL
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -50,11 +53,15 @@ class BookMemoViewController: BaseViewController {
         mainView.memoTextView.text = memo
         mainView.starRatingSlider.value = starRating
         mainView.lastUpdateDate.text = dateFormatter(date: lastUpdate)
-        toolBarAttribute()
+        navigationAttribute()
+        buttonAttribute()
+        //toolBarAttribute()
+        mainView.bookInfoUrlButton.addTarget(self, action: #selector(openBookInfoUrl(_:)), for: .touchUpInside)
     }
     
     override func viewWillAppear(_ animated: Bool) {
-
+        showStarRating()
+        print("현재 별점: ", mainView.starRatingSlider.value)
     }
     
     func toolBarAttribute() {
@@ -64,7 +71,7 @@ class BookMemoViewController: BaseViewController {
 //        self.navigationController?.setToolbarHidden(false, animated: true)
         
         let flexSpace = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
-        let saveButton = UIBarButtonItem(title: "메모파일 저장", style: .plain, target: self, action: #selector(saveButtonClicked))
+        let saveButton = UIBarButtonItem(title: "메모파일 저장", style: .plain, target: self, action: nil)
         let deleteButton = UIBarButtonItem(title: "삭제", style: .plain, target: self, action: #selector(deleteButtonClicked))
         let barButtonItems = [saveButton, flexSpace, deleteButton]
         self.mainView.toolBar.setItems(barButtonItems, animated: false)
@@ -74,8 +81,9 @@ class BookMemoViewController: BaseViewController {
         mainView.memoTextView.inputAccessoryView = mainView.toolBar
     }
     
-    @objc func saveButtonClicked() {
-        //@리팩토링: realm데이터파일 생성 추가예정
+    func navigationAttribute() {
+        let deleteButton = UIBarButtonItem(image: UIImage(systemName: "trash"), style: .plain, target: self, action: #selector(deleteButtonClicked))
+        self.navigationItem.rightBarButtonItem = deleteButton
     }
     
     @objc func deleteButtonClicked() {
@@ -96,19 +104,105 @@ class BookMemoViewController: BaseViewController {
         present(alert, animated: true)
     }
     
+    func buttonAttribute() {
+        guard let bookInforUrlButton = mainView.bookInfoUrlButton.titleLabel?.text else { return }
+        let attributedString = NSMutableAttributedString(string: bookInforUrlButton)
+        attributedString.addAttribute(.underlineStyle, value: NSUnderlineStyle.single.rawValue, range: NSRange(location: 0, length: bookInforUrlButton.count))
+        mainView.bookInfoUrlButton.setAttributedTitle(attributedString, for: .normal)
+    }
+    
+    @objc func openBookInfoUrl(_ sender: UIButton) {
+        if let url = URL(string: linkURL) {
+                UIApplication.shared.open(url)
+              } else {
+                print("INCORRECT URL")
+              }
+    }
+    
     func showBookInformation() {
         mainView.bookName.text = bookTitle
         mainView.bookAuthor.text = bookWriter
     }
     
+    func showStarRating() {
+        if mainView.starRatingSlider.value >= 5 {
+            mainView.star1.image = UIImage(systemName: "star.fill")
+            mainView.star2.image = UIImage(systemName: "star.fill")
+            mainView.star3.image = UIImage(systemName: "star.fill")
+            mainView.star4.image = UIImage(systemName: "star.fill")
+            mainView.star5.image = UIImage(systemName: "star.fill")
+        } else if
+            mainView.starRatingSlider.value >= 4.5 {
+            mainView.star1.image = UIImage(systemName: "star.fill")
+            mainView.star2.image = UIImage(systemName: "star.fill")
+            mainView.star3.image = UIImage(systemName: "star.fill")
+            mainView.star4.image = UIImage(systemName: "star.fill")
+            mainView.star5.image = UIImage(systemName: "star.leadinghalf.filled")
+        } else if mainView.starRatingSlider.value >= 4 {
+            mainView.star1.image = UIImage(systemName: "star.fill")
+            mainView.star2.image = UIImage(systemName: "star.fill")
+            mainView.star3.image = UIImage(systemName: "star.fill")
+            mainView.star4.image = UIImage(systemName: "star.fill")
+            mainView.star5.image = UIImage(systemName: "star")
+        } else if mainView.starRatingSlider.value >= 3.5 {
+            mainView.star1.image = UIImage(systemName: "star.fill")
+            mainView.star2.image = UIImage(systemName: "star.fill")
+            mainView.star3.image = UIImage(systemName: "star.fill")
+            mainView.star4.image = UIImage(systemName: "star.leadinghalf.filled")
+            mainView.star5.image = UIImage(systemName: "star")
+        } else if mainView.starRatingSlider.value >= 3 {
+            mainView.star1.image = UIImage(systemName: "star.fill")
+            mainView.star2.image = UIImage(systemName: "star.fill")
+            mainView.star3.image = UIImage(systemName: "star.fill")
+            mainView.star4.image = UIImage(systemName: "star")
+            mainView.star5.image = UIImage(systemName: "star")
+        } else if mainView.starRatingSlider.value >= 2.5 {
+            mainView.star1.image = UIImage(systemName: "star.fill")
+            mainView.star2.image = UIImage(systemName: "star.fill")
+            mainView.star3.image = UIImage(systemName: "star.leadinghalf.filled")
+            mainView.star4.image = UIImage(systemName: "star")
+            mainView.star5.image = UIImage(systemName: "star")
+        } else if mainView.starRatingSlider.value >= 2 {
+            mainView.star1.image = UIImage(systemName: "star.fill")
+            mainView.star2.image = UIImage(systemName: "star.fill")
+            mainView.star3.image = UIImage(systemName: "star")
+            mainView.star4.image = UIImage(systemName: "star")
+            mainView.star5.image = UIImage(systemName: "star")
+        } else if mainView.starRatingSlider.value >= 1.5 {
+            mainView.star1.image = UIImage(systemName: "star.fill")
+            mainView.star2.image = UIImage(systemName: "star.leadinghalf.filled")
+            mainView.star3.image = UIImage(systemName: "star")
+            mainView.star4.image = UIImage(systemName: "star")
+            mainView.star5.image = UIImage(systemName: "star")
+        } else if mainView.starRatingSlider.value >= 1 {
+            mainView.star1.image = UIImage(systemName: "star.fill")
+            mainView.star2.image = UIImage(systemName: "star")
+            mainView.star3.image = UIImage(systemName: "star")
+            mainView.star4.image = UIImage(systemName: "star")
+            mainView.star5.image = UIImage(systemName: "star")
+        } else if mainView.starRatingSlider.value >= 0.5 {
+            mainView.star1.image = UIImage(systemName: "star.leadinghalf.filled")
+            mainView.star2.image = UIImage(systemName: "star")
+            mainView.star3.image = UIImage(systemName: "star")
+            mainView.star4.image = UIImage(systemName: "star")
+            mainView.star5.image = UIImage(systemName: "star")
+        } else {
+            mainView.star1.image = UIImage(systemName: "star")
+            mainView.star2.image = UIImage(systemName: "star")
+            mainView.star3.image = UIImage(systemName: "star")
+            mainView.star4.image = UIImage(systemName: "star")
+            mainView.star5.image = UIImage(systemName: "star")
+        }
+    }
+    
     func starRatingSliderAttribute() {
-        var sliderValue: Float {
+        sliderValue = {
             if mainView.starRatingSlider.value - Float(Int(mainView.starRatingSlider.value)) >= 0.5 {
                 return Float(Int(mainView.starRatingSlider.value)) + 0.5
             } else {
                 return Float(Int(mainView.starRatingSlider.value))
             }
-        }
+        }()
         mainView.starRatingSlider.addTarget(self, action: #selector(onChangeValue), for: .valueChanged)
     }
     
@@ -131,7 +225,6 @@ class BookMemoViewController: BaseViewController {
     
     func dateFormatter(date: Date) -> String {
         let dateFormatter = DateFormatter()
-        //let lastUpdate = Date()
         let lastUpdate = lastUpdate
         dateFormatter.locale = Locale(identifier: Locale.current.identifier)
         dateFormatter.timeZone = TimeZone(identifier: TimeZone.current.identifier)
