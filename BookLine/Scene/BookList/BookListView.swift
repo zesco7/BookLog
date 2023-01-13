@@ -9,15 +9,13 @@ import UIKit
 import SnapKit
 
 class BookListView: BaseView {
-    let tableView: UITableView = {
-       let view = UITableView()
-        view.backgroundColor = .backgroundColorBeige
+    let tableView: UITableViewAttribute = {
+       let view = UITableViewAttribute()
         return view
     }()
     
     var userGuide: UILabelFontAttribute = {
        let view = UILabelFontAttribute()
-        view.text = "              버튼(+)을 눌러 책을 추가해보세요"
         return view
     }()
     

@@ -63,40 +63,39 @@ class BookMemoView: BaseView {
         view.minimumTrackTintColor = .clear
         view.maximumTrackTintColor = .clear
         view.thumbTintColor = .clear
-        
         return view
     }()
     
-    let star1 : UIImageView = {
-        let view = UIImageView()
+    let star1 : StarImageAttribute = {
+        let view = StarImageAttribute(frame: .zero)
         view.image = UIImage(systemName: "star")
         view.tag = 1
         return view
     }()
     
-    let star2 : UIImageView = {
-        let view = UIImageView()
+    let star2 : StarImageAttribute = {
+        let view = StarImageAttribute(frame: .zero)
         view.image = UIImage(systemName: "star")
         view.tag = 2
         return view
     }()
     
-    let star3 : UIImageView = {
-        let view = UIImageView()
+    let star3 : StarImageAttribute = {
+        let view = StarImageAttribute(frame: .zero)
         view.image = UIImage(systemName: "star")
         view.tag = 3
         return view
     }()
     
-    let star4 : UIImageView = {
-        let view = UIImageView()
+    let star4 : StarImageAttribute = {
+        let view = StarImageAttribute(frame: .zero)
         view.image = UIImage(systemName: "star")
         view.tag = 4
         return view
     }()
     
-    let star5 : UIImageView = {
-        let view = UIImageView()
+    let star5 : StarImageAttribute = {
+        let view = StarImageAttribute(frame: .zero)
         view.image = UIImage(systemName: "star")
         view.tag = 5
         return view
@@ -120,6 +119,8 @@ class BookMemoView: BaseView {
         let view = UITextView()
         view.font = .systemFont(ofSize: 15)
         view.backgroundColor = .white
+        view.layer.cornerRadius = 3
+        view.clipsToBounds = true
         return view
     }()
     
@@ -145,6 +146,8 @@ class BookMemoView: BaseView {
         let view = UITextView()
         view.font = .systemFont(ofSize: 15)
         view.backgroundColor = .white
+        view.layer.cornerRadius = 3
+        view.clipsToBounds = true
         return view
     }()
     

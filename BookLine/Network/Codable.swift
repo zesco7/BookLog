@@ -24,6 +24,10 @@ struct Item: Codable {
     let link: String
     let image: String
     
+    func toBookData(lastUpate: Date, categorySortCode: String, review: String?, memo: String?) -> BookData {
+        return BookData(lastUpdate: lastUpate, categorySortCode: categorySortCode, ISBN: self.isbn, rating: 0, review: review, memo: memo, title: self.title, author: self.author, publisher: self.publisher, pubdate: self.pubdate, linkURL: self.link, imageURL: self.image)
+    }
+    
 //    let title: String
 //    let link: String
 //    let image: String

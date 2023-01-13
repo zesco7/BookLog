@@ -43,6 +43,8 @@
 		98EC520B296434B200DACC1C /* APIManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98EC520A296434B200DACC1C /* APIManager.swift */; };
 		98EC520D29643BE400DACC1C /* Codable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98EC520C29643BE400DACC1C /* Codable.swift */; };
 		98EC52102965A1D800DACC1C /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 98EC520F2965A1D800DACC1C /* Kingfisher */; };
+		98F9F96F29713F7D00A11418 /* UITableViewAttribute.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98F9F96E29713F7D00A11418 /* UITableViewAttribute.swift */; };
+		98F9F97229719A0E00A11418 /* BookSortType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98F9F97129719A0E00A11418 /* BookSortType.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -78,6 +80,8 @@
 		98CB9D1B29618D2A00958583 /* BookSearchViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookSearchViewCell.swift; sourceTree = "<group>"; };
 		98EC520A296434B200DACC1C /* APIManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIManager.swift; sourceTree = "<group>"; };
 		98EC520C29643BE400DACC1C /* Codable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Codable.swift; sourceTree = "<group>"; };
+		98F9F96E29713F7D00A11418 /* UITableViewAttribute.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UITableViewAttribute.swift; sourceTree = "<group>"; };
+		98F9F97129719A0E00A11418 /* BookSortType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookSortType.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -118,6 +122,7 @@
 		9831A00D2957232300437B26 /* BookLine */ = {
 			isa = PBXGroup;
 			children = (
+				98F9F970297199AB00A11418 /* Enum */,
 				98B16553295BFE60007D24CF /* Realm */,
 				983D17AA295B028300D265EA /* Extension */,
 				9831A02F295AE61400437B26 /* Scene */,
@@ -251,8 +256,17 @@
 			children = (
 				98CB9D0F2961588700958583 /* UILabelFontAttribute.swift */,
 				981A6730296EC05B006DB6A0 /* StarImageAttribute.swift */,
+				98F9F96E29713F7D00A11418 /* UITableViewAttribute.swift */,
 			);
 			path = Attribute;
+			sourceTree = "<group>";
+		};
+		98F9F970297199AB00A11418 /* Enum */ = {
+			isa = PBXGroup;
+			children = (
+				98F9F97129719A0E00A11418 /* BookSortType.swift */,
+			);
+			path = Enum;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -352,10 +366,12 @@
 				98CB9D1829618C8B00958583 /* BookSearchView.swift in Sources */,
 				98EC520B296434B200DACC1C /* APIManager.swift in Sources */,
 				98B16562295C1FE2007D24CF /* BookListViewController.swift in Sources */,
+				98F9F97229719A0E00A11418 /* BookSortType.swift in Sources */,
 				98CB9D1A29618C9600958583 /* BookSearchViewController.swift in Sources */,
 				98B16570295C4B6D007D24CF /* CategoryListCreator.swift in Sources */,
 				9831A04B295AF14900437B26 /* BaseView.swift in Sources */,
 				983D17AF295B06FC00D265EA /* CategoryListViewCell.swift in Sources */,
+				98F9F96F29713F7D00A11418 /* UITableViewAttribute.swift in Sources */,
 				98CB9D102961588700958583 /* UILabelFontAttribute.swift in Sources */,
 				9831A029295AE36A00437B26 /* APIKey.swift in Sources */,
 				981A6731296EC05B006DB6A0 /* StarImageAttribute.swift in Sources */,

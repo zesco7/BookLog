@@ -10,13 +10,8 @@ import UIKit
 class BaseViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        attribute()
+
 //        hideKeyboard()
-    }
-    
-    func attribute() {
-        view.backgroundColor = .backgroundColorBeige
     }
 
     //self는 BaseViewController에만 적용되고 서브클래스에는 적용안됨

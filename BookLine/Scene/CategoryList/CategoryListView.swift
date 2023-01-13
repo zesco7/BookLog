@@ -9,9 +9,8 @@ import UIKit
 import SnapKit
 
 class CategoryListView: BaseView {
-    let tableView: UITableView = {
-       let view = UITableView()
-        view.backgroundColor = .backgroundColorBeige
+    let tableView: UITableViewAttribute = {
+       let view = UITableViewAttribute()
         return view
     }()
     

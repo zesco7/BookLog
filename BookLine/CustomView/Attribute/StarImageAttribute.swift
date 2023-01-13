@@ -9,7 +9,7 @@ import UIKit
 
 class StarImageAttribute: UIImageView {
     override init(frame: CGRect) {
-        super.init(frame: frame)
+        super.init(frame: .zero)
         configureUI()
     }
     

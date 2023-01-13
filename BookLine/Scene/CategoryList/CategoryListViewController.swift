@@ -10,7 +10,6 @@ import Kingfisher
 import RealmSwift
 import Toast
 
-
 class CategoryListViewController: BaseViewController {
     var mainView = CategoryListView()
     var mainViewCell = CategoryListViewCell()
@@ -73,7 +72,7 @@ class CategoryListViewController: BaseViewController {
     }
     
     func alertForAddCategory() {
-        let alert = UIAlertController(title: "카테고리를 추가해주세요", message: nil, preferredStyle: .alert)
+        let alert = UIAlertController(title: "카테고리를 추가해주세요.", message: nil, preferredStyle: .alert)
         alert.addTextField()
         //확인버튼 누르면 카테고리목록테이블에 값추가
         let ok = UIAlertAction(title: "확인", style: .destructive) { (ok) in
@@ -112,8 +111,6 @@ extension CategoryListViewController: UITableViewDelegate, UITableViewDataSource
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: CategoryListViewCell.identifier, for: indexPath) as? CategoryListViewCell else { return UITableViewCell() }
         cell.backgroundColor = .clear
-        
-        //전체목록: 기본사진, 각 카테고리: 해당 카테고리 첫번째 레코드 이미지로 카테고리목록화면 표시예정
         if indexPath.section == 0 {
             cell.categoryThumbnail.image = UIImage(named: "bookshelf")
             cell.categoryName.text = "\(defaultCategoryTitle[indexPath.row])"
@@ -166,10 +163,10 @@ extension CategoryListViewController: UITableViewDelegate, UITableViewDataSource
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if indexPath.section == 0 {
-            let vc = BookListViewController(categorySortCode: nil, navigationTitle: UserDefaults.standard.string(forKey: "defaultCategoryTitle"))
+            let vc = BookListViewController(categorySortType: .all, navigationTitle: UserDefaults.standard.string(forKey: "defaultCategoryTitle"))
             self.navigationController?.pushViewController(vc, animated: true)
         } else {
-            let vc = BookListViewController(categorySortCode: "\(categoryList[indexPath.row].categorySortCode)", navigationTitle: "\(categoryList[indexPath.row].category)")
+            let vc = BookListViewController(categorySortType: .category(categoryCode: "\(categoryList[indexPath.row].categorySortCode)"), navigationTitle: "\(categoryList[indexPath.row].category)")
             self.navigationController?.pushViewController(vc, animated: true)
         }
     }
@@ -178,10 +175,3 @@ extension CategoryListViewController: UITableViewDelegate, UITableViewDataSource
         return 80
     }
 }
-
-//extension CategoryListViewController: CellDelegate {
-//
-//    var value: Date {
-//        Date()
-//    }
-//}

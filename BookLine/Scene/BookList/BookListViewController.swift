@@ -11,14 +11,22 @@ import RealmSwift
 class BookListViewController: BaseViewController {
     var mainView = BookListView()
     var mainViewCell = BookListViewCell()
-    
     var bookLocalRealm = try! Realm()
     var bookList : Results<BookData>!
-    var categorySortCode : String?
+    let categorySortType : BookSortType
     var navigationTitle : String?
+    var newlyCategorizedBookArray : Array<BookData>?
     
-    init(categorySortCode: String?, navigationTitle: String?) {
-        self.categorySortCode = categorySortCode
+    init(categorySortType: BookSortType, navigationTitle: String?) {
+        self.categorySortType = categorySortType
+        switch categorySortType {
+        case .all:
+            self.bookList = bookLocalRealm.objects(BookData.self)
+        case .category(let categoryCode):
+            self.bookList = bookLocalRealm.objects(BookData.self).filter("categorySortCode == '\(categoryCode)'")
+        case .withoutCategory(let categoryCode):
+            self.bookList = bookLocalRealm.objects(BookData.self).filter("categorySortCode != '\(categoryCode)'")
+        }
         self.navigationTitle = navigationTitle
         super.init(nibName: nil, bundle: nil)
     }
@@ -36,17 +44,15 @@ class BookListViewController: BaseViewController {
         mainView.tableView.dataSource = self
         mainView.tableView.delegate = self
         mainView.tableView.register(BookListViewCell.self, forCellReuseIdentifier: BookListViewCell.identifier)
-        print(categorySortCode)
         navigationAttribute()
         NotificationCenter.default.addObserver(self, selector: #selector(memoContentsReceived(notification:)), name: NSNotification.Name("memoContents"), object: nil)
-        
         NotificationCenter.default.addObserver(self, selector: #selector(ratingReceived(notification:)), name: NSNotification.Name("rating"), object: nil)
     }
     
     @objc func memoContentsReceived(notification: NSNotification) {
         if let isbn = notification.userInfo?["isbn"], let comment = notification.userInfo?["comment"] as? String, let memo = notification.userInfo?["memo"] as? String{
             bookList = bookLocalRealm.objects(BookData.self).filter("ISBN == '\(isbn)'").sorted(byKeyPath: "lastUpdate", ascending: true)
-            print(bookList!)
+            print(bookList)
             try! bookLocalRealm.write({
                 bookList.first?.review = comment
                 bookList.first?.memo = memo
@@ -68,22 +74,29 @@ class BookListViewController: BaseViewController {
         }
     }
     
-    func filterBookList(){
-        if let categorySortCode = categorySortCode {
-            //카테고라이징
-            bookList = bookLocalRealm.objects(BookData.self).filter("categorySortCode == '\(categorySortCode)'")
-            print("BookList Filtered")
-        } else {
-            //전체
-            bookList = bookLocalRealm.objects(BookData.self).sorted(byKeyPath: "lastUpdate", ascending: true)
-            print("BookList Unfiltered")
-        }
-    }
-    
     override func viewWillAppear(_ animated: Bool) {
         print(#function)
-        filterBookList()
-        mainView.tableView.reloadData()
+        switch categorySortType {
+        case .withoutCategory(let categoryCode):
+            print("책이동화면 초기화 카테고리", categorySortType.categorySortCode)
+            let dummyButton = UIBarButtonItem()
+            let completionButton = UIBarButtonItem(title: "완료", style: .plain, target: self, action: #selector(self.completionButtonClicked))
+            self.navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.black]
+            self.navigationController?.navigationBar.tintColor = .navigationBar
+            self.navigationItem.rightBarButtonItems = [dummyButton, completionButton]
+        default:
+            return
+        }
+        self.mainView.tableView.reloadData()
+    }
+    
+    @objc func completionButtonClicked() {
+        switch categorySortType {
+        case .withoutCategory(let categoryCode):
+            self.dismiss(animated: true)
+        default:
+            return
+        }
     }
 
     func navigationAttribute() {
@@ -91,10 +104,6 @@ class BookListViewController: BaseViewController {
         let sortButton = UIBarButtonItem(title: "정렬", style: .plain, target: self, action: #selector(sortButtonClicked))
         let plusButton = UIBarButtonItem(image: UIImage(systemName: "plus"), style: .plain, target: self, action: #selector(plusButtonClicked))
         self.navigationItem.rightBarButtonItems = [plusButton, sortButton]
-    }
-    
-    func modalNavigationAttribute() {
-
     }
    
     @objc func sortButtonClicked() {
@@ -106,11 +115,14 @@ class BookListViewController: BaseViewController {
     }
     
     @objc func plusButtonClicked() {
-        if let categorySortCode = categorySortCode {
-            actionSheetForBookSearch()
-        } else {
-            let vc = BookSearchViewController(categorySortCode: categorySortCode)
+        switch categorySortType {
+        case .all:
+            let vc = BookSearchViewController(categorySortCode: categorySortType.categorySortCode)
             self.navigationController?.pushViewController(vc, animated: true)
+        case .category:
+            actionSheetForBookSearch()
+        default:
+            return
         }
     }
     
@@ -157,35 +169,24 @@ class BookListViewController: BaseViewController {
     func actionSheetForBookSearch() {
         let actionSheet = UIAlertController(title: "원하는 책을 찾아보세요", message: nil, preferredStyle: .actionSheet)
         let searchingForNewBook = UIAlertAction(title: "새 책 찾기", style: .default) { _ in
-            let vc = BookSearchViewController(categorySortCode: self.categorySortCode)
+            let vc = BookSearchViewController(categorySortCode: self.categorySortType.categorySortCode)
             self.navigationController?.pushViewController(vc, animated: true)
         }
         let searchingForSavedBook = UIAlertAction(title: "저장된 책에서 찾기", style: .default) { _ in
-            //vc.bookList로 테이블 갱신 어떻게?
-            //네비게이션바버튼 적용 어떻게?
-            let vc = BookListViewController(categorySortCode: nil, navigationTitle: UserDefaults.standard.string(forKey: "defaultCategoryTitle"))
-            guard let categoryCode = self.categorySortCode else { return }
-            vc.bookList = vc.bookLocalRealm.objects(BookData.self).filter("categorySortCode != '\(categoryCode)'")
-            vc.mainView.tableView.reloadData()
-            print("self: ", self.bookList.count)
-            print("Vc: ", vc.bookList.count)
-            
-            let navi = UINavigationController(rootViewController: vc)
-            let dummyButton = UIBarButtonItem()
-            let completionButton = UIBarButtonItem(title: "완료", style: .plain, target: vc, action: nil)
-            vc.navigationItem.rightBarButtonItem = completionButton
-            navi.navigationItem.rightBarButtonItems = [dummyButton, completionButton]
-            self.present(navi, animated: true)
+            switch self.categorySortType {
+            case .category(let categoryCode):
+                let vc = BookListViewController(categorySortType: .withoutCategory(categoryCode: categoryCode), navigationTitle: UserDefaults.standard.string(forKey: "defaultCategoryTitle"))
+                let navi = UINavigationController(rootViewController: vc)
+                self.present(navi, animated: true)
+            default:
+                return
+            }
         }
         let cancel = UIAlertAction(title: "취소", style: .cancel)
         actionSheet.addAction(searchingForNewBook)
         actionSheet.addAction(searchingForSavedBook)
         actionSheet.addAction(cancel)
         present(actionSheet, animated: true)
-    }
-    
-    @objc func completionButtonClicked() {
-        self.dismiss(animated: true)
     }
 }
 
@@ -197,70 +198,68 @@ extension BookListViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: BookListViewCell.identifier , for: indexPath) as? BookListViewCell else { return UITableViewCell() }
-        //셀재사용될 때 공백처리하는게 맞는건지 뷰를 교체?하는게 맞는건지
-        mainView.userGuide.text = ""
         let url = URL(string: bookList[indexPath.row].imageURL)
         cell.backgroundColor = .clear
         cell.bookImage.kf.setImage(with: url)
         cell.bookName.text = bookList[indexPath.row].title
         cell.bookAuthor.text = bookList[indexPath.row].author
         
-        if bookList[indexPath.row].rating! >= 5 {
+        if bookList[indexPath.row].rating >= 5 {
             cell.star1.image = UIImage(systemName: "star.fill")
             cell.star2.image = UIImage(systemName: "star.fill")
             cell.star3.image = UIImage(systemName: "star.fill")
             cell.star4.image = UIImage(systemName: "star.fill")
             cell.star5.image = UIImage(systemName: "star.fill")
         } else if
-            bookList[indexPath.row].rating! >= 4.5 {
+            bookList[indexPath.row].rating >= 4.5 {
             cell.star1.image = UIImage(systemName: "star.fill")
             cell.star2.image = UIImage(systemName: "star.fill")
             cell.star3.image = UIImage(systemName: "star.fill")
             cell.star4.image = UIImage(systemName: "star.fill")
             cell.star5.image = UIImage(systemName: "star.leadinghalf.filled")
-        } else if bookList[indexPath.row].rating! >= 4 {
+        } else if bookList[indexPath.row].rating >= 4 {
             cell.star1.image = UIImage(systemName: "star.fill")
             cell.star2.image = UIImage(systemName: "star.fill")
             cell.star3.image = UIImage(systemName: "star.fill")
             cell.star4.image = UIImage(systemName: "star.fill")
             cell.star5.image = UIImage(systemName: "star")
-        } else if bookList[indexPath.row].rating! >= 3.5 {
+        } else if bookList[indexPath.row].rating >= 3.5 {
             cell.star1.image = UIImage(systemName: "star.fill")
             cell.star2.image = UIImage(systemName: "star.fill")
             cell.star3.image = UIImage(systemName: "star.fill")
             cell.star4.image = UIImage(systemName: "star.leadinghalf.filled")
             cell.star5.image = UIImage(systemName: "star")
-        } else if bookList[indexPath.row].rating! >= 3 {
+        } else if bookList[indexPath.row].rating >= 3 {
             cell.star1.image = UIImage(systemName: "star.fill")
             cell.star2.image = UIImage(systemName: "star.fill")
             cell.star3.image = UIImage(systemName: "star.fill")
             cell.star4.image = UIImage(systemName: "star")
             cell.star5.image = UIImage(systemName: "star")
-        } else if bookList[indexPath.row].rating! >= 2.5 {
+        } else if bookList[indexPath.row].rating >= 2.5 {
             cell.star1.image = UIImage(systemName: "star.fill")
             cell.star2.image = UIImage(systemName: "star.fill")
             cell.star3.image = UIImage(systemName: "star.leadinghalf.filled")
             cell.star4.image = UIImage(systemName: "star")
             cell.star5.image = UIImage(systemName: "star")
-        } else if bookList[indexPath.row].rating! >= 2 {
+        } else if bookList[indexPath.row].rating >= 2 {
             cell.star1.image = UIImage(systemName: "star.fill")
             cell.star2.image = UIImage(systemName: "star.fill")
             cell.star3.image = UIImage(systemName: "star")
             cell.star4.image = UIImage(systemName: "star")
             cell.star5.image = UIImage(systemName: "star")
-        } else if bookList[indexPath.row].rating! >= 1.5 {
+        } else if bookList[indexPath.row].rating >= 1.5 {
             cell.star1.image = UIImage(systemName: "star.fill")
             cell.star2.image = UIImage(systemName: "star.leadinghalf.filled")
             cell.star3.image = UIImage(systemName: "star")
             cell.star4.image = UIImage(systemName: "star")
             cell.star5.image = UIImage(systemName: "star")
-        } else if bookList[indexPath.row].rating! >= 1 {
+        } else if bookList[indexPath.row].rating >= 1 {
             cell.star1.image = UIImage(systemName: "star.fill")
             cell.star2.image = UIImage(systemName: "star")
             cell.star3.image = UIImage(systemName: "star")
             cell.star4.image = UIImage(systemName: "star")
             cell.star5.image = UIImage(systemName: "star")
-        } else if bookList[indexPath.row].rating! >= 0.5 {
+        } else if bookList[indexPath.row].rating >= 0.5 {
             cell.star1.image = UIImage(systemName: "star.leadinghalf.filled")
             cell.star2.image = UIImage(systemName: "star")
             cell.star3.image = UIImage(systemName: "star")
@@ -273,8 +272,6 @@ extension BookListViewController: UITableViewDelegate, UITableViewDataSource {
             cell.star4.image = UIImage(systemName: "star")
             cell.star5.image = UIImage(systemName: "star")
         }
-        
-//        cell.bookRating.text = "\(bookList[indexPath.row].rating!)"
         cell.bookReview.text = bookList[indexPath.row].review
         return cell
     }
@@ -300,10 +297,22 @@ extension BookListViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let vc = BookMemoViewController(isbn: bookList[indexPath.row].ISBN, lastUpdate: bookList[indexPath.row].lastUpdate, review: bookList[indexPath.row].review, memo: bookList[indexPath.row].memo, bookMemo: bookList[indexPath.row], starRating: bookList[indexPath.row].rating!, linkURL: bookList[indexPath.row].linkURL)
-        vc.bookTitle = bookList[indexPath.row].title
-        vc.bookWriter = bookList[indexPath.row].author
-        self.navigationController?.pushViewController(vc, animated: true)
+        switch categorySortType {
+        case .all, .category(categoryCode: bookList[indexPath.row].categorySortCode):
+            let vc = BookMemoViewController(isbn: bookList[indexPath.row].ISBN, lastUpdate: bookList[indexPath.row].lastUpdate, review: bookList[indexPath.row].review, memo: bookList[indexPath.row].memo, bookMemo: bookList[indexPath.row], starRating: bookList[indexPath.row].rating, linkURL: bookList[indexPath.row].linkURL)
+            vc.bookTitle = bookList[indexPath.row].title
+            vc.bookWriter = bookList[indexPath.row].author
+            self.navigationController?.pushViewController(vc, animated: true)
+        case .withoutCategory(categoryCode: bookList[indexPath.row].categorySortCode):
+            print(bookList[indexPath.row].categorySortCode)
+            try! bookLocalRealm.write({
+                bookList[indexPath.row].categorySortCode = categorySortType.categorySortCode!
+            })
+            bookList[indexPath.row].categorySortCode
+            return
+        default:
+            return
+        }
     }
         
         func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {

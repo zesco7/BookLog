@@ -19,7 +19,7 @@ class BookMemoViewController: BaseViewController {
     var review: String?
     var memo: String?
     var starRating: Float
-    var sliderValue: Float?
+    var sliderValue: Float
     var linkURL: String
     
     init(isbn: String, lastUpdate: Date, review: String?, memo: String?, bookMemo: BookData, starRating: Float, linkURL: String) {
@@ -30,6 +30,7 @@ class BookMemoViewController: BaseViewController {
         self.bookMemo = bookMemo
         self.starRating = starRating
         self.linkURL = linkURL
+        self.sliderValue = 0.0
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -55,30 +56,12 @@ class BookMemoViewController: BaseViewController {
         mainView.lastUpdateDate.text = dateFormatter(date: lastUpdate)
         navigationAttribute()
         buttonAttribute()
-        //toolBarAttribute()
         mainView.bookInfoUrlButton.addTarget(self, action: #selector(openBookInfoUrl(_:)), for: .touchUpInside)
     }
     
     override func viewWillAppear(_ animated: Bool) {
         showStarRating()
         print("현재 별점: ", mainView.starRatingSlider.value)
-    }
-    
-    func toolBarAttribute() {
-        //네비게이션에 있는 툴바속성을 사용 못하는 이유?
-        //툴바기본높이 속성 적용 안되는 이유?
-//        self.navigationController?.isToolbarHidden = false
-//        self.navigationController?.setToolbarHidden(false, animated: true)
-        
-        let flexSpace = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
-        let saveButton = UIBarButtonItem(title: "메모파일 저장", style: .plain, target: self, action: nil)
-        let deleteButton = UIBarButtonItem(title: "삭제", style: .plain, target: self, action: #selector(deleteButtonClicked))
-        let barButtonItems = [saveButton, flexSpace, deleteButton]
-        self.mainView.toolBar.setItems(barButtonItems, animated: false)
-        mainView.toolBar.isHidden = false
-        mainView.toolBar.sizeToFit()
-        mainView.commentTextView.inputAccessoryView = mainView.toolBar
-        mainView.memoTextView.inputAccessoryView = mainView.toolBar
     }
     
     func navigationAttribute() {
@@ -91,7 +74,7 @@ class BookMemoViewController: BaseViewController {
     }
     
     func alertForDeleteButton() {
-        let alert = UIAlertController(title: "삭제하시겠습니까", message: nil, preferredStyle: .alert)
+        let alert = UIAlertController(title: "삭제하시겠습니까?", message: nil, preferredStyle: .alert)
         let ok = UIAlertAction(title: "확인", style: .destructive) { _ in
             try! self.bookMemoLocalRealm.write({
                 self.bookMemoLocalRealm.delete(self.bookMemo)
@@ -112,6 +95,7 @@ class BookMemoViewController: BaseViewController {
     }
     
     @objc func openBookInfoUrl(_ sender: UIButton) {
+        //웹킷으로 앱내부에서 처리하는거 추천
         if let url = URL(string: linkURL) {
                 UIApplication.shared.open(url)
               } else {

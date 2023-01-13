@@ -36,37 +36,32 @@ class BookListViewCell: BaseTableViewCell {
         return view
     }()
     
-    let star1 : UIImageView = {
-        let view = UIImageView()
-        view.image = UIImage(systemName: "star")
+    let star1 : StarImageAttribute = {
+        let view = StarImageAttribute(frame: .zero)
         view.tag = 1
         return view
     }()
     
-    let star2 : UIImageView = {
-        let view = UIImageView()
-        view.image = UIImage(systemName: "star")
+    let star2 : StarImageAttribute = {
+        let view = StarImageAttribute(frame: .zero)
         view.tag = 2
         return view
     }()
     
-    let star3 : UIImageView = {
-        let view = UIImageView()
-        view.image = UIImage(systemName: "star")
+    let star3 : StarImageAttribute = {
+        let view = StarImageAttribute(frame: .zero)
         view.tag = 3
         return view
     }()
     
-    let star4 : UIImageView = {
-        let view = UIImageView()
-        view.image = UIImage(systemName: "star")
+    let star4 : StarImageAttribute = {
+        let view = StarImageAttribute(frame: .zero)
         view.tag = 4
         return view
     }()
     
-    let star5 : UIImageView = {
-        let view = UIImageView()
-        view.image = UIImage(systemName: "star")
+    let star5 : StarImageAttribute = {
+        let view = StarImageAttribute(frame: .zero)
         view.tag = 5
         return view
     }()
