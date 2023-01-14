@@ -75,8 +75,11 @@ class BookListViewController: BaseViewController {
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        print(#function)
+        print(bookList)
+        self.mainView.tableView.reloadData()
         switch categorySortType {
+        case .all(let categoryCode), .category(let categoryCode):
+            self.bookList = bookLocalRealm.objects(BookData.self).filter("categorySortCode == '\(categoryCode)'")
         case .withoutCategory(let categoryCode):
             print("책이동화면 초기화 카테고리", categorySortType.categorySortCode)
             let dummyButton = UIBarButtonItem()
@@ -87,7 +90,6 @@ class BookListViewController: BaseViewController {
         default:
             return
         }
-        self.mainView.tableView.reloadData()
     }
     
     @objc func completionButtonClicked() {
@@ -199,7 +201,7 @@ extension BookListViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: BookListViewCell.identifier , for: indexPath) as? BookListViewCell else { return UITableViewCell() }
         let url = URL(string: bookList[indexPath.row].imageURL)
-        cell.backgroundColor = .clear
+        cell.backgroundColor = .backgroundColorBeige
         cell.bookImage.kf.setImage(with: url)
         cell.bookName.text = bookList[indexPath.row].title
         cell.bookAuthor.text = bookList[indexPath.row].author

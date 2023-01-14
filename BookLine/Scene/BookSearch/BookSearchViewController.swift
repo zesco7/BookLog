@@ -85,10 +85,17 @@ class BookSearchViewController: BaseViewController {
     func alertForBookSearch() {
         let alert = UIAlertController(title: "선택한 책을 추가할까요?", message: nil, preferredStyle: .alert)
         let addBook = UIAlertAction(title: "추가", style: .default) { _ in
-            try! self.bookSearchLocalRealm.write({
-                self.bookSearchLocalRealm.add(self.multiselectionArray)
-            })
-            self.navigationController?.popViewController(animated: true)
+            let bookDuplicationCheck = self.bookSearchResults.filter("ISBN == '\(self.multiselectionArray.first!.ISBN)'").count
+            if bookDuplicationCheck > 0 {
+                print("책 중복")
+                self.view.makeToast("이미 추가한 책입니다.", duration: 0.5, position: .center)
+            } else {
+                print("책 중복 아님")
+                try! self.bookSearchLocalRealm.write({
+                    self.bookSearchLocalRealm.add(self.multiselectionArray)
+                })
+                self.navigationController?.popViewController(animated: true)
+            }
         }
         let cancel = UIAlertAction(title: "취소", style: .cancel)
         alert.addAction(addBook)
@@ -106,7 +113,7 @@ extension BookSearchViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: BookSearchViewCell.identifier , for: indexPath) as? BookSearchViewCell else { return UITableViewCell() }
         let url = URL(string: (bookInfoArray?[indexPath.row].image)!)
-        cell.backgroundColor = .clear
+        cell.backgroundColor = .backgroundColorBeige
         cell.bookImage.kf.setImage(with: url)
         cell.bookName.text = bookInfoArray?[indexPath.row].title
         cell.bookAuthor.text = bookInfoArray?[indexPath.row].author
@@ -119,7 +126,8 @@ extension BookSearchViewController: UITableViewDelegate, UITableViewDataSource {
         guard let categorySortCode = categorySortCode else { return categorySortCode = "" }
         multiselectionArray.append(items.toBookData(lastUpate: Date(), categorySortCode: categorySortCode, review: nil, memo: nil))
         alertForBookSearch()
-        print(multiselectionArray)
+        print(type(of:multiselectionArray.first?.ISBN))
+        print(type(of:multiselectionArray.first!.ISBN))
     }
     
     func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {

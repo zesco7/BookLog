@@ -18,7 +18,6 @@ class CategoryListViewController: BaseViewController {
     let bookLocalRealm = try! Realm()
     var categoryList: Results<CategoryData>!
     var bookList: Results<BookData>?
-    
     let defaultCategoryTitle = ["모든 책"]
     
     override func loadView() {
@@ -34,7 +33,7 @@ class CategoryListViewController: BaseViewController {
         noEditNavigationAttribute()
         categoryList = categoryLocalRealm.objects(CategoryData.self).sorted(byKeyPath: "categorySortCode", ascending: true)
         bookList = bookLocalRealm.objects(BookData.self)
-        print("Realm Succeed. categoryLocalRealm is located at: ", self.categoryLocalRealm.configuration.fileURL!)
+        print("categoryLocalRealm is located at: ", self.categoryLocalRealm.configuration.fileURL!)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -74,18 +73,21 @@ class CategoryListViewController: BaseViewController {
     func alertForAddCategory() {
         let alert = UIAlertController(title: "카테고리를 추가해주세요.", message: nil, preferredStyle: .alert)
         alert.addTextField()
-        //확인버튼 누르면 카테고리목록테이블에 값추가
-        let ok = UIAlertAction(title: "확인", style: .destructive) { (ok) in
-            if alert.textFields![0].text!.count > 0 {
-                let record = CategoryData(regDate: Date(), category: "\(alert.textFields![0].text!)", savedBook: 1)
-                try! self.categoryLocalRealm.write {
-                    self.categoryLocalRealm.add(record)
-                    print("Realm Succeed. categoryLocalRealm is located at: ", self.categoryLocalRealm.configuration.fileURL!)
-                    self.mainView.tableView.reloadData()
-                }
+        let ok = UIAlertAction(title: "확인", style: .default) { (ok) in
+            guard let textFieldText = alert.textFields![0].text else { return }
+            let categoryDuplicationCheck = self.categoryLocalRealm.objects(CategoryData.self).filter("category == '\(textFieldText)'").count
+            if textFieldText.count == 0 {
+                self.view.makeToast("카테고리 이름을 정해주세요.", duration: 0.5, position: .center)
             } else {
-                //글자수 0이하면 버튼비활성화 처리 예정(토스트 대신)
-                self.view.makeToast("카테고리 이름을 정해주세요", duration: 0.5, position: .center)
+                if categoryDuplicationCheck > 0 || textFieldText == self.defaultCategoryTitle[0] {
+                    self.view.makeToast("이미 추가한 카테고리입니다.", duration: 0.5, position: .center)
+                } else {
+                    let record = CategoryData(regDate: Date(), category: "\(alert.textFields![0].text!)")
+                    try! self.categoryLocalRealm.write {
+                        self.categoryLocalRealm.add(record)
+                        self.mainView.tableView.reloadData()
+                    }
+                }
             }
         }
         let cancel = UIAlertAction(title: "취소", style: .cancel)
@@ -110,7 +112,7 @@ extension CategoryListViewController: UITableViewDelegate, UITableViewDataSource
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: CategoryListViewCell.identifier, for: indexPath) as? CategoryListViewCell else { return UITableViewCell() }
-        cell.backgroundColor = .clear
+        cell.backgroundColor = .backgroundColorBeige
         if indexPath.section == 0 {
             cell.categoryThumbnail.image = UIImage(named: "bookshelf")
             cell.categoryName.text = "\(defaultCategoryTitle[indexPath.row])"
@@ -131,8 +133,8 @@ extension CategoryListViewController: UITableViewDelegate, UITableViewDataSource
             let deleteMemo = UIContextualAction(style: .normal, title: nil) { action, view, completionHandler in
                 try! self.categoryLocalRealm.write {
                     self.categoryLocalRealm.delete(self.categoryList[indexPath.row])
-                    self.mainView.tableView.reloadData() //note변수에 didSet있는데 왜 reloadData가 안될까?
-                    print("Realm Deleted")
+                    self.mainView.tableView.reloadData()
+                    print("Category Deleted")
                 }
             }
             deleteMemo.image = UIImage(systemName: "trash.fill")
@@ -163,7 +165,7 @@ extension CategoryListViewController: UITableViewDelegate, UITableViewDataSource
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if indexPath.section == 0 {
-            let vc = BookListViewController(categorySortType: .all, navigationTitle: UserDefaults.standard.string(forKey: "defaultCategoryTitle"))
+            let vc = BookListViewController(categorySortType: .all(categoryCode: ""), navigationTitle: UserDefaults.standard.string(forKey: "defaultCategoryTitle"))
             self.navigationController?.pushViewController(vc, animated: true)
         } else {
             let vc = BookListViewController(categorySortType: .category(categoryCode: "\(categoryList[indexPath.row].categorySortCode)"), navigationTitle: "\(categoryList[indexPath.row].category)")

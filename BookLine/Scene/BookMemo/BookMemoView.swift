@@ -68,35 +68,30 @@ class BookMemoView: BaseView {
     
     let star1 : StarImageAttribute = {
         let view = StarImageAttribute(frame: .zero)
-        view.image = UIImage(systemName: "star")
         view.tag = 1
         return view
     }()
     
     let star2 : StarImageAttribute = {
         let view = StarImageAttribute(frame: .zero)
-        view.image = UIImage(systemName: "star")
         view.tag = 2
         return view
     }()
     
     let star3 : StarImageAttribute = {
         let view = StarImageAttribute(frame: .zero)
-        view.image = UIImage(systemName: "star")
         view.tag = 3
         return view
     }()
     
     let star4 : StarImageAttribute = {
         let view = StarImageAttribute(frame: .zero)
-        view.image = UIImage(systemName: "star")
         view.tag = 4
         return view
     }()
     
     let star5 : StarImageAttribute = {
         let view = StarImageAttribute(frame: .zero)
-        view.image = UIImage(systemName: "star")
         view.tag = 5
         return view
     }()
@@ -151,13 +146,8 @@ class BookMemoView: BaseView {
         return view
     }()
     
-    let toolBar: UIToolbar = {
-        let view = UIToolbar()
-        return view
-    }()
-    
     override func configureUI() {
-        [lastUpdateDateLabel, lastUpdateDate, bookNameLabel, bookName, bookAuthorLabel, bookAuthor, bookInfoUrlButton, starRatingLabel, starRatingSlider, commentLabel, commentTextView, divisionLine, divisionLine2, memoLabel, memoTextView, star1, star2, star3, star4, star5, toolBar].forEach {
+        [lastUpdateDateLabel, lastUpdateDate, bookNameLabel, bookName, bookAuthorLabel, bookAuthor, bookInfoUrlButton, starRatingLabel, starRatingSlider, commentLabel, commentTextView, divisionLine, divisionLine2, memoLabel, memoTextView, star1, star2, star3, star4, star5].forEach {
             self.addSubview($0)
         }
     }
@@ -300,13 +290,6 @@ class BookMemoView: BaseView {
             make.leadingMargin.equalTo(self).offset(10)
             make.trailingMargin.equalTo(self).offset(-10)
             make.height.equalTo(self)
-        }
-
-        toolBar.snp.makeConstraints { make in
-            make.width.equalTo(self)
-            make.centerX.equalTo(self)
-            make.height.equalTo(44)
-            make.bottomMargin.equalTo(0)
         }
     }
 }

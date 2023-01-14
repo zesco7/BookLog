@@ -44,13 +44,11 @@ class CategoryData: Object {
     @Persisted(primaryKey: true) var categorySortCode: ObjectId
     @Persisted var regDate = Date()
     @Persisted var category: String
-    @Persisted var savedBook: Int
     
-    convenience init(regDate: Date, category: String, savedBook: Int) {
+    convenience init(regDate: Date, category: String) {
         self.init()
         self.regDate = regDate
         self.category = category
-        self.savedBook = savedBook
     }
 }
 
