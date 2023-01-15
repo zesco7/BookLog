@@ -8,15 +8,13 @@
 import Foundation
 
 enum BookSortType {
-    case all(categoryCode: String)
+    case all
     case category(categoryCode: String)
     case withoutCategory(categoryCode: String)
     
     var categorySortCode: String? {
         switch self {
-        case .all(let categoryCode):
-            return categoryCode
-        case .withoutCategory:
+        case .all, .withoutCategory:
             return nil
         case .category(let categoryCode):
             return categoryCode

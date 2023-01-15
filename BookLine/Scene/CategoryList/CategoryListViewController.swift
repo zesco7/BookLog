@@ -21,6 +21,7 @@ class CategoryListViewController: BaseViewController {
     let defaultCategoryTitle = ["모든 책"]
     
     override func loadView() {
+        //self.view.addSubview(mainView)
         self.view = mainView
         mainView.tableView.delegate = self
         mainView.tableView.dataSource = self
@@ -165,7 +166,7 @@ extension CategoryListViewController: UITableViewDelegate, UITableViewDataSource
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if indexPath.section == 0 {
-            let vc = BookListViewController(categorySortType: .all(categoryCode: ""), navigationTitle: UserDefaults.standard.string(forKey: "defaultCategoryTitle"))
+            let vc = BookListViewController(categorySortType: .all, navigationTitle: UserDefaults.standard.string(forKey: "defaultCategoryTitle"))
             self.navigationController?.pushViewController(vc, animated: true)
         } else {
             let vc = BookListViewController(categorySortType: .category(categoryCode: "\(categoryList[indexPath.row].categorySortCode)"), navigationTitle: "\(categoryList[indexPath.row].category)")

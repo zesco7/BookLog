@@ -192,7 +192,7 @@ class BookMemoViewController: BaseViewController {
     }
     
     @objc func onChangeValue(_ sender: UISlider) {
-        NotificationCenter.default.post(name: NSNotification.Name("rating"), object: nil, userInfo: ["isbn": isbn, "starRating": mainView.starRatingSlider.value])
+        NotificationCenter.default.post(name: NSNotification.Name("rating"), object: nil, userInfo: ["isbn": isbn, "lastUpdate": Date(), "starRating": mainView.starRatingSlider.value])
         
         let floatValue = floor(sender.value * 10) / 10
         for i in 1...5 {
@@ -231,7 +231,7 @@ class BookMemoViewController: BaseViewController {
 
 extension BookMemoViewController: UITextViewDelegate {
     func textViewDidChange(_ textView: UITextView) {
-        NotificationCenter.default.post(name: NSNotification.Name("memoContents"), object: nil, userInfo: ["isbn": isbn, "comment": mainView.commentTextView.text, "memo": mainView.memoTextView.text])
+        NotificationCenter.default.post(name: NSNotification.Name("memoContents"), object: nil, userInfo: ["isbn": isbn, "lastUpdate": Date(), "comment": mainView.commentTextView.text, "memo": mainView.memoTextView.text])
     }
 }
 

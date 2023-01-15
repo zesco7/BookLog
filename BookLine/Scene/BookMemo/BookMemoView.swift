@@ -113,6 +113,7 @@ class BookMemoView: BaseView {
     let commentTextView : UITextView = {
         let view = UITextView()
         view.font = .systemFont(ofSize: 15)
+        view.textColor = .black
         view.backgroundColor = .white
         view.layer.cornerRadius = 3
         view.clipsToBounds = true
@@ -140,6 +141,7 @@ class BookMemoView: BaseView {
     let memoTextView: UITextView = {
         let view = UITextView()
         view.font = .systemFont(ofSize: 15)
+        view.textColor = .black
         view.backgroundColor = .white
         view.layer.cornerRadius = 3
         view.clipsToBounds = true

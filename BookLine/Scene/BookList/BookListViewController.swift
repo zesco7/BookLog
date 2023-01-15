@@ -50,36 +50,49 @@ class BookListViewController: BaseViewController {
     }
     
     @objc func memoContentsReceived(notification: NSNotification) {
-        if let isbn = notification.userInfo?["isbn"], let comment = notification.userInfo?["comment"] as? String, let memo = notification.userInfo?["memo"] as? String{
+        if let isbn = notification.userInfo?["isbn"], let lastUpdate = notification.userInfo?["lastUpdate"] as? Date, let comment = notification.userInfo?["comment"] as? String, let memo = notification.userInfo?["memo"] as? String{
             bookList = bookLocalRealm.objects(BookData.self).filter("ISBN == '\(isbn)'").sorted(byKeyPath: "lastUpdate", ascending: true)
-            print(bookList)
             try! bookLocalRealm.write({
+                bookList.first?.lastUpdate = lastUpdate
                 bookList.first?.review = comment
                 bookList.first?.memo = memo
             })
         } else{
             print("BookMemo Not Saved")
         }
+        switch categorySortType {
+        case .all:
+            self.bookList = bookLocalRealm.objects(BookData.self)
+        case .category(let categoryCode):
+            self.bookList = bookLocalRealm.objects(BookData.self).filter("categorySortCode == '\(categoryCode)'")
+        case .withoutCategory(let categoryCode):
+            self.bookList = bookLocalRealm.objects(BookData.self).filter("categorySortCode != '\(categoryCode)'")
+        }
     }
     
     @objc func ratingReceived(notification: NSNotification) {
-        if let isbn = notification.userInfo?["isbn"] as? String, let starRating = notification.userInfo?["starRating"] as? Float {
+        if let isbn = notification.userInfo?["isbn"] as? String, let lastUpdate = notification.userInfo?["lastUpdate"] as? Date, let starRating = notification.userInfo?["starRating"] as? Float {
             bookList = bookLocalRealm.objects(BookData.self).filter("ISBN == '\(isbn)'").sorted(byKeyPath: "lastUpdate", ascending: true)
             try! bookLocalRealm.write({
+                bookList.first?.lastUpdate = lastUpdate
                 bookList.first?.rating = starRating
             })
-            print(starRating)
         } else{
             print("BookMemo Not Saved")
+        }
+        switch categorySortType {
+        case .all:
+            self.bookList = bookLocalRealm.objects(BookData.self)
+        case .category(let categoryCode):
+            self.bookList = bookLocalRealm.objects(BookData.self).filter("categorySortCode == '\(categoryCode)'")
+        case .withoutCategory(let categoryCode):
+            self.bookList = bookLocalRealm.objects(BookData.self).filter("categorySortCode != '\(categoryCode)'")
         }
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        print(bookList)
         self.mainView.tableView.reloadData()
         switch categorySortType {
-        case .all(let categoryCode), .category(let categoryCode):
-            self.bookList = bookLocalRealm.objects(BookData.self).filter("categorySortCode == '\(categoryCode)'")
         case .withoutCategory(let categoryCode):
             print("책이동화면 초기화 카테고리", categorySortType.categorySortCode)
             let dummyButton = UIBarButtonItem()
@@ -139,7 +152,7 @@ class BookListViewController: BaseViewController {
             self.mainView.tableView.reloadData()
         }
         let sortByLastUpdate = UIAlertAction(title: "최종 수정일순", style: .default) { _ in
-            self.bookList = self.bookLocalRealm.objects(BookData.self).sorted(byKeyPath: "lastUpdate", ascending: true)
+            self.bookList = self.bookLocalRealm.objects(BookData.self).sorted(byKeyPath: "lastUpdate", ascending: false)
             self.mainView.tableView.reloadData()
         }
         let cancel = UIAlertAction(title: "취소", style: .cancel)
@@ -162,7 +175,7 @@ class BookListViewController: BaseViewController {
         }
         
         let sortByLastUpdate = UIAction(title: "최종 수정일순") { _ in
-            self.bookList = self.bookLocalRealm.objects(BookData.self).sorted(byKeyPath: "lastUpdate", ascending: true)
+            self.bookList = self.bookLocalRealm.objects(BookData.self).sorted(byKeyPath: "lastUpdate", ascending: false)
             self.mainView.tableView.reloadData()
         }
         let menu = UIMenu(title: "정렬기준 선택", children: [sortBytitle, sortByRating, sortByLastUpdate])
