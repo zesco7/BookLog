@@ -226,11 +226,15 @@ class BookMemoViewController: BaseViewController {
     @objc func dismissKeyboard() {
         view.endEditing(true)
     }
+    
+    func notificationCenterPostForBookMemo() {
+        NotificationCenter.default.post(name: NSNotification.Name("memoContents"), object: nil, userInfo: ["isbn": isbn, "lastUpdate": Date(), "comment": mainView.commentTextView.text, "memo": mainView.memoTextView.text])
+    }
 }
 
 extension BookMemoViewController: UITextViewDelegate {
     func textViewDidChange(_ textView: UITextView) {
-        NotificationCenter.default.post(name: NSNotification.Name("memoContents"), object: nil, userInfo: ["isbn": isbn, "lastUpdate": Date(), "comment": mainView.commentTextView.text, "memo": mainView.memoTextView.text])
+       notificationCenterPostForBookMemo()
     }
 }
 
