@@ -92,35 +92,35 @@ class BookListViewCell: BaseTableViewCell {
         bookImage.snp.makeConstraints { make in
             make.topMargin.equalTo(0)
             make.height.equalTo(self).multipliedBy(0.8)
-            make.leadingMargin.equalTo(0)
-            make.width.equalTo(self).multipliedBy(0.2)
+            make.leadingMargin.equalTo(10)
+            make.width.equalTo(self).multipliedBy(0.18)
         }
         
         bookName.snp.makeConstraints { make in
             make.topMargin.equalTo(5)
             make.height.equalTo(self).multipliedBy(0.15)
-            make.leadingMargin.equalTo(bookImage.snp.trailing).offset(20)
+            make.leadingMargin.equalTo(bookImage.snp.trailing).offset(15)
             make.width.lessThanOrEqualTo(self).multipliedBy(0.75)
         }
         
         bookAuthor.snp.makeConstraints { make in
             make.topMargin.equalTo(bookName.snp.bottom).offset(12)
             make.height.equalTo(self).multipliedBy(0.1)
-            make.leadingMargin.equalTo(bookImage.snp.trailing).offset(20)
+            make.leadingMargin.equalTo(bookImage.snp.trailing).offset(15)
             make.trailingMargin.equalTo(10)
         }
         
         bookReview.snp.makeConstraints { make in
             make.topMargin.equalTo(bookAuthor.snp.bottom).offset(15)
             make.width.equalTo(self).multipliedBy(0.7)
-            make.leadingMargin.equalTo(bookImage.snp.trailing).offset(20)
+            make.leadingMargin.equalTo(bookImage.snp.trailing).offset(15)
             make.bottomMargin.equalTo(-5)
         }
         
         star1.snp.makeConstraints { make in
             make.width.equalTo(15)
             make.height.equalTo(15)
-            make.leadingMargin.equalTo(5)
+            make.leadingMargin.equalTo(15)
             make.bottomMargin.equalTo(0)
         }
         

@@ -16,11 +16,13 @@ class BookSearchViewCell: BaseTableViewCell {
     
     let bookName: UILabelFontAttribute = {
        let view = UILabelFontAttribute()
+        view.font = .systemFont(ofSize: 15, weight: .bold)
         return view
     }()
     
     let bookAuthor: UILabelFontAttribute = {
        let view = UILabelFontAttribute()
+        view.font = .systemFont(ofSize: 13)
         return view
     }()
     
@@ -43,23 +45,23 @@ class BookSearchViewCell: BaseTableViewCell {
     
     override func setConstraints() {
         bookImage.snp.makeConstraints { make in
-            make.centerY.equalTo(self)
-            make.height.equalTo(self)
-            make.leadingMargin.equalTo(0)
-            make.width.equalTo(self).multipliedBy(0.2)
+            make.topMargin.equalTo(0)
+            make.height.equalTo(self).multipliedBy(0.9)
+            make.leadingMargin.equalTo(10)
+            make.width.equalTo(self).multipliedBy(0.15)
         }
         
         bookName.snp.makeConstraints { make in
             make.centerY.equalTo(self).multipliedBy(0.7)
-            make.height.equalTo(self).multipliedBy(0.15)
-            make.leadingMargin.equalTo(bookImage.snp.trailing).offset(10)
+            make.height.equalTo(self).multipliedBy(0.2)
+            make.leadingMargin.equalTo(bookImage.snp.trailing).offset(20)
             make.width.equalTo(self).multipliedBy(0.7)
         }
         
         bookAuthor.snp.makeConstraints { make in
-            make.topMargin.equalTo(bookName.snp.bottom).offset(30)
+            make.topMargin.equalTo(bookName.snp.bottom).offset(20)
             make.height.equalTo(self).multipliedBy(0.15)
-            make.leadingMargin.equalTo(bookImage.snp.trailing).offset(10)
+            make.leadingMargin.equalTo(bookImage.snp.trailing).offset(20)
             make.width.equalTo(self).multipliedBy(0.7)
         }
     }

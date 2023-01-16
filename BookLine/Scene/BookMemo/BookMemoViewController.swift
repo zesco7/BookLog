@@ -39,13 +39,12 @@ class BookMemoViewController: BaseViewController {
     }
     
     override func loadView() {
+        super.loadView()
         self.view = mainView
-        mainView.backgroundColor = .backgroundColorBeige
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .backgroundColorBeige
         starRatingSliderAttribute()
         showBookInformation()
         hideKeyboard()

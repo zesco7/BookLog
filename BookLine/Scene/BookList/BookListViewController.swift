@@ -36,9 +36,10 @@ class BookListViewController: BaseViewController {
     }
     
     override func loadView() {
+        super.loadView()
         self.view = mainView
     }
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         mainView.tableView.dataSource = self
@@ -48,7 +49,7 @@ class BookListViewController: BaseViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(memoContentsReceived(notification:)), name: NSNotification.Name("memoContents"), object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(ratingReceived(notification:)), name: NSNotification.Name("rating"), object: nil)
     }
-    
+
     @objc func memoContentsReceived(notification: NSNotification) {
         if let isbn = notification.userInfo?["isbn"], let lastUpdate = notification.userInfo?["lastUpdate"] as? Date, let comment = notification.userInfo?["comment"] as? String, let memo = notification.userInfo?["memo"] as? String{
             bookList = bookLocalRealm.objects(BookData.self).filter("ISBN == '\(isbn)'").sorted(byKeyPath: "lastUpdate", ascending: true)
@@ -116,17 +117,18 @@ class BookListViewController: BaseViewController {
 
     func navigationAttribute() {
         self.navigationItem.title = navigationTitle
-        let sortButton = UIBarButtonItem(title: "정렬", style: .plain, target: self, action: #selector(sortButtonClicked))
         let plusButton = UIBarButtonItem(image: UIImage(systemName: "plus"), style: .plain, target: self, action: #selector(plusButtonClicked))
-        self.navigationItem.rightBarButtonItems = [plusButton, sortButton]
+        if #available(iOS 13.0, *) {
+            let sortButton = uiMenuForSort()
+            self.navigationItem.rightBarButtonItems = [plusButton, sortButton]
+        } else {
+            let sortButton = UIBarButtonItem(title: "정렬", style: .plain, target: self, action: #selector(sortButtonClicked))
+            self.navigationItem.rightBarButtonItems = [plusButton, sortButton]
+        }
     }
    
     @objc func sortButtonClicked() {
-        //iOS14미만: actionSheet
-        sortBookList()
-
-        //iOS14+: UImenu
-        uiMenuForSort()
+            sortBookList()
     }
     
     @objc func plusButtonClicked() {
@@ -148,7 +150,7 @@ class BookListViewController: BaseViewController {
             self.mainView.tableView.reloadData()
         }
         let sortByRating = UIAlertAction(title: "별점순", style: .default) { _ in
-            self.bookList = self.bookLocalRealm.objects(BookData.self).sorted(byKeyPath: "rating", ascending: true)
+            self.bookList = self.bookLocalRealm.objects(BookData.self).sorted(byKeyPath: "rating", ascending: false)
             self.mainView.tableView.reloadData()
         }
         let sortByLastUpdate = UIAlertAction(title: "최종 수정일순", style: .default) { _ in
@@ -163,22 +165,27 @@ class BookListViewController: BaseViewController {
         present(actionSheet, animated: true)
     }
     
-    func uiMenuForSort() {
-        let sortBytitle = UIAction(title: "제목순") { _ in
-            self.bookList = self.bookLocalRealm.objects(BookData.self).sorted(byKeyPath: "title", ascending: true)
-            self.mainView.tableView.reloadData()
+    func uiMenuForSort() -> UIBarButtonItem {
+        var menuItems: [UIAction] {
+            return [
+                UIAction(title: "제목순", image: UIImage(systemName: "character"), handler: { _ in
+                    self.bookList = self.bookLocalRealm.objects(BookData.self).sorted(byKeyPath: "title", ascending: true)
+                    self.mainView.tableView.reloadData()
+                }),
+                UIAction(title: "별점순", image: UIImage(systemName: "star.fill"), handler: { _ in
+                    self.bookList = self.bookLocalRealm.objects(BookData.self).sorted(byKeyPath: "rating", ascending: false)
+                    self.mainView.tableView.reloadData()
+                }),
+                UIAction(title: "최종 수정일순", image: UIImage(systemName: "calendar"), handler: { _ in
+                    self.bookList = self.bookLocalRealm.objects(BookData.self).sorted(byKeyPath: "lastUpdate", ascending: false)
+                    self.mainView.tableView.reloadData()
+                })
+            ]
         }
-        
-        let sortByRating = UIAction(title: "별점순") { _ in
-            self.bookList = self.bookLocalRealm.objects(BookData.self).sorted(byKeyPath: "rating", ascending: true)
-            self.mainView.tableView.reloadData()
+        var menu: UIMenu {
+            return UIMenu(title: "", image: nil, identifier: nil, options: .displayInline, children: menuItems)
         }
-        
-        let sortByLastUpdate = UIAction(title: "최종 수정일순") { _ in
-            self.bookList = self.bookLocalRealm.objects(BookData.self).sorted(byKeyPath: "lastUpdate", ascending: false)
-            self.mainView.tableView.reloadData()
-        }
-        let menu = UIMenu(title: "정렬기준 선택", children: [sortBytitle, sortByRating, sortByLastUpdate])
+        return UIBarButtonItem(title: "정렬", menu: menu)
     }
     
     func actionSheetForBookSearch() {
@@ -214,7 +221,7 @@ extension BookListViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: BookListViewCell.identifier , for: indexPath) as? BookListViewCell else { return UITableViewCell() }
         let url = URL(string: bookList[indexPath.row].imageURL)
-        cell.backgroundColor = .backgroundColorBeige
+        cell.backgroundColor = .tableViewCellColor
         cell.bookImage.kf.setImage(with: url)
         cell.bookName.text = bookList[indexPath.row].title
         cell.bookAuthor.text = bookList[indexPath.row].author
@@ -308,7 +315,9 @@ extension BookListViewController: UITableViewDelegate, UITableViewDataSource {
         }
         deleteMemo.image = UIImage(systemName: "trash.fill")
         deleteMemo.backgroundColor = .red
-        return UISwipeActionsConfiguration(actions: [deleteMemo])
+        let config = UISwipeActionsConfiguration(actions: [deleteMemo])
+        config.performsFirstActionWithFullSwipe = false
+        return config
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {

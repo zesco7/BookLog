@@ -27,10 +27,10 @@ class BookListView: BaseView {
     
     override func setConstraints() {
         tableView.snp.makeConstraints { make in
-            make.topMargin.equalTo(0)
-            make.bottomMargin.equalTo(0)
-            make.leadingMargin.equalTo(0)
-            make.trailingMargin.equalTo(0)
+            make.topMargin.equalTo(self.safeAreaLayoutGuide)
+            make.bottomMargin.equalTo(self.safeAreaLayoutGuide)
+            make.leadingMargin.equalTo(self.safeAreaLayoutGuide)
+            make.trailingMargin.equalTo(self.safeAreaLayoutGuide)
         }
         
         //centerX constraints적용 안되는 이유?

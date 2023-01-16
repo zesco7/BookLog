@@ -21,20 +21,33 @@ class CategoryListViewController: BaseViewController {
     let defaultCategoryTitle = ["모든 책"]
     
     override func loadView() {
-        //self.view.addSubview(mainView)
+        super.loadView()
         self.view = mainView
-        mainView.tableView.delegate = self
-        mainView.tableView.dataSource = self
-        mainView.tableView.register(CategoryListViewCell.self, forCellReuseIdentifier: CategoryListViewCell.identifier)
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        mainView.tableView.delegate = self
+        mainView.tableView.dataSource = self
+        mainView.tableView.register(CategoryListViewCell.self, forCellReuseIdentifier: CategoryListViewCell.identifier)
         UserDefaults.standard.set(defaultCategoryTitle[0], forKey: "defaultCategoryTitle")
         noEditNavigationAttribute()
         categoryList = categoryLocalRealm.objects(CategoryData.self).sorted(byKeyPath: "categorySortCode", ascending: true)
         bookList = bookLocalRealm.objects(BookData.self)
         print("categoryLocalRealm is located at: ", self.categoryLocalRealm.configuration.fileURL!)
+    }
+    
+    func configureUI() {
+        view.addSubview(mainView.tableView)
+    }
+    
+    func setConstraints() {
+        mainView.tableView.snp.makeConstraints { make in
+            make.topMargin.equalTo(view.safeAreaLayoutGuide)
+            make.bottomMargin.equalTo(view.safeAreaLayoutGuide)
+            make.leadingMargin.equalTo(view.safeAreaLayoutGuide)
+            make.trailingMargin.equalTo(view.safeAreaLayoutGuide)
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -113,7 +126,7 @@ extension CategoryListViewController: UITableViewDelegate, UITableViewDataSource
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: CategoryListViewCell.identifier, for: indexPath) as? CategoryListViewCell else { return UITableViewCell() }
-        cell.backgroundColor = .backgroundColorBeige
+        cell.backgroundColor = .tableViewCellColor
         if indexPath.section == 0 {
             cell.categoryThumbnail.image = UIImage(named: "bookshelf")
             cell.categoryName.text = "\(defaultCategoryTitle[indexPath.row])"
@@ -131,7 +144,7 @@ extension CategoryListViewController: UITableViewDelegate, UITableViewDataSource
         if indexPath.section == 0 {
             return nil
         } else {
-            let deleteMemo = UIContextualAction(style: .normal, title: nil) { action, view, completionHandler in
+            let deleteMemo = UIContextualAction(style: .destructive, title: nil) { action, view, completionHandler in
                 try! self.categoryLocalRealm.write {
                     self.categoryLocalRealm.delete(self.categoryList[indexPath.row])
                     self.mainView.tableView.reloadData()
@@ -140,7 +153,9 @@ extension CategoryListViewController: UITableViewDelegate, UITableViewDataSource
             }
             deleteMemo.image = UIImage(systemName: "trash.fill")
             deleteMemo.backgroundColor = .red
-            return UISwipeActionsConfiguration(actions: [deleteMemo])
+            let config = UISwipeActionsConfiguration(actions: [deleteMemo])
+            config.performsFirstActionWithFullSwipe = false
+            return config
         }
     }
     
@@ -149,7 +164,7 @@ extension CategoryListViewController: UITableViewDelegate, UITableViewDataSource
     }
     
     func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
-        //첫행은 순서변경적용 안되도록 처리예정
+        //@리팩토링: 첫행은 순서변경불가 처리예정
     }
     
     func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {

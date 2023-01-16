@@ -21,7 +21,7 @@ class BaseView: UIView {
     }
     
     func attribute() {
-        self.backgroundColor = .backgroundColorBeige
+        self.backgroundColor = .clear
     }
     
     func configureUI() { }

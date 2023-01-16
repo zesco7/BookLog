@@ -43,7 +43,19 @@ class BookSearchViewController: BaseViewController {
         mainView.tableView.prefetchDataSource = self
         bookSearchResults = bookSearchLocalRealm.objects(BookData.self)
         navigationAttribute()
-        //hideKeyboard()
+    }
+    
+    func configureUI() {
+        view.addSubview(mainView.tableView) 
+    }
+    
+    func setConstraints() {
+        mainView.tableView.snp.makeConstraints { make in
+            make.topMargin.equalTo(view.safeAreaLayoutGuide)
+            make.bottomMargin.equalTo(view.safeAreaLayoutGuide)
+            make.leadingMargin.equalTo(view.safeAreaLayoutGuide)
+            make.trailingMargin.equalTo(view.safeAreaLayoutGuide)
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -57,6 +69,7 @@ class BookSearchViewController: BaseViewController {
         self.navigationItem.hidesSearchBarWhenScrolling = false
         searchController.searchBar.delegate = self
         searchController.searchBar.placeholder = "검색"
+        searchController.searchBar.searchTextField.textColor = .black
         searchController.hidesNavigationBarDuringPresentation = false
         searchController.automaticallyShowsCancelButton = false
         
@@ -71,15 +84,6 @@ class BookSearchViewController: BaseViewController {
 //            self.bookSearchLocalRealm.add(multiselectionArray)
 //            self.navigationController?.popViewController(animated: true)
 //        })
-    }
-    
-    func hideKeyboard() {
-        let tap = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
-        view.addGestureRecognizer(tap)
-    }
-    
-    @objc func dismissKeyboard() {
-        view.endEditing(true)
     }
     
     func alertForBookSearch() {
@@ -113,7 +117,7 @@ extension BookSearchViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: BookSearchViewCell.identifier , for: indexPath) as? BookSearchViewCell else { return UITableViewCell() }
         let url = URL(string: (bookInfoArray?[indexPath.row].image)!)
-        cell.backgroundColor = .backgroundColorBeige
+        cell.backgroundColor = .tableViewCellColor
         cell.bookImage.kf.setImage(with: url)
         cell.bookName.text = bookInfoArray?[indexPath.row].title
         cell.bookAuthor.text = bookInfoArray?[indexPath.row].author
@@ -137,7 +141,7 @@ extension BookSearchViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 120
+        return 80
     }
 }
 
@@ -157,7 +161,6 @@ extension BookSearchViewController: UITableViewDataSourcePrefetching {
                     print("Pagenation Excuted", self!.bookInfoArray)
                 }
             }
-            print("===\(indexPaths)")
         }
         
         func tableView(_ tableView: UITableView, cancelPrefetchingForRowsAt indexPaths: [IndexPath]) {

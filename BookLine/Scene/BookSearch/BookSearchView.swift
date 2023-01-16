@@ -15,17 +15,15 @@ class BookSearchView: BaseView {
     }()
     
     override func configureUI() {
-        [tableView].forEach {
-            self.addSubview($0)
-        }
+        self.addSubview(tableView)
     }
     
     override func setConstraints() {
         tableView.snp.makeConstraints { make in
-            make.topMargin.equalTo(0)
-            make.bottomMargin.equalTo(0)
-            make.leadingMargin.equalTo(0)
-            make.trailingMargin.equalTo(0)
+            make.topMargin.equalTo(safeAreaLayoutGuide.snp.top)
+            make.bottomMargin.equalTo(safeAreaLayoutGuide.snp.bottom)
+            make.leadingMargin.equalTo(safeAreaLayoutGuide.snp.leading)
+            make.trailingMargin.equalTo(safeAreaLayoutGuide.snp.trailing)
         }
     }
 }

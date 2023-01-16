@@ -18,6 +18,6 @@ class UITableViewAttribute: UITableView {
     }
     
     func attribute() {
-        self.backgroundColor = .backgroundColorBeige
+        self.backgroundColor = .tableViewColor
     }
 }

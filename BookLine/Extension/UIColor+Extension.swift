@@ -8,8 +8,16 @@
 import UIKit
 
 extension UIColor {
-    class var backgroundColorBeige: UIColor {
-        return UIColor(red: 248/255, green: 248/255, blue: 217/255, alpha: 0.8)
+    class var viewControllerColor: UIColor {
+        return UIColor(red: 248/255, green: 248/255, blue: 217/255, alpha: 1)
+    }
+    
+    class var tableViewColor: UIColor {
+        return UIColor(red: 248/255, green: 248/255, blue: 217/255, alpha: 1)
+    }
+    
+    class var tableViewCellColor: UIColor {
+        return UIColor(red: 255/255, green: 229/255, blue: 204/255, alpha: 0.4)
     }
     
     class var navigationBar: UIColor {
