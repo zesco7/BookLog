@@ -88,6 +88,7 @@ class BookListViewController: BaseViewController {
     }
     
     override func viewWillAppear(_ animated: Bool) {
+        print(#function)
         let classification = UserDefaults.standard.string(forKey: "classification")
         switch categorySortType {
         case .all:
@@ -101,6 +102,7 @@ class BookListViewController: BaseViewController {
                 self.bookList = self.bookLocalRealm.objects(BookData.self)
             }
         case .category(let categoryCode):
+            print("카테고리", bookList)
             if classification == "title" {
                 self.bookList = bookLocalRealm.objects(BookData.self).filter("categorySortCode == '\(categoryCode)'").sorted(byKeyPath: "title", ascending: true)
             } else if classification == "rating" {
@@ -111,19 +113,21 @@ class BookListViewController: BaseViewController {
                 self.bookList = bookLocalRealm.objects(BookData.self).filter("categorySortCode == '\(categoryCode)'")
             }
         case .withoutCategory(let categoryCode):
+            print("without카테고리", bookList)
             self.bookList = bookLocalRealm.objects(BookData.self).filter("categorySortCode != '\(categoryCode)'")
+            let closeButton = UIBarButtonItem(title: "닫기", style: .plain, target: self, action: #selector(self.closeButtonClicked))
             let dummyButton = UIBarButtonItem()
-            let completionButton = UIBarButtonItem(title: "완료", style: .plain, target: self, action: #selector(self.completionButtonClicked))
             self.navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.black]
             self.navigationController?.navigationBar.tintColor = .navigationBar
-            self.navigationItem.rightBarButtonItems = [dummyButton, completionButton]
+            self.navigationItem.leftBarButtonItem = closeButton
+            self.navigationItem.rightBarButtonItem = dummyButton
         default:
             return
         }
         self.mainView.tableView.reloadData()
     }
     
-    @objc func completionButtonClicked() {
+    @objc func closeButtonClicked() {
         switch categorySortType {
         case .withoutCategory(let categoryCode):
             self.dismiss(animated: true)
@@ -131,7 +135,7 @@ class BookListViewController: BaseViewController {
             return
         }
     }
-
+    
     func navigationAttribute() {
         self.navigationItem.title = navigationTitle
         let plusButton = UIBarButtonItem(image: UIImage(systemName: "plus"), style: .plain, target: self, action: #selector(plusButtonClicked))
@@ -359,18 +363,25 @@ extension BookListViewController: UITableViewDelegate, UITableViewDataSource {
             vc.bookWriter = bookList[indexPath.row].author
             print("all or cate", bookList[indexPath.row].categorySortCode)
             self.navigationController?.pushViewController(vc, animated: true)
-        case .withoutCategory(categoryCode: bookList[indexPath.row].categorySortCode):
+        case .withoutCategory(let categoryCode):
             print("without", bookList[indexPath.row].categorySortCode)
-            try! bookLocalRealm.write({
-                bookList[indexPath.row].categorySortCode = categorySortType.categorySortCode!
-            })
-            bookList[indexPath.row].categorySortCode
+            let alert = UIAlertController(title: "선택한 책을 이동하시겠습니까?", message: nil, preferredStyle: .alert)
+            let ok = UIAlertAction(title: "확인", style: .default) { _ in
+                try! self.bookLocalRealm.write({
+                    self.bookList[indexPath.row].categorySortCode = categoryCode
+                })
+                self.dismiss(animated: true)
+            }
+            let cancel = UIAlertAction(title: "취소", style: .cancel)
+            alert.addAction(ok)
+            alert.addAction(cancel)
+            self.present(alert, animated: true)
         default:
             return
         }
     }
-        
-        func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-            return 120
-        }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 120
     }
+}

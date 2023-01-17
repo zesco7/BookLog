@@ -14,8 +14,10 @@ enum BookSortType {
     
     var categorySortCode: String? {
         switch self {
-        case .all, .withoutCategory:
+        case .all:
             return nil
+        case .withoutCategory(let categoryCode):
+            return categoryCode
         case .category(let categoryCode):
             return categoryCode
         }
