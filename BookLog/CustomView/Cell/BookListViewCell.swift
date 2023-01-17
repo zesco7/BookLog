@@ -112,8 +112,8 @@ class BookListViewCell: BaseTableViewCell {
         
         bookReview.snp.makeConstraints { make in
             make.topMargin.equalTo(bookAuthor.snp.bottom).offset(15)
-            make.width.equalTo(self).multipliedBy(0.7)
             make.leadingMargin.equalTo(bookImage.snp.trailing).offset(15)
+            make.trailingMargin.equalTo(self).offset(-15)
             make.bottomMargin.equalTo(-5)
         }
         
