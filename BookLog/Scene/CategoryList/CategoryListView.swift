@@ -20,10 +20,7 @@ class CategoryListView: BaseView {
     
     override func setConstraints() {
         tableView.snp.makeConstraints { make in
-            make.topMargin.equalTo(self.safeAreaLayoutGuide)
-            make.bottomMargin.equalTo(self.safeAreaLayoutGuide)
-            make.leadingMargin.equalTo(self.safeAreaLayoutGuide)
-            make.trailingMargin.equalTo(self.safeAreaLayoutGuide)
+            make.edges.equalToSuperview()
         }
     }
 }

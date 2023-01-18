@@ -136,14 +136,8 @@ class BookListViewController: BaseViewController {
     func navigationAttribute() {
         self.navigationItem.title = navigationTitle
         let plusButton = UIBarButtonItem(image: UIImage(systemName: "plus"), style: .plain, target: self, action: #selector(plusButtonClicked))
-        
-        if #available(iOS 13.0, *) {
-            let sortButton = uiMenuForSort()
-            self.navigationItem.rightBarButtonItems = [plusButton, sortButton]
-        } else {
-            let sortButton = UIBarButtonItem(title: "정렬", style: .plain, target: self, action: #selector(sortButtonClicked))
-            self.navigationItem.rightBarButtonItems = [plusButton, sortButton]
-        }
+        let sortButton = UIBarButtonItem(title: "정렬", style: .plain, target: self, action: #selector(sortButtonClicked))
+        self.navigationItem.rightBarButtonItems = [plusButton, sortButton]
     }
    
     @objc func sortButtonClicked() {
@@ -162,61 +156,6 @@ class BookListViewController: BaseViewController {
         }
     }
     
-    func uiMenuForSort() -> UIBarButtonItem {
-        switch categorySortType {
-        case .all:
-            var menuItems: [UIAction] {
-                return [
-                    UIAction(title: "제목순", image: UIImage(systemName: "character"), handler: { _ in
-                        self.bookList = self.bookLocalRealm.objects(BookData.self).sorted(byKeyPath: "title", ascending: true)
-                        UserDefaults.standard.set("title", forKey: "classification")
-                        self.mainView.tableView.reloadData()
-                    }),
-                    UIAction(title: "별점순", image: UIImage(systemName: "star.fill"), handler: { _ in
-                        self.bookList = self.bookLocalRealm.objects(BookData.self).sorted(byKeyPath: "rating", ascending: false)
-                        UserDefaults.standard.set("rating", forKey: "classification")
-                        self.mainView.tableView.reloadData()
-                    }),
-                    UIAction(title: "최종 수정일순", image: UIImage(systemName: "calendar"), handler: { _ in
-                        self.bookList = self.bookLocalRealm.objects(BookData.self).sorted(byKeyPath: "lastUpdate", ascending: false)
-                        UserDefaults.standard.set("lastUpdate", forKey: "classification")
-                        self.mainView.tableView.reloadData()
-                    })
-                ]
-            }
-            var menu: UIMenu {
-                return UIMenu(title: "", image: nil, identifier: nil, options: .displayInline, children: menuItems)
-            }
-            return UIBarButtonItem(title: title, menu: menu)
-        case .category(let categoryCode):
-            var menuItems: [UIAction] {
-                return [
-                    UIAction(title: "제목순", image: UIImage(systemName: "character"), handler: { _ in
-                        self.bookList = self.bookLocalRealm.objects(BookData.self).filter("categorySortCode == '\(categoryCode)'").sorted(byKeyPath: "title", ascending: true)
-                        UserDefaults.standard.set("title", forKey: "classification")
-                        self.mainView.tableView.reloadData()
-                    }),
-                    UIAction(title: "별점순", image: UIImage(systemName: "star.fill"), handler: { _ in
-                        self.bookList = self.bookLocalRealm.objects(BookData.self).filter("categorySortCode == '\(categoryCode)'").sorted(byKeyPath: "rating", ascending: false)
-                        UserDefaults.standard.set("rating", forKey: "classification")
-                        self.mainView.tableView.reloadData()
-                    }),
-                    UIAction(title: "최종 수정일순", image: UIImage(systemName: "calendar"), handler: { _ in
-                        self.bookList = self.bookLocalRealm.objects(BookData.self).filter("categorySortCode == '\(categoryCode)'").sorted(byKeyPath: "lastUpdate", ascending: false)
-                        UserDefaults.standard.set("lastUpdate", forKey: "classification")
-                        self.mainView.tableView.reloadData()
-                    })
-                ]
-            }
-            var menu: UIMenu {
-                return UIMenu(title: "", image: nil, identifier: nil, options: .displayInline, children: menuItems)
-            }
-            return UIBarButtonItem(title: "정렬", menu: menu)
-        default:
-            return UIBarButtonItem()
-        }
-    }
-    
     func sortBookList() {
         switch categorySortType {
         case .all:
@@ -226,7 +165,7 @@ class BookListViewController: BaseViewController {
                 self.bookList = self.bookLocalRealm.objects(BookData.self).sorted(byKeyPath: "title", ascending: true)
                 self.mainView.tableView.reloadData()
             }
-            let sortByRating = UIAlertAction(title: "별점순", style: .default) { _ in
+            let sortByRating = UIAlertAction(title: "별점 높은순", style: .default) { _ in
                 self.bookList = self.bookLocalRealm.objects(BookData.self).sorted(byKeyPath: "rating", ascending: false)
                 self.mainView.tableView.reloadData()
             }
@@ -247,7 +186,7 @@ class BookListViewController: BaseViewController {
                 self.bookList = self.bookLocalRealm.objects(BookData.self).filter("categorySortCode == '\(categoryCode)'").sorted(byKeyPath: "title", ascending: true)
                 self.mainView.tableView.reloadData()
             }
-            let sortByRating = UIAlertAction(title: "별점순", style: .default) { _ in
+            let sortByRating = UIAlertAction(title: "별점 높은순", style: .default) { _ in
                 self.bookList = self.bookLocalRealm.objects(BookData.self).filter("categorySortCode == '\(categoryCode)'").sorted(byKeyPath: "rating", ascending: false)
                 self.mainView.tableView.reloadData()
             }
@@ -384,7 +323,7 @@ extension BookListViewController: UITableViewDelegate, UITableViewDataSource {
                 try! self.bookLocalRealm.write {
                     self.bookLocalRealm.delete(self.bookList[indexPath.row])
                     self.mainView.tableView.reloadData()
-                    print("Realm Deleted")
+                    print("Book Deleted")
                 }
             }
             let cancel = UIAlertAction(title: "취소", style: .cancel)

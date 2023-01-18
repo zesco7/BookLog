@@ -48,7 +48,7 @@ class CategoryListViewCell: BaseTableViewCell {
         categoryThumbnail.snp.makeConstraints { make in
             make.centerY.equalTo(self)
             make.height.equalTo(self).multipliedBy(0.6)
-            make.leadingMargin.equalTo(20)
+            make.leadingMargin.equalTo(10)
             make.width.equalTo(self).multipliedBy(0.1)
         }
         

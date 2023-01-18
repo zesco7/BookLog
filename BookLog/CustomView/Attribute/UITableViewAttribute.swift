@@ -19,5 +19,6 @@ class UITableViewAttribute: UITableView {
     
     func attribute() {
         self.backgroundColor = .tableViewColor
+        self.separatorInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
     }
 }

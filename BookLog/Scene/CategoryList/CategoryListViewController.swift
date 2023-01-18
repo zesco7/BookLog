@@ -46,14 +46,8 @@ class CategoryListViewController: BaseViewController {
         self.navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.black]
         self.navigationController!.navigationBar.tintColor = .navigationBar
         let addButton = UIBarButtonItem(image: UIImage(systemName: "plus"), style: .plain, target: self, action: #selector(addButtonClicked))
-        
-        if #available(iOS 13.0, *) {
-            let sortButton = uiMenuForSort()
-            self.navigationItem.rightBarButtonItems = [addButton, sortButton]
-        } else {
-            let sortButton = UIBarButtonItem(title: "정렬", style: .plain, target: self, action: #selector(sortCategoryClicked))
-            self.navigationItem.rightBarButtonItems = [addButton, sortButton]
-        }
+        let sortButton = UIBarButtonItem(title: "정렬", style: .plain, target: self, action: #selector(sortCategoryClicked))
+        self.navigationItem.rightBarButtonItems = [addButton, sortButton]
     }
     
     @objc func addButtonClicked() {
@@ -63,27 +57,7 @@ class CategoryListViewController: BaseViewController {
     @objc func sortCategoryClicked() {
         sortCategoryList()
     }
-    
-    @available(iOS 13.0, *)
-    func uiMenuForSort() -> UIBarButtonItem {
-        var menuItems: [UIAction] {
-            return [
-                UIAction(title: "가나다순", image: UIImage(systemName: "textformat.superscript"), handler: { _ in
-                    self.categoryList = self.categoryLocalRealm.objects(CategoryData.self).sorted(byKeyPath: "category", ascending: true)
-                    self.mainView.tableView.reloadData()
-                }),
-                UIAction(title: "가나다역순", image: UIImage(systemName: "textformat.subscript"), handler: { _ in
-                    self.categoryList = self.categoryLocalRealm.objects(CategoryData.self).sorted(byKeyPath: "category", ascending: false)
-                    self.mainView.tableView.reloadData()
-                })
-            ]
-        }
-        var menu: UIMenu {
-            return UIMenu(title: "", image: nil, identifier: nil, options: .displayInline, children: menuItems)
-        }
-        return UIBarButtonItem(title: "정렬", menu: menu)
-    }
-    
+
     func sortCategoryList() {
         let actionSheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         let sortByTitleAscending = UIAlertAction(title: "가나다순", style: .default) { _ in
@@ -91,7 +65,7 @@ class CategoryListViewController: BaseViewController {
             self.mainView.tableView.reloadData()
         }
         let sortByTitleDescending = UIAlertAction(title: "가나다역순", style: .default) { _ in
-            self.categoryList = self.categoryLocalRealm.objects(CategoryData.self).sorted(byKeyPath: "category", ascending: true)
+            self.categoryList = self.categoryLocalRealm.objects(CategoryData.self).sorted(byKeyPath: "category", ascending: false)
             self.mainView.tableView.reloadData()
         }
         let cancel = UIAlertAction(title: "취소", style: .cancel)
@@ -116,7 +90,6 @@ class CategoryListViewController: BaseViewController {
                     let record = CategoryData(regDate: Date(), category: "\(alert.textFields![0].text!)")
                     try! self.categoryLocalRealm.write {
                         self.categoryLocalRealm.add(record)
-                        self.categoryList = self.categoryList.map({ $0 })
                         self.mainView.tableView.reloadData()
                     }
                 }
@@ -163,11 +136,18 @@ extension CategoryListViewController: UITableViewDelegate, UITableViewDataSource
             return nil
         } else {
             let deleteMemo = UIContextualAction(style: .destructive, title: nil) { action, view, completionHandler in
-                try! self.categoryLocalRealm.write {
-                    self.categoryLocalRealm.delete(self.categoryList[indexPath.row])
-                    self.mainView.tableView.reloadData()
-                    print("Category Deleted")
+                let alert = UIAlertController(title: "삭제하시겠습니까?", message: nil, preferredStyle: .alert)
+                let ok = UIAlertAction(title: "삭제", style: .destructive) { _ in
+                    try! self.categoryLocalRealm.write {
+                        self.categoryLocalRealm.delete(self.categoryList[indexPath.row])
+                        self.mainView.tableView.reloadData()
+                        print("Category Deleted")
+                    }
                 }
+                let cancel = UIAlertAction(title: "취소", style: .cancel)
+                alert.addAction(ok)
+                alert.addAction(cancel)
+                self.present(alert, animated: true)
             }
             deleteMemo.image = UIImage(systemName: "trash.fill")
             deleteMemo.backgroundColor = .red

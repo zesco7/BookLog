@@ -92,7 +92,7 @@ class BookListViewCell: BaseTableViewCell {
         bookImage.snp.makeConstraints { make in
             make.topMargin.equalTo(0)
             make.height.equalTo(self).multipliedBy(0.8)
-            make.leadingMargin.equalTo(10)
+            make.leadingMargin.equalTo(0)
             make.width.equalTo(self).multipliedBy(0.18)
         }
         
@@ -100,55 +100,55 @@ class BookListViewCell: BaseTableViewCell {
             make.topMargin.equalTo(5)
             make.height.equalTo(self).multipliedBy(0.15)
             make.leadingMargin.equalTo(bookImage.snp.trailing).offset(15)
-            make.width.equalTo(self).multipliedBy(0.7)
+            make.width.equalTo(self).multipliedBy(0.72)
         }
         
         bookAuthor.snp.makeConstraints { make in
             make.topMargin.equalTo(bookName.snp.bottom).offset(12)
             make.height.equalTo(self).multipliedBy(0.1)
             make.leadingMargin.equalTo(bookImage.snp.trailing).offset(15)
-            make.trailingMargin.equalTo(10)
+            make.trailingMargin.equalTo(5)
         }
         
         bookReview.snp.makeConstraints { make in
             make.topMargin.equalTo(bookAuthor.snp.bottom).offset(15)
             make.leadingMargin.equalTo(bookImage.snp.trailing).offset(15)
-            make.trailingMargin.equalTo(self).offset(-15)
+            make.trailingMargin.equalTo(self).offset(-5)
             make.bottomMargin.equalTo(-5)
         }
         
         star1.snp.makeConstraints { make in
             make.width.equalTo(15)
             make.height.equalTo(15)
-            make.leadingMargin.equalTo(15)
+            make.leadingMargin.equalTo(0)
             make.bottomMargin.equalTo(0)
         }
         
         star2.snp.makeConstraints { make in
             make.width.equalTo(15)
             make.height.equalTo(15)
-            make.leadingMargin.equalTo(star1.snp.trailing).offset(5)
+            make.leadingMargin.equalTo(star1.snp.trailing).offset(6)
             make.bottomMargin.equalTo(0)
         }
         
         star3.snp.makeConstraints { make in
             make.width.equalTo(15)
             make.height.equalTo(15)
-            make.leadingMargin.equalTo(star2.snp.trailing).offset(5)
+            make.leadingMargin.equalTo(star2.snp.trailing).offset(6)
             make.bottomMargin.equalTo(0)
         }
         
         star4.snp.makeConstraints { make in
             make.width.equalTo(15)
             make.height.equalTo(15)
-            make.leadingMargin.equalTo(star3.snp.trailing).offset(5)
+            make.leadingMargin.equalTo(star3.snp.trailing).offset(6)
             make.bottomMargin.equalTo(0)
         }
         
         star5.snp.makeConstraints { make in
             make.width.equalTo(15)
             make.height.equalTo(15)
-            make.leadingMargin.equalTo(star4.snp.trailing).offset(5)
+            make.leadingMargin.equalTo(star4.snp.trailing).offset(6)
             make.bottomMargin.equalTo(0)
         }
     }

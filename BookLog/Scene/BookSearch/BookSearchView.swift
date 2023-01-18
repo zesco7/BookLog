@@ -20,10 +20,7 @@ class BookSearchView: BaseView {
     
     override func setConstraints() {
         tableView.snp.makeConstraints { make in
-            make.topMargin.equalTo(safeAreaLayoutGuide.snp.top)
-            make.bottomMargin.equalTo(safeAreaLayoutGuide.snp.bottom)
-            make.leadingMargin.equalTo(safeAreaLayoutGuide.snp.leading)
-            make.trailingMargin.equalTo(safeAreaLayoutGuide.snp.trailing)
+            make.edges.equalToSuperview()
         }
     }
 }
