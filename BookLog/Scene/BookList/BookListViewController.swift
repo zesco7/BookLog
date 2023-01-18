@@ -88,7 +88,6 @@ class BookListViewController: BaseViewController {
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        print(#function)
         let classification = UserDefaults.standard.string(forKey: "classification")
         switch categorySortType {
         case .all:
@@ -102,7 +101,6 @@ class BookListViewController: BaseViewController {
                 self.bookList = self.bookLocalRealm.objects(BookData.self)
             }
         case .category(let categoryCode):
-            print("카테고리", bookList)
             if classification == "title" {
                 self.bookList = bookLocalRealm.objects(BookData.self).filter("categorySortCode == '\(categoryCode)'").sorted(byKeyPath: "title", ascending: true)
             } else if classification == "rating" {
@@ -113,7 +111,6 @@ class BookListViewController: BaseViewController {
                 self.bookList = bookLocalRealm.objects(BookData.self).filter("categorySortCode == '\(categoryCode)'")
             }
         case .withoutCategory(let categoryCode):
-            print("without카테고리", bookList)
             self.bookList = bookLocalRealm.objects(BookData.self).filter("categorySortCode != '\(categoryCode)'")
             let closeButton = UIBarButtonItem(title: "닫기", style: .plain, target: self, action: #selector(self.closeButtonClicked))
             let dummyButton = UIBarButtonItem()
@@ -139,6 +136,7 @@ class BookListViewController: BaseViewController {
     func navigationAttribute() {
         self.navigationItem.title = navigationTitle
         let plusButton = UIBarButtonItem(image: UIImage(systemName: "plus"), style: .plain, target: self, action: #selector(plusButtonClicked))
+        
         if #available(iOS 13.0, *) {
             let sortButton = uiMenuForSort()
             self.navigationItem.rightBarButtonItems = [plusButton, sortButton]
@@ -166,6 +164,30 @@ class BookListViewController: BaseViewController {
     
     func uiMenuForSort() -> UIBarButtonItem {
         switch categorySortType {
+        case .all:
+            var menuItems: [UIAction] {
+                return [
+                    UIAction(title: "제목순", image: UIImage(systemName: "character"), handler: { _ in
+                        self.bookList = self.bookLocalRealm.objects(BookData.self).sorted(byKeyPath: "title", ascending: true)
+                        UserDefaults.standard.set("title", forKey: "classification")
+                        self.mainView.tableView.reloadData()
+                    }),
+                    UIAction(title: "별점순", image: UIImage(systemName: "star.fill"), handler: { _ in
+                        self.bookList = self.bookLocalRealm.objects(BookData.self).sorted(byKeyPath: "rating", ascending: false)
+                        UserDefaults.standard.set("rating", forKey: "classification")
+                        self.mainView.tableView.reloadData()
+                    }),
+                    UIAction(title: "최종 수정일순", image: UIImage(systemName: "calendar"), handler: { _ in
+                        self.bookList = self.bookLocalRealm.objects(BookData.self).sorted(byKeyPath: "lastUpdate", ascending: false)
+                        UserDefaults.standard.set("lastUpdate", forKey: "classification")
+                        self.mainView.tableView.reloadData()
+                    })
+                ]
+            }
+            var menu: UIMenu {
+                return UIMenu(title: "", image: nil, identifier: nil, options: .displayInline, children: menuItems)
+            }
+            return UIBarButtonItem(title: title, menu: menu)
         case .category(let categoryCode):
             var menuItems: [UIAction] {
                 return [
@@ -197,6 +219,27 @@ class BookListViewController: BaseViewController {
     
     func sortBookList() {
         switch categorySortType {
+        case .all:
+            bookList = bookLocalRealm.objects(BookData.self)
+            let actionSheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+            let sortBytitle = UIAlertAction(title: "제목순", style: .default) { _ in
+                self.bookList = self.bookLocalRealm.objects(BookData.self).sorted(byKeyPath: "title", ascending: true)
+                self.mainView.tableView.reloadData()
+            }
+            let sortByRating = UIAlertAction(title: "별점순", style: .default) { _ in
+                self.bookList = self.bookLocalRealm.objects(BookData.self).sorted(byKeyPath: "rating", ascending: false)
+                self.mainView.tableView.reloadData()
+            }
+            let sortByLastUpdate = UIAlertAction(title: "최종 수정일순", style: .default) { _ in
+                self.bookList = self.bookLocalRealm.objects(BookData.self).sorted(byKeyPath: "lastUpdate", ascending: false)
+                self.mainView.tableView.reloadData()
+            }
+            let cancel = UIAlertAction(title: "취소", style: .cancel)
+            actionSheet.addAction(sortBytitle)
+            actionSheet.addAction(sortByRating)
+            actionSheet.addAction(sortByLastUpdate)
+            actionSheet.addAction(cancel)
+            present(actionSheet, animated: true)
         case .category(let categoryCode):
             bookList = bookLocalRealm.objects(BookData.self).filter("categorySortCode == '\(categoryCode)'")
             let actionSheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
@@ -234,6 +277,7 @@ class BookListViewController: BaseViewController {
             case .category(let categoryCode):
                 let vc = BookListViewController(categorySortType: .withoutCategory(categoryCode: categoryCode), navigationTitle: UserDefaults.standard.string(forKey: "defaultCategoryTitle"))
                 let navi = UINavigationController(rootViewController: vc)
+                navi.modalPresentationStyle = .fullScreen
                 self.present(navi, animated: true)
             default:
                 return
@@ -361,10 +405,8 @@ extension BookListViewController: UITableViewDelegate, UITableViewDataSource {
             let vc = BookMemoViewController(isbn: bookList[indexPath.row].ISBN, lastUpdate: bookList[indexPath.row].lastUpdate, review: bookList[indexPath.row].review, memo: bookList[indexPath.row].memo, bookMemo: bookList[indexPath.row], starRating: bookList[indexPath.row].rating, linkURL: bookList[indexPath.row].linkURL)
             vc.bookTitle = bookList[indexPath.row].title
             vc.bookWriter = bookList[indexPath.row].author
-            print("all or cate", bookList[indexPath.row].categorySortCode)
             self.navigationController?.pushViewController(vc, animated: true)
         case .withoutCategory(let categoryCode):
-            print("without", bookList[indexPath.row].categorySortCode)
             let alert = UIAlertController(title: "선택한 책을 이동하시겠습니까?", message: nil, preferredStyle: .alert)
             let ok = UIAlertAction(title: "확인", style: .default) { _ in
                 try! self.bookLocalRealm.write({

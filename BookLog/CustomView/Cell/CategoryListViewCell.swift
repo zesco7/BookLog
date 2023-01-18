@@ -8,11 +8,6 @@
 import UIKit
 import SnapKit
 
-//protocol CellDelegate: NSObject {
-//
-//    var value: Date { get }
-//}
-
 class CategoryListViewCell: BaseTableViewCell {
     let categoryThumbnail: UIImageView = {
         let view = UIImageView()
@@ -71,8 +66,4 @@ class CategoryListViewCell: BaseTableViewCell {
             make.width.equalTo(self).multipliedBy(0.7)
         }
     }
-    
-//    public func configureCell(text: String) {
-//        categoryName.text = text + (cellDelegate?.value.description ?? "")
-//    }
 }

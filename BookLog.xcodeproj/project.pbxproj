@@ -33,7 +33,6 @@
 		98B16562295C1FE2007D24CF /* BookListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98B16561295C1FE2007D24CF /* BookListViewController.swift */; };
 		98B16564295C22C3007D24CF /* BookListViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98B16563295C22C3007D24CF /* BookListViewCell.swift */; };
 		98B16568295C2ACE007D24CF /* BaseTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98B16567295C2ACE007D24CF /* BaseTableViewCell.swift */; };
-		98B16570295C4B6D007D24CF /* CategoryListCreator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98B1656F295C4B6D007D24CF /* CategoryListCreator.swift */; };
 		98B16572295EE05B007D24CF /* BookMemoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98B16571295EE05B007D24CF /* BookMemoView.swift */; };
 		98B16574295EE064007D24CF /* BookMemoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98B16573295EE064007D24CF /* BookMemoViewController.swift */; };
 		98CB9D102961588700958583 /* UILabelFontAttribute.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98CB9D0F2961588700958583 /* UILabelFontAttribute.swift */; };
@@ -71,7 +70,6 @@
 		98B16561295C1FE2007D24CF /* BookListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookListViewController.swift; sourceTree = "<group>"; };
 		98B16563295C22C3007D24CF /* BookListViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookListViewCell.swift; sourceTree = "<group>"; };
 		98B16567295C2ACE007D24CF /* BaseTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseTableViewCell.swift; sourceTree = "<group>"; };
-		98B1656F295C4B6D007D24CF /* CategoryListCreator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryListCreator.swift; sourceTree = "<group>"; };
 		98B16571295EE05B007D24CF /* BookMemoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookMemoView.swift; sourceTree = "<group>"; };
 		98B16573295EE064007D24CF /* BookMemoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookMemoViewController.swift; sourceTree = "<group>"; };
 		98CB9D0F2961588700958583 /* UILabelFontAttribute.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UILabelFontAttribute.swift; sourceTree = "<group>"; };
@@ -186,7 +184,6 @@
 			children = (
 				9831A04E295AF45400437B26 /* CategoryListView.swift */,
 				9831A050295AF45B00437B26 /* CategoryListViewController.swift */,
-				98B1656F295C4B6D007D24CF /* CategoryListCreator.swift */,
 			);
 			path = CategoryList;
 			sourceTree = "<group>";
@@ -368,7 +365,6 @@
 				98B16562295C1FE2007D24CF /* BookListViewController.swift in Sources */,
 				98F9F97229719A0E00A11418 /* BookSortType.swift in Sources */,
 				98CB9D1A29618C9600958583 /* BookSearchViewController.swift in Sources */,
-				98B16570295C4B6D007D24CF /* CategoryListCreator.swift in Sources */,
 				9831A04B295AF14900437B26 /* BaseView.swift in Sources */,
 				983D17AF295B06FC00D265EA /* CategoryListViewCell.swift in Sources */,
 				98F9F96F29713F7D00A11418 /* UITableViewAttribute.swift in Sources */,
@@ -538,6 +534,7 @@
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -569,6 +566,7 @@
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

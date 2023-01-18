@@ -61,7 +61,6 @@ class BookMemoViewController: BaseViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         showStarRating()
-        print("현재 별점: ", mainView.starRatingSlider.value)
     }
     
     func navigationAttribute() {
@@ -95,7 +94,6 @@ class BookMemoViewController: BaseViewController {
     }
     
     @objc func openBookInfoUrl(_ sender: UIButton) {
-        //웹킷으로 앱내부에서 처리하는거 추천
         if let url = URL(string: linkURL) {
                 UIApplication.shared.open(url)
               } else {

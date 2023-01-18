@@ -14,15 +14,8 @@ class BookListView: BaseView {
         return view
     }()
     
-    var userGuide: UILabelFontAttribute = {
-       let view = UILabelFontAttribute()
-        return view
-    }()
-    
     override func configureUI() {
-        [tableView, userGuide].forEach {
-            self.addSubview($0)
-        }
+        self.addSubview(tableView)
     }
     
     override func setConstraints() {
@@ -31,14 +24,6 @@ class BookListView: BaseView {
             make.bottomMargin.equalTo(self.safeAreaLayoutGuide)
             make.leadingMargin.equalTo(self.safeAreaLayoutGuide)
             make.trailingMargin.equalTo(self.safeAreaLayoutGuide)
-        }
-        
-        //centerX constraints적용 안되는 이유?
-        userGuide.snp.makeConstraints { make in
-            make.centerX.equalTo(self)
-            make.width.equalTo(self).multipliedBy(0.9)
-            make.centerY.equalTo(self)
-            make.height.equalTo(44)
         }
     }
 }

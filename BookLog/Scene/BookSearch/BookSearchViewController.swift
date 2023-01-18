@@ -58,10 +58,6 @@ class BookSearchViewController: BaseViewController {
         }
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        print("카테고리구분:", categorySortCode)
-    }
-    
     func navigationAttribute() {
         self.navigationItem.title = "책 검색하기"
         self.navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.black]
@@ -91,10 +87,8 @@ class BookSearchViewController: BaseViewController {
         let addBook = UIAlertAction(title: "추가", style: .default) { _ in
             let bookDuplicationCheck = self.bookSearchResults.filter("ISBN == '\(self.multiselectionArray.first!.ISBN)'").count
             if bookDuplicationCheck > 0 {
-                print("책 중복")
                 self.view.makeToast("이미 추가한 책입니다.", duration: 0.5, position: .center)
             } else {
-                print("책 중복 아님")
                 try! self.bookSearchLocalRealm.write({
                     self.bookSearchLocalRealm.add(self.multiselectionArray)
                 })
@@ -130,14 +124,11 @@ extension BookSearchViewController: UITableViewDelegate, UITableViewDataSource {
         guard let categorySortCode = categorySortCode else { return categorySortCode = "" }
         multiselectionArray.append(items.toBookData(lastUpate: Date(), categorySortCode: categorySortCode, review: nil, memo: nil))
         alertForBookSearch()
-        print(type(of:multiselectionArray.first?.ISBN))
-        print(type(of:multiselectionArray.first!.ISBN))
     }
     
     func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
         //@리팩토링: 다중선택해제 추가 예정
         multiselectionArray.removeAll()
-        print(multiselectionArray)
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -164,7 +155,7 @@ extension BookSearchViewController: UITableViewDataSourcePrefetching {
         }
         
         func tableView(_ tableView: UITableView, cancelPrefetchingForRowsAt indexPaths: [IndexPath]) {
-            print("취소===\(indexPaths)")
+            print("Pagenation Quit===\(indexPaths)")
         }
     }
 }
@@ -181,7 +172,6 @@ extension BookSearchViewController: UISearchBarDelegate {
             let data = bookInfo.map { $0.items }
             guard let data = data else { return }
             self!.bookInfoArray = data
-            print(self!.bookInfoArray)
             DispatchQueue.main.sync {
                 self!.mainView.tableView.reloadData()
             }

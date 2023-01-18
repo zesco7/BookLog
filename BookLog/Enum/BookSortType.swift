@@ -22,15 +22,4 @@ enum BookSortType {
             return categoryCode
         }
     }
-    
-    //    var navigationRightBarItems: [String] {
-    //        switch self {
-    //        case .all:
-    //            return []
-    //        case .category(let categoryCode):
-    //            return ["정렬", "plus.image"]
-    //        case .withoutCategory(let categoryCode):
-    //            return []
-    //        }
-    //    }
 }

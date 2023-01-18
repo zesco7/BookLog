@@ -19,7 +19,6 @@ class CategoryListViewController: BaseViewController {
     var categoryList: Results<CategoryData>!
     var bookList: Results<BookData>?
     let defaultCategoryTitle = ["모든 책"]
-    var categoryListArray: Array<CategoryData> = []
     
     override func loadView() {
         super.loadView()
@@ -36,20 +35,6 @@ class CategoryListViewController: BaseViewController {
         categoryList = categoryLocalRealm.objects(CategoryData.self).sorted(byKeyPath: "categorySortCode", ascending: true)
         bookList = bookLocalRealm.objects(BookData.self)
         print("categoryLocalRealm is located at: ", self.categoryLocalRealm.configuration.fileURL!)
-        categoryListArray = categoryList.map({ $0 })
-    }
-    
-    func configureUI() {
-        view.addSubview(mainView.tableView)
-    }
-    
-    func setConstraints() {
-        mainView.tableView.snp.makeConstraints { make in
-            make.topMargin.equalTo(view.safeAreaLayoutGuide)
-            make.bottomMargin.equalTo(view.safeAreaLayoutGuide)
-            make.leadingMargin.equalTo(view.safeAreaLayoutGuide)
-            make.trailingMargin.equalTo(view.safeAreaLayoutGuide)
-        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -60,27 +45,60 @@ class CategoryListViewController: BaseViewController {
         self.navigationItem.title = "카테고리"
         self.navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.black]
         self.navigationController!.navigationBar.tintColor = .navigationBar
-        let editButton = UIBarButtonItem(title: "편집", style: .plain, target: self, action: #selector(editButtonClicked))
         let addButton = UIBarButtonItem(image: UIImage(systemName: "plus"), style: .plain, target: self, action: #selector(addButtonClicked))
-        self.navigationItem.rightBarButtonItems = [addButton, editButton]
-    }
-    
-    @objc func editButtonClicked() {
-        mainView.tableView.isEditing = true
-        let completionButton = UIBarButtonItem(title: "완료", style: .plain, target: self, action: #selector(completionButtonClicked))
-        let dummyButton = UIBarButtonItem()
-        self.navigationItem.rightBarButtonItems = [dummyButton, completionButton]
-        print(categoryListArray)
-    }
-    
-    @objc func completionButtonClicked() {
-        mainView.tableView.isEditing = false
-        navigationAttribute()
-        print("완료", self.categoryListArray)
+        
+        if #available(iOS 13.0, *) {
+            let sortButton = uiMenuForSort()
+            self.navigationItem.rightBarButtonItems = [addButton, sortButton]
+        } else {
+            let sortButton = UIBarButtonItem(title: "정렬", style: .plain, target: self, action: #selector(sortCategoryClicked))
+            self.navigationItem.rightBarButtonItems = [addButton, sortButton]
+        }
     }
     
     @objc func addButtonClicked() {
         alertForAddCategory()
+    }
+        
+    @objc func sortCategoryClicked() {
+        sortCategoryList()
+    }
+    
+    @available(iOS 13.0, *)
+    func uiMenuForSort() -> UIBarButtonItem {
+        var menuItems: [UIAction] {
+            return [
+                UIAction(title: "가나다순", image: UIImage(systemName: "textformat.superscript"), handler: { _ in
+                    self.categoryList = self.categoryLocalRealm.objects(CategoryData.self).sorted(byKeyPath: "category", ascending: true)
+                    self.mainView.tableView.reloadData()
+                }),
+                UIAction(title: "가나다역순", image: UIImage(systemName: "textformat.subscript"), handler: { _ in
+                    self.categoryList = self.categoryLocalRealm.objects(CategoryData.self).sorted(byKeyPath: "category", ascending: false)
+                    self.mainView.tableView.reloadData()
+                })
+            ]
+        }
+        var menu: UIMenu {
+            return UIMenu(title: "", image: nil, identifier: nil, options: .displayInline, children: menuItems)
+        }
+        return UIBarButtonItem(title: "정렬", menu: menu)
+    }
+    
+    func sortCategoryList() {
+        let actionSheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        let sortByTitleAscending = UIAlertAction(title: "가나다순", style: .default) { _ in
+            self.categoryList = self.categoryLocalRealm.objects(CategoryData.self).sorted(byKeyPath: "category", ascending: true)
+            self.mainView.tableView.reloadData()
+        }
+        let sortByTitleDescending = UIAlertAction(title: "가나다역순", style: .default) { _ in
+            self.categoryList = self.categoryLocalRealm.objects(CategoryData.self).sorted(byKeyPath: "category", ascending: true)
+            self.mainView.tableView.reloadData()
+        }
+        let cancel = UIAlertAction(title: "취소", style: .cancel)
+        actionSheet.addAction(sortByTitleAscending)
+        actionSheet.addAction(sortByTitleDescending)
+        actionSheet.addAction(cancel)
+        present(actionSheet, animated: true)
     }
     
     func alertForAddCategory() {
@@ -98,7 +116,7 @@ class CategoryListViewController: BaseViewController {
                     let record = CategoryData(regDate: Date(), category: "\(alert.textFields![0].text!)")
                     try! self.categoryLocalRealm.write {
                         self.categoryLocalRealm.add(record)
-                        self.categoryListArray = self.categoryList.map({ $0 })
+                        self.categoryList = self.categoryList.map({ $0 })
                         self.mainView.tableView.reloadData()
                     }
                 }
@@ -120,7 +138,7 @@ extension CategoryListViewController: UITableViewDelegate, UITableViewDataSource
         if section == 0 {
             return defaultCategoryTitle.count
         } else {
-            return categoryListArray.count
+            return categoryList.count
         }
     }
     
@@ -133,8 +151,8 @@ extension CategoryListViewController: UITableViewDelegate, UITableViewDataSource
             cell.bookCount.text = "총 \(bookList?.count ?? 0) 권"
         } else {
             cell.categoryThumbnail.image = UIImage(named: "open-book")
-            cell.categoryName.text = "\(categoryListArray[indexPath.row].category)"
-            let categorizedBookList = bookList?.filter("categorySortCode == '\(categoryListArray[indexPath.row].categorySortCode)'")
+            cell.categoryName.text = "\(categoryList[indexPath.row].category)"
+            let categorizedBookList = bookList?.filter("categorySortCode == '\(categoryList[indexPath.row].categorySortCode)'")
             cell.bookCount.text = "총 \(categorizedBookList?.count ?? 0) 권"
         }
         return cell
@@ -159,37 +177,16 @@ extension CategoryListViewController: UITableViewDelegate, UITableViewDataSource
         }
     }
     
-    func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
-        return indexPath.section != 0
-    }
-    
-    func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
-        //@리팩토링: 첫행은 순서변경불가 처리예정
-        let categoryToMove = categoryListArray[sourceIndexPath.row]
-        categoryListArray.remove(at: sourceIndexPath.row)
-        categoryListArray.insert(categoryToMove, at: destinationIndexPath.row)
-    }
-    
-    func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {
-        if indexPath.section == 0 {
-            return .none
-        } else {
-            return .delete
-        }
-    }
-    
     func tableView(_ tableView: UITableView, shouldIndentWhileEditingRowAt indexPath: IndexPath) -> Bool {
         return true
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        print(categoryList[indexPath.row].category)
         if indexPath.section == 0 {
             let vc = BookListViewController(categorySortType: .all, navigationTitle: UserDefaults.standard.string(forKey: "defaultCategoryTitle"))
             self.navigationController?.pushViewController(vc, animated: true)
         } else {
-            //print(bookList)
-            let vc = BookListViewController(categorySortType: .category(categoryCode: "\(categoryListArray[indexPath.row].categorySortCode)"), navigationTitle: "\(categoryListArray[indexPath.row].category)")
+            let vc = BookListViewController(categorySortType: .category(categoryCode: "\(categoryList[indexPath.row].categorySortCode)"), navigationTitle: "\(categoryList[indexPath.row].category)")
             self.navigationController?.pushViewController(vc, animated: true)
         }
     }
