@@ -32,9 +32,22 @@ class CategoryListViewController: BaseViewController {
         mainView.tableView.register(CategoryListViewCell.self, forCellReuseIdentifier: CategoryListViewCell.identifier)
         UserDefaults.standard.set(defaultCategoryTitle[0], forKey: "defaultCategoryTitle")
         navigationAttribute()
-        categoryList = categoryLocalRealm.objects(CategoryData.self).sorted(byKeyPath: "categorySortCode", ascending: true)
+        initView()
         bookList = bookLocalRealm.objects(BookData.self)
         print("categoryLocalRealm is located at: ", self.categoryLocalRealm.configuration.fileURL!)
+    }
+    
+    func initView() {
+        let categorySort = UserDefaults.standard.string(forKey: "categorySort")
+        if let categorySort = categorySort {
+            if categorySort == "ascending" {
+                categoryList = categoryLocalRealm.objects(CategoryData.self).sorted(byKeyPath: "category", ascending: true)
+            } else {
+                categoryList = categoryLocalRealm.objects(CategoryData.self).sorted(byKeyPath: "category", ascending: false)
+            }
+        } else {
+            categoryList = categoryLocalRealm.objects(CategoryData.self).sorted(byKeyPath: "categorySortCode", ascending: true)
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -62,10 +75,12 @@ class CategoryListViewController: BaseViewController {
         let actionSheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         let sortByTitleAscending = UIAlertAction(title: "가나다순", style: .default) { _ in
             self.categoryList = self.categoryLocalRealm.objects(CategoryData.self).sorted(byKeyPath: "category", ascending: true)
+            UserDefaults.standard.set("ascending", forKey: "categorySort")
             self.mainView.tableView.reloadData()
         }
         let sortByTitleDescending = UIAlertAction(title: "가나다역순", style: .default) { _ in
             self.categoryList = self.categoryLocalRealm.objects(CategoryData.self).sorted(byKeyPath: "category", ascending: false)
+            UserDefaults.standard.set("descending", forKey: "categorySort")
             self.mainView.tableView.reloadData()
         }
         let cancel = UIAlertAction(title: "취소", style: .cancel)

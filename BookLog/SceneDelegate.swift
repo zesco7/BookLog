@@ -20,7 +20,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let vc = CategoryListViewController()
         let navi = UINavigationController(rootViewController: vc)
         window = UIWindow(windowScene: scene)
-        window?.overrideUserInterfaceStyle = .light
         window?.rootViewController = navi
         window?.makeKeyAndVisible()
     }

@@ -88,24 +88,24 @@ class BookListViewController: BaseViewController {
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        let classification = UserDefaults.standard.string(forKey: "classification")
+        let bookSort = UserDefaults.standard.string(forKey: "bookSort")
         switch categorySortType {
         case .all:
-            if classification == "title" {
+            if bookSort == "title" {
                 self.bookList = self.bookLocalRealm.objects(BookData.self).sorted(byKeyPath: "title", ascending: true)
-            } else if classification == "rating" {
+            } else if bookSort == "rating" {
                 self.bookList = self.bookLocalRealm.objects(BookData.self).sorted(byKeyPath: "rating", ascending: false)
-            } else if classification == "lastUpdate" {
+            } else if bookSort == "lastUpdate" {
                 self.bookList = self.bookLocalRealm.objects(BookData.self).sorted(byKeyPath: "lastUpdate", ascending: false)
             } else {
                 self.bookList = self.bookLocalRealm.objects(BookData.self)
             }
         case .category(let categoryCode):
-            if classification == "title" {
+            if bookSort == "title" {
                 self.bookList = bookLocalRealm.objects(BookData.self).filter("categorySortCode == '\(categoryCode)'").sorted(byKeyPath: "title", ascending: true)
-            } else if classification == "rating" {
+            } else if bookSort == "rating" {
                 self.bookList = bookLocalRealm.objects(BookData.self).filter("categorySortCode == '\(categoryCode)'").sorted(byKeyPath: "rating", ascending: false)
-            } else if classification == "lastUpdate" {
+            } else if bookSort == "lastUpdate" {
                 self.bookList = bookLocalRealm.objects(BookData.self).filter("categorySortCode == '\(categoryCode)'").sorted(byKeyPath: "lastUpdate", ascending: false)
             } else {
                 self.bookList = bookLocalRealm.objects(BookData.self).filter("categorySortCode == '\(categoryCode)'")
@@ -163,14 +163,17 @@ class BookListViewController: BaseViewController {
             let actionSheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
             let sortBytitle = UIAlertAction(title: "제목순", style: .default) { _ in
                 self.bookList = self.bookLocalRealm.objects(BookData.self).sorted(byKeyPath: "title", ascending: true)
+                UserDefaults.standard.set("title", forKey: "bookSort")
                 self.mainView.tableView.reloadData()
             }
             let sortByRating = UIAlertAction(title: "별점 높은순", style: .default) { _ in
                 self.bookList = self.bookLocalRealm.objects(BookData.self).sorted(byKeyPath: "rating", ascending: false)
+                UserDefaults.standard.set("rating", forKey: "bookSort")
                 self.mainView.tableView.reloadData()
             }
             let sortByLastUpdate = UIAlertAction(title: "최종 수정일순", style: .default) { _ in
                 self.bookList = self.bookLocalRealm.objects(BookData.self).sorted(byKeyPath: "lastUpdate", ascending: false)
+                UserDefaults.standard.set("lastUpdate", forKey: "bookSort")
                 self.mainView.tableView.reloadData()
             }
             let cancel = UIAlertAction(title: "취소", style: .cancel)
@@ -184,14 +187,17 @@ class BookListViewController: BaseViewController {
             let actionSheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
             let sortBytitle = UIAlertAction(title: "제목순", style: .default) { _ in
                 self.bookList = self.bookLocalRealm.objects(BookData.self).filter("categorySortCode == '\(categoryCode)'").sorted(byKeyPath: "title", ascending: true)
+                UserDefaults.standard.set("title", forKey: "bookSort")
                 self.mainView.tableView.reloadData()
             }
             let sortByRating = UIAlertAction(title: "별점 높은순", style: .default) { _ in
                 self.bookList = self.bookLocalRealm.objects(BookData.self).filter("categorySortCode == '\(categoryCode)'").sorted(byKeyPath: "rating", ascending: false)
+                UserDefaults.standard.set("rating", forKey: "bookSort")
                 self.mainView.tableView.reloadData()
             }
             let sortByLastUpdate = UIAlertAction(title: "최종 수정일순", style: .default) { _ in
                 self.bookList = self.bookLocalRealm.objects(BookData.self).filter("categorySortCode == '\(categoryCode)'").sorted(byKeyPath: "lastUpdate", ascending: false)
+                UserDefaults.standard.set("lastUpdate", forKey: "bookSort")
                 self.mainView.tableView.reloadData()
             }
             let cancel = UIAlertAction(title: "취소", style: .cancel)
