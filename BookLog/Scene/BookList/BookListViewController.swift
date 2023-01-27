@@ -15,7 +15,7 @@ class BookListViewController: BaseViewController {
     var bookList : Results<BookData>!
     let categorySortType : BookSortType
     var navigationTitle : String?
-    var newlyCategorizedBookArray : Array<BookData>?
+    var multipleSelectedBookArray : Array<BookData>?
     
     init(categorySortType: BookSortType, navigationTitle: String?) {
         self.categorySortType = categorySortType
@@ -47,6 +47,7 @@ class BookListViewController: BaseViewController {
         mainView.tableView.register(BookListViewCell.self, forCellReuseIdentifier: BookListViewCell.identifier)
         navigationAttribute()
         notificationCenterAddObserverForBookMemo()
+        mainView.tableView.allowsMultipleSelectionDuringEditing = true
     }
     
     func notificationCenterAddObserverForBookMemo() {
@@ -135,13 +136,15 @@ class BookListViewController: BaseViewController {
     
     func navigationAttribute() {
         self.navigationItem.title = navigationTitle
-        let plusButton = UIBarButtonItem(image: UIImage(systemName: "plus"), style: .plain, target: self, action: #selector(plusButtonClicked))
-        let sortButton = UIBarButtonItem(title: "정렬", style: .plain, target: self, action: #selector(sortButtonClicked))
-        self.navigationItem.rightBarButtonItems = [plusButton, sortButton]
-    }
-   
-    @objc func sortButtonClicked() {
-            sortBookList()
+        let plusButton = self.navigationItem.makeSFSymbolButton(target: self, action: #selector(plusButtonClicked), symbolName: "plus")
+        let sortButton = self.navigationItem.makeSFSymbolButton(target: self, action: #selector(sortButtonClicked), symbolName: "list.bullet")
+        let deleteButton = self.navigationItem.makeSFSymbolButton(target: self, action: #selector(deleteButtonClicked), symbolName: "trash")
+        let deleteButtonForEditing = self.navigationItem.makeSFSymbolButton(target: self, action: #selector(deleteButtonForEditingClicked), symbolName: "trash.slash")
+        if mainView.tableView.isEditing == true {
+            self.navigationItem.rightBarButtonItems = [plusButton, sortButton, deleteButtonForEditing]
+        } else {
+            self.navigationItem.rightBarButtonItems = [plusButton, sortButton, deleteButton]
+        }
     }
     
     @objc func plusButtonClicked() {
@@ -154,6 +157,47 @@ class BookListViewController: BaseViewController {
         default:
             return
         }
+    }
+    
+    @objc func sortButtonClicked() {
+            sortBookList()
+    }
+    
+    @objc func deleteButtonClicked() {
+        mainView.tableView.isEditing = true
+        let plusButton = self.navigationItem.makeSFSymbolButton(target: self, action: #selector(plusButtonClicked), symbolName: "plus")
+        let sortButton = self.navigationItem.makeSFSymbolButton(target: self, action: #selector(sortButtonClicked), symbolName: "list.bullet")
+        let deleteButtonForEditing = self.navigationItem.makeSFSymbolButton(target: self, action: #selector(deleteButtonForEditingClicked), symbolName: "trash.slash.fill")
+        self.navigationItem.rightBarButtonItems = [plusButton, sortButton, deleteButtonForEditing]
+        toolbarAttribute(toolbarHidden: false)
+    }
+    
+    @objc func deleteButtonForEditingClicked() {
+        mainView.tableView.isEditing = false
+        navigationAttribute()
+        toolbarAttribute(toolbarHidden: true)
+    }
+    
+    func toolbarAttribute(toolbarHidden: Bool) {
+        self.navigationController?.isToolbarHidden = toolbarHidden
+        self.navigationController?.toolbar.tintColor = .navigationBar
+        var items = [UIBarButtonItem]()
+        items.append(UIBarButtonItem(title: "취소", style: .plain, target: self, action: #selector(toolbarCancelClicked)))
+        items.append(UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: self, action: nil))
+        items.append(UIBarButtonItem(title: "삭제", style: .plain, target: self, action: #selector(toolbarDeleteClicked)))
+        toolbarItems = items
+    }
+    
+    @objc func toolbarCancelClicked() {
+        mainView.tableView.isEditing = false
+    }
+    
+    @objc func toolbarDeleteClicked() {
+        guard let multipleSelectedBookArray = multipleSelectedBookArray else { return }
+        print(multipleSelectedBookArray)
+        try! bookLocalRealm.write({
+            bookLocalRealm.delete(multipleSelectedBookArray)
+        })
     }
     
     func sortBookList() {
@@ -350,7 +394,12 @@ extension BookListViewController: UITableViewDelegate, UITableViewDataSource {
             let vc = BookMemoViewController(isbn: bookList[indexPath.row].ISBN, lastUpdate: bookList[indexPath.row].lastUpdate, review: bookList[indexPath.row].review, memo: bookList[indexPath.row].memo, bookMemo: bookList[indexPath.row], starRating: bookList[indexPath.row].rating, linkURL: bookList[indexPath.row].linkURL)
             vc.bookTitle = bookList[indexPath.row].title
             vc.bookWriter = bookList[indexPath.row].author
-            self.navigationController?.pushViewController(vc, animated: true)
+            if mainView.tableView.isEditing == false {
+                self.navigationController?.pushViewController(vc, animated: true)
+            } else {
+                multipleSelectedBookArray?.append(bookList[indexPath.row])
+                print(multipleSelectedBookArray)
+            }
         case .withoutCategory(let categoryCode):
             let alert = UIAlertController(title: "선택한 책을 이동하시겠습니까?", message: nil, preferredStyle: .alert)
             let ok = UIAlertAction(title: "확인", style: .default) { _ in
