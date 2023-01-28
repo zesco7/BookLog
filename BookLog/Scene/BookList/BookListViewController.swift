@@ -15,7 +15,7 @@ class BookListViewController: BaseViewController {
     var bookList : Results<BookData>!
     let categorySortType : BookSortType
     var navigationTitle : String?
-    var multipleSelectedBookArray : Array<BookData>?
+    var multipleSelectedBookArray : Array<BookData> = []
     
     init(categorySortType: BookSortType, navigationTitle: String?) {
         self.categorySortType = categorySortType
@@ -190,14 +190,17 @@ class BookListViewController: BaseViewController {
     
     @objc func toolbarCancelClicked() {
         mainView.tableView.isEditing = false
+        toolbarAttribute(toolbarHidden: true)
     }
     
     @objc func toolbarDeleteClicked() {
-        guard let multipleSelectedBookArray = multipleSelectedBookArray else { return }
-        print(multipleSelectedBookArray)
+//        guard let multipleSelectedBookArray = multipleSelectedBookArray else { return }
+//        print(multipleSelectedBookArray)
         try! bookLocalRealm.write({
             bookLocalRealm.delete(multipleSelectedBookArray)
+            mainView.tableView.reloadData()
         })
+        mainView.tableView.isEditing = false
     }
     
     func sortBookList() {
@@ -397,7 +400,9 @@ extension BookListViewController: UITableViewDelegate, UITableViewDataSource {
             if mainView.tableView.isEditing == false {
                 self.navigationController?.pushViewController(vc, animated: true)
             } else {
-                multipleSelectedBookArray?.append(bookList[indexPath.row])
+                let a = bookList[indexPath.row]
+                print("선택한셀", a)
+                multipleSelectedBookArray.append(a)
                 print(multipleSelectedBookArray)
             }
         case .withoutCategory(let categoryCode):
@@ -414,6 +419,14 @@ extension BookListViewController: UITableViewDelegate, UITableViewDataSource {
             self.present(alert, animated: true)
         default:
             return
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
+        if multipleSelectedBookArray.contains(bookList[indexPath.row]) {
+                multipleSelectedBookArray.remove(at: indexPath.row)
+        } else {
+           return
         }
     }
     
