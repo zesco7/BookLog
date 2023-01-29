@@ -15,7 +15,6 @@ class BookListViewController: BaseViewController {
     var bookList : Results<BookData>!
     let categorySortType : BookSortType
     var navigationTitle : String?
-    var multipleSelectedBookArray : Array<BookData> = []
     
     init(categorySortType: BookSortType, navigationTitle: String?) {
         self.categorySortType = categorySortType
@@ -165,10 +164,7 @@ class BookListViewController: BaseViewController {
     
     @objc func deleteButtonClicked() {
         mainView.tableView.isEditing = true
-        let plusButton = self.navigationItem.makeSFSymbolButton(target: self, action: #selector(plusButtonClicked), symbolName: "plus")
-        let sortButton = self.navigationItem.makeSFSymbolButton(target: self, action: #selector(sortButtonClicked), symbolName: "list.bullet")
-        let deleteButtonForEditing = self.navigationItem.makeSFSymbolButton(target: self, action: #selector(deleteButtonForEditingClicked), symbolName: "trash.slash.fill")
-        self.navigationItem.rightBarButtonItems = [plusButton, sortButton, deleteButtonForEditing]
+        navigationAttribute()
         toolbarAttribute(toolbarHidden: false)
     }
     
@@ -190,17 +186,46 @@ class BookListViewController: BaseViewController {
     
     @objc func toolbarCancelClicked() {
         mainView.tableView.isEditing = false
+        navigationAttribute()
         toolbarAttribute(toolbarHidden: true)
     }
     
     @objc func toolbarDeleteClicked() {
-//        guard let multipleSelectedBookArray = multipleSelectedBookArray else { return }
-//        print(multipleSelectedBookArray)
-        try! bookLocalRealm.write({
-            bookLocalRealm.delete(multipleSelectedBookArray)
+        if let selectedItems = mainView.tableView.indexPathsForSelectedRows, selectedItems.count >= 1 {
+            var deleteTarget = Array<String>()
+            selectedItems.forEach { indexPath in
+                deleteTarget.append(bookList[indexPath.row].ISBN)
+            }
+            deleteTarget.forEach { isbn in
+                try! bookLocalRealm.write({
+                    bookLocalRealm.delete(bookLocalRealm.object(ofType: BookData.self, forPrimaryKey: isbn)!)
+                })
+            }
             mainView.tableView.reloadData()
-        })
+//            var dummyBookList = Array<BookData>()
+//            for i in 0 ..< bookList.count {
+//                if selectedItems.contains(IndexPath(row: i, section: 0)) == false {
+//                    dummyBookList.append(bookList[i])
+//                    print("더미북리스트", dummyBookList)
+//                }
+//            }
+//            for i in 0 ..< dummyBookList.count {
+//                try! bookLocalRealm.write({
+//                    bookLocalRealm.delete(bookList)
+//                    bookLocalRealm.add(dummyBookList[0])
+//                    print("북리스트", bookList)
+//                })
+//            }
+//            mainView.tableView.reloadData()
+        } else {
+            let alert = UIAlertController(title: "삭제할 책을 선택해주세요.", message: nil, preferredStyle: .alert)
+            let ok = UIAlertAction(title: "확인", style: .default)
+            alert.addAction(ok)
+            self.present(alert, animated: true)
+        }
         mainView.tableView.isEditing = false
+        navigationAttribute()
+        toolbarAttribute(toolbarHidden: true)
     }
     
     func sortBookList() {
@@ -400,10 +425,7 @@ extension BookListViewController: UITableViewDelegate, UITableViewDataSource {
             if mainView.tableView.isEditing == false {
                 self.navigationController?.pushViewController(vc, animated: true)
             } else {
-                let a = bookList[indexPath.row]
-                print("선택한셀", a)
-                multipleSelectedBookArray.append(a)
-                print(multipleSelectedBookArray)
+                return
             }
         case .withoutCategory(let categoryCode):
             let alert = UIAlertController(title: "선택한 책을 이동하시겠습니까?", message: nil, preferredStyle: .alert)
@@ -419,14 +441,6 @@ extension BookListViewController: UITableViewDelegate, UITableViewDataSource {
             self.present(alert, animated: true)
         default:
             return
-        }
-    }
-    
-    func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
-        if multipleSelectedBookArray.contains(bookList[indexPath.row]) {
-                multipleSelectedBookArray.remove(at: indexPath.row)
-        } else {
-           return
         }
     }
     
