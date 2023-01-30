@@ -15,10 +15,11 @@ class BookSearchViewController: BaseViewController {
     var bookSearchResults : Results<BookData>!
     var categorySortCode : String?
     var bookInfoArray : [Item]?
-    var multiselectionArray : Array<BookData>
+    var multiselectionArray = Array<BookData>()
     var searchbarText : String?
     var totalCount = 0
     let searchController = UISearchController(searchResultsController: nil)
+    var targetToAdd = Array<BookData>()
     
     init(categorySortCode: String?) {
         self.categorySortCode = categorySortCode
@@ -43,6 +44,7 @@ class BookSearchViewController: BaseViewController {
         mainView.tableView.prefetchDataSource = self
         bookSearchResults = bookSearchLocalRealm.objects(BookData.self)
         navigationAttribute()
+        mainView.tableView.allowsMultipleSelection = true
     }
     
     func configureUI() {
@@ -61,13 +63,19 @@ class BookSearchViewController: BaseViewController {
     func navigationAttribute() {
         self.navigationItem.title = "책 검색하기"
         self.navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.black]
-        self.navigationItem.searchController = searchController
-        self.navigationItem.hidesSearchBarWhenScrolling = false
-        searchController.searchBar.delegate = self
-        searchController.searchBar.placeholder = "검색"
-        searchController.searchBar.searchTextField.textColor = .black
-        searchController.hidesNavigationBarDuringPresentation = false
-        searchController.automaticallyShowsCancelButton = false
+        if let selectedItems = mainView.tableView.indexPathsForSelectedRows, selectedItems.count >= 1 {
+            print(selectedItems)
+            let addButton = UIBarButtonItem(title: "추가", style: .plain, target: self, action: #selector(addButtonClicked))
+            self.navigationItem.rightBarButtonItem = addButton
+        } else {
+            self.navigationItem.searchController = searchController
+            self.navigationItem.hidesSearchBarWhenScrolling = false
+            searchController.searchBar.delegate = self
+            searchController.searchBar.placeholder = "검색"
+            searchController.searchBar.searchTextField.textColor = .black
+            searchController.hidesNavigationBarDuringPresentation = false
+            searchController.automaticallyShowsCancelButton = false
+        }
         
         //@리팩토링: 다중선택 추가 예정
 //        let addButton = UIBarButtonItem(title: "추가", style: .plain, target: self, action: #selector(addButtonClicked))
@@ -76,10 +84,14 @@ class BookSearchViewController: BaseViewController {
     
     @objc func addButtonClicked() {
         //@리팩토링: 다중선택 추가 예정
+        print(mainView.tableView.indexPathForSelectedRow?.row)
+        alertForBookSearch()
+        
 //        try! self.bookSearchLocalRealm.write({
 //            self.bookSearchLocalRealm.add(multiselectionArray)
 //            self.navigationController?.popViewController(animated: true)
 //        })
+//        self.navigationController?.popViewController(animated: true)
     }
     
     func alertForBookSearch() {
@@ -119,16 +131,26 @@ extension BookSearchViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        navigationAttribute()
         //@리팩토링: 다중선택 추가 예정
+        
         guard let items = bookInfoArray?[indexPath.row] else { return }
         guard let categorySortCode = categorySortCode else { return categorySortCode = "" }
-        multiselectionArray.append(items.toBookData(lastUpate: Date(), categorySortCode: categorySortCode, review: nil, memo: nil))
-        alertForBookSearch()
+    
+        if let selectedItems = mainView.tableView.indexPathsForSelectedRows,
+           selectedItems.count >= 1 {
+            selectedItems.forEach { indexPath in
+                multiselectionArray.append(BookData(lastUpdate: Date(), categorySortCode: categorySortCode, ISBN: (bookInfoArray?[indexPath.row].isbn)!, rating: 0, review: nil, memo: nil, title: (bookInfoArray?[indexPath.row].title)!, author: (bookInfoArray?[indexPath.row].author)!, publisher: (bookInfoArray?[indexPath.row].publisher)!, pubdate: (bookInfoArray?[indexPath.row].pubdate)!, linkURL: (bookInfoArray?[indexPath.row].link)!, imageURL: (bookInfoArray?[indexPath.row].image)!))
+            }
+        }
+        print("더할타겟", multiselectionArray.count, multiselectionArray)
+//        alertForBookSearch()
     }
     
     func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
         //@리팩토링: 다중선택해제 추가 예정
         multiselectionArray.removeAll()
+        print("디셀렉트", multiselectionArray)
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {

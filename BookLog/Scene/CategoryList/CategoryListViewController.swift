@@ -186,6 +186,15 @@ extension CategoryListViewController: UITableViewDelegate, UITableViewDataSource
         }
     }
     
+//    func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
+//        -(NSIndexPath *)tableView:(UITableView *)tableView targetIndexPathForMoveFromRowAtIndexPath:(NSIndexPath *)sourceIndexPath toProposedIndexPath:(NSIndexPath *)proposedDestinationIndexPath{
+//            if (proposedDestinationIndexPath.row == 0) {
+//                return sourceIndexPath;
+//            }
+//            return proposedDestinationIndexPath;
+//        }
+//    }
+    
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 80
     }
