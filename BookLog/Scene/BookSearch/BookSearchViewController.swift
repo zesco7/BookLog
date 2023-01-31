@@ -19,7 +19,8 @@ class BookSearchViewController: BaseViewController {
     var searchbarText : String?
     var totalCount = 0
     let searchController = UISearchController(searchResultsController: nil)
-    var targetToAdd = Array<BookData>()
+    var targetToAdd = Array<String>()
+    var duplicationCheckArray = Array<String>()
     
     init(categorySortCode: String?) {
         self.categorySortCode = categorySortCode
@@ -84,21 +85,30 @@ class BookSearchViewController: BaseViewController {
     
     @objc func addButtonClicked() {
         //@리팩토링: 다중선택 추가 예정
-        print(mainView.tableView.indexPathForSelectedRow?.row)
-        alertForBookSearch()
-        
-//        try! self.bookSearchLocalRealm.write({
-//            self.bookSearchLocalRealm.add(multiselectionArray)
-//            self.navigationController?.popViewController(animated: true)
-//        })
-//        self.navigationController?.popViewController(animated: true)
+//        alertForBookSearch()
+        try! self.bookSearchLocalRealm.write({
+            self.bookSearchLocalRealm.add(multiselectionArray)
+        })
+        self.navigationController?.popViewController(animated: true)
     }
     
     func alertForBookSearch() {
+        var bookCheck = bookSearchLocalRealm.objects(BookData.self)
         let alert = UIAlertController(title: "선택한 책을 추가할까요?", message: nil, preferredStyle: .alert)
         let addBook = UIAlertAction(title: "추가", style: .default) { _ in
+            if let selectedItems = self.mainView.tableView.indexPathsForSelectedRows {
+                self.targetToAdd.removeAll()
+                if selectedItems.count >= 1 {
+                    selectedItems.forEach { indexPath in
+                        self.targetToAdd.append(self.multiselectionArray[indexPath.row].ISBN)
+                    }
+                } else {
+                    print("추가기능 비활성화")
+                }
+                print(self.targetToAdd)
+            }
             let bookDuplicationCheck = self.bookSearchResults.filter("ISBN == '\(self.multiselectionArray.first!.ISBN)'").count
-            if bookDuplicationCheck > 0 {
+            if bookCheck.count > 0 {
                 self.view.makeToast("이미 추가한 책입니다.", duration: 0.5, position: .center)
             } else {
                 try! self.bookSearchLocalRealm.write({
@@ -132,25 +142,17 @@ extension BookSearchViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         navigationAttribute()
-        //@리팩토링: 다중선택 추가 예정
-        
         guard let items = bookInfoArray?[indexPath.row] else { return }
         guard let categorySortCode = categorySortCode else { return categorySortCode = "" }
     
         if let selectedItems = mainView.tableView.indexPathsForSelectedRows,
            selectedItems.count >= 1 {
+            multiselectionArray.removeAll()
             selectedItems.forEach { indexPath in
                 multiselectionArray.append(BookData(lastUpdate: Date(), categorySortCode: categorySortCode, ISBN: (bookInfoArray?[indexPath.row].isbn)!, rating: 0, review: nil, memo: nil, title: (bookInfoArray?[indexPath.row].title)!, author: (bookInfoArray?[indexPath.row].author)!, publisher: (bookInfoArray?[indexPath.row].publisher)!, pubdate: (bookInfoArray?[indexPath.row].pubdate)!, linkURL: (bookInfoArray?[indexPath.row].link)!, imageURL: (bookInfoArray?[indexPath.row].image)!))
             }
         }
-        print("더할타겟", multiselectionArray.count, multiselectionArray)
-//        alertForBookSearch()
-    }
-    
-    func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
-        //@리팩토링: 다중선택해제 추가 예정
-        multiselectionArray.removeAll()
-        print("디셀렉트", multiselectionArray)
+        print("multiselectionArray", multiselectionArray.count, multiselectionArray)
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
