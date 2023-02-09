@@ -57,9 +57,8 @@ class CategoryListViewController: BaseViewController {
     func navigationAttribute() {
         self.navigationItem.title = "카테고리"
         self.navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.black]
-        self.navigationController!.navigationBar.tintColor = .navigationBar
-        let addButton = UIBarButtonItem(image: UIImage(systemName: "plus"), style: .plain, target: self, action: #selector(addButtonClicked))
-        let sortButton = UIBarButtonItem(title: "정렬", style: .plain, target: self, action: #selector(sortCategoryClicked))
+        let addButton = self.navigationItem.makeSFSymbolButton(target: self, action: #selector(addButtonClicked), symbolName: "plus")
+        let sortButton = self.navigationItem.makeSFSymbolButton(target: self, action: #selector(sortCategoryClicked), symbolName: "list.bullet")
         self.navigationItem.rightBarButtonItems = [addButton, sortButton]
     }
     
@@ -68,7 +67,12 @@ class CategoryListViewController: BaseViewController {
     }
         
     @objc func sortCategoryClicked() {
-        sortCategoryList()
+        //sortCategoryList()
+        if mainView.tableView.isEditing == false {
+            mainView.tableView.isEditing = true
+        } else {
+            mainView.tableView.isEditing = false
+        }
     }
 
     func sortCategoryList() {
@@ -172,10 +176,6 @@ extension CategoryListViewController: UITableViewDelegate, UITableViewDataSource
         }
     }
     
-    func tableView(_ tableView: UITableView, shouldIndentWhileEditingRowAt indexPath: IndexPath) -> Bool {
-        return true
-    }
-    
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if indexPath.section == 0 {
             let vc = BookListViewController(categorySortType: .all, navigationTitle: UserDefaults.standard.string(forKey: "defaultCategoryTitle"))
@@ -186,14 +186,25 @@ extension CategoryListViewController: UITableViewDelegate, UITableViewDataSource
         }
     }
     
-//    func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
-//        -(NSIndexPath *)tableView:(UITableView *)tableView targetIndexPathForMoveFromRowAtIndexPath:(NSIndexPath *)sourceIndexPath toProposedIndexPath:(NSIndexPath *)proposedDestinationIndexPath{
-//            if (proposedDestinationIndexPath.row == 0) {
-//                return sourceIndexPath;
-//            }
-//            return proposedDestinationIndexPath;
-//        }
-//    }
+    func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {
+        return .none
+    }
+    
+    func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
+        return indexPath.section != 0
+    }
+    
+    func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
+        return
+    }
+    
+    func tableView(_ tableView: UITableView, targetIndexPathForMoveFromRowAt sourceIndexPath: IndexPath, toProposedIndexPath proposedDestinationIndexPath: IndexPath) -> IndexPath {
+        if proposedDestinationIndexPath.row == 0 {
+            return sourceIndexPath
+        } else {
+            return proposedDestinationIndexPath
+        }
+    }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 80

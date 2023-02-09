@@ -45,7 +45,7 @@ class BookSearchViewController: BaseViewController {
         mainView.tableView.prefetchDataSource = self
         bookSearchResults = bookSearchLocalRealm.objects(BookData.self)
         navigationAttribute()
-        mainView.tableView.allowsMultipleSelection = true
+        //mainView.tableView.allowsMultipleSelection = true
     }
     
     func configureUI() {
@@ -85,14 +85,33 @@ class BookSearchViewController: BaseViewController {
     
     @objc func addButtonClicked() {
         //@리팩토링: 다중선택 추가 예정
-//        alertForBookSearch()
-        try! self.bookSearchLocalRealm.write({
-            self.bookSearchLocalRealm.add(multiselectionArray)
-        })
-        self.navigationController?.popViewController(animated: true)
+        alertForBookSearch()
+//        try! self.bookSearchLocalRealm.write({
+//            self.bookSearchLocalRealm.add(multiselectionArray)
+//        })
+//        self.navigationController?.popViewController(animated: true)
     }
     
     func alertForBookSearch() {
+        let alert = UIAlertController(title: "선택한 책을 추가할까요?", message: nil, preferredStyle: .alert)
+        let addBook = UIAlertAction(title: "추가", style: .default) { _ in
+            let bookDuplicationCheck = self.bookSearchResults.filter("ISBN == '\(self.multiselectionArray.first!.ISBN)'").count
+            if bookDuplicationCheck > 0 {
+                self.view.makeToast("이미 추가한 책입니다.", duration: 0.5, position: .center)
+            } else {
+                try! self.bookSearchLocalRealm.write({
+                    self.bookSearchLocalRealm.add(self.multiselectionArray)
+                })
+                self.view.makeToast("선택한 책을 추가했습니다.", duration: 0.5, position: .center)
+            }
+        }
+        let cancel = UIAlertAction(title: "취소", style: .cancel)
+        alert.addAction(addBook)
+        alert.addAction(cancel)
+        present(alert, animated: true)
+    }
+    
+    func alertForBookSearch2() {
         var bookCheck = bookSearchLocalRealm.objects(BookData.self)
         let alert = UIAlertController(title: "선택한 책을 추가할까요?", message: nil, preferredStyle: .alert)
         let addBook = UIAlertAction(title: "추가", style: .default) { _ in
@@ -134,9 +153,10 @@ extension BookSearchViewController: UITableViewDelegate, UITableViewDataSource {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: BookSearchViewCell.identifier , for: indexPath) as? BookSearchViewCell else { return UITableViewCell() }
         let url = URL(string: (bookInfoArray?[indexPath.row].image)!)
         cell.backgroundColor = .tableViewCellColor
+        let replacedAuthor = bookInfoArray?[indexPath.row].author.replacingOccurrences(of: "^", with: ", ")
         cell.bookImage.kf.setImage(with: url)
         cell.bookName.text = bookInfoArray?[indexPath.row].title
-        cell.bookAuthor.text = bookInfoArray?[indexPath.row].author
+        cell.bookAuthor.text = replacedAuthor
         return cell
     }
     
@@ -186,20 +206,24 @@ extension BookSearchViewController: UITableViewDataSourcePrefetching {
 
 extension BookSearchViewController: UISearchBarDelegate {
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        bookInfoArray?.removeAll()
-        APIManager.startCount = 1
-        UserDefaults.standard.set(searchBar.text, forKey: "searchBarText")
-        searchbarText = UserDefaults.standard.string(forKey: "searchBarText")
-        APIManager.requestBookInformation(query: searchbarText!) { [weak self] bookInfo, apiError in
-            guard let totalCount = bookInfo?.total else { return self!.totalCount = 500 }
-            self!.totalCount = totalCount
-            let data = bookInfo.map { $0.items }
-            guard let data = data else { return }
-            self!.bookInfoArray = data
-            DispatchQueue.main.sync {
-                self!.mainView.tableView.reloadData()
+        if NetworkConnectionChecker.shared.isConnected {
+            bookInfoArray?.removeAll()
+            APIManager.startCount = 1
+            UserDefaults.standard.set(searchBar.text, forKey: "searchBarText")
+            searchbarText = UserDefaults.standard.string(forKey: "searchBarText")
+            APIManager.requestBookInformation(query: searchbarText!) { [weak self] bookInfo, apiError in
+                guard let totalCount = bookInfo?.total else { return self!.totalCount = 500 }
+                self!.totalCount = totalCount
+                let data = bookInfo.map { $0.items }
+                guard let data = data else { return }
+                self!.bookInfoArray = data
+                DispatchQueue.main.sync {
+                    self!.mainView.tableView.reloadData()
+                }
+                print("searchBarTapped")
             }
-            print("searchBarTapped")
+        } else {
+            self.view.makeToast("인터넷 연결상태를 확인해주세요.", duration: 0.5, position: .center)
         }
     }
     

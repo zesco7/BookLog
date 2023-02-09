@@ -27,6 +27,7 @@
 		983D17D5295B42A900D265EA /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 983D17D4295B42A900D265EA /* SnapKit */; };
 		98706C4629762468003C37AD /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = 98706C4529762468003C37AD /* .gitignore */; };
 		9876BA4329838D8C00F2302B /* UINavigationController+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9876BA4229838D8C00F2302B /* UINavigationController+Extension.swift */; };
+		9876F4342994CE4B001A7D6E /* NetworkConnectionChecker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9876F4332994CE4B001A7D6E /* NetworkConnectionChecker.swift */; };
 		98B16555295BFE6D007D24CF /* RealmModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98B16554295BFE6D007D24CF /* RealmModel.swift */; };
 		98B1655A295C1511007D24CF /* Realm in Frameworks */ = {isa = PBXBuildFile; productRef = 98B16559295C1511007D24CF /* Realm */; };
 		98B1655C295C1511007D24CF /* RealmSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 98B1655B295C1511007D24CF /* RealmSwift */; };
@@ -67,6 +68,7 @@
 		98706C4529762468003C37AD /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
 		98706C47297625F1003C37AD /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		9876BA4229838D8C00F2302B /* UINavigationController+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UINavigationController+Extension.swift"; sourceTree = "<group>"; };
+		9876F4332994CE4B001A7D6E /* NetworkConnectionChecker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkConnectionChecker.swift; sourceTree = "<group>"; };
 		98B16554295BFE6D007D24CF /* RealmModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealmModel.swift; sourceTree = "<group>"; };
 		98B1655F295C1FD6007D24CF /* BookListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookListView.swift; sourceTree = "<group>"; };
 		98B16561295C1FE2007D24CF /* BookListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookListViewController.swift; sourceTree = "<group>"; };
@@ -147,6 +149,7 @@
 				9831A02B295AE39D00437B26 /* EndPoint.swift */,
 				98EC520A296434B200DACC1C /* APIManager.swift */,
 				98EC520C29643BE400DACC1C /* Codable.swift */,
+				9876F4332994CE4B001A7D6E /* NetworkConnectionChecker.swift */,
 			);
 			path = Network;
 			sourceTree = "<group>";
@@ -364,6 +367,7 @@
 				9831A051295AF45B00437B26 /* CategoryListViewController.swift in Sources */,
 				9831A02C295AE39D00437B26 /* EndPoint.swift in Sources */,
 				98CB9D1829618C8B00958583 /* BookSearchView.swift in Sources */,
+				9876F4342994CE4B001A7D6E /* NetworkConnectionChecker.swift in Sources */,
 				98EC520B296434B200DACC1C /* APIManager.swift in Sources */,
 				98B16562295C1FE2007D24CF /* BookListViewController.swift in Sources */,
 				98F9F97229719A0E00A11418 /* BookSortType.swift in Sources */,
