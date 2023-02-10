@@ -15,7 +15,7 @@ class BookSearchViewController: BaseViewController {
     var bookSearchResults : Results<BookData>!
     var categorySortCode : String?
     var bookInfoArray : [Item]?
-    var multiselectionArray = Array<BookData>()
+    var multiselectionArray = Set<BookData>()
     var searchbarText : String?
     var totalCount = 0
     let searchController = UISearchController(searchResultsController: nil)
@@ -45,7 +45,7 @@ class BookSearchViewController: BaseViewController {
         mainView.tableView.prefetchDataSource = self
         bookSearchResults = bookSearchLocalRealm.objects(BookData.self)
         navigationAttribute()
-        //mainView.tableView.allowsMultipleSelection = true
+        mainView.tableView.allowsMultipleSelection = true
     }
     
     func configureUI() {
@@ -79,17 +79,23 @@ class BookSearchViewController: BaseViewController {
         }
         
         //@리팩토링: 다중선택 추가 예정
-//        let addButton = UIBarButtonItem(title: "추가", style: .plain, target: self, action: #selector(addButtonClicked))
-//        self.navigationItem.rightBarButtonItem = addButton
+        let addButton = UIBarButtonItem(title: "추가", style: .plain, target: self, action: #selector(addButtonClicked))
+        self.navigationItem.rightBarButtonItem = addButton
     }
     
     @objc func addButtonClicked() {
         //@리팩토링: 다중선택 추가 예정
-        alertForBookSearch()
-//        try! self.bookSearchLocalRealm.write({
-//            self.bookSearchLocalRealm.add(multiselectionArray)
-//        })
-//        self.navigationController?.popViewController(animated: true)
+        //alertForBookSearch()
+        multiselectionArray.forEach { bookData in
+            let pk = bookData.ISBN
+            let isNewBook = bookSearchLocalRealm.object(ofType: BookData.self, forPrimaryKey: pk) == nil
+            if isNewBook {
+                try! self.bookSearchLocalRealm.write({
+                    self.bookSearchLocalRealm.add(bookData)
+                })
+            }
+        }
+        self.navigationController?.popViewController(animated: true)
     }
     
     func alertForBookSearch() {
@@ -119,7 +125,7 @@ class BookSearchViewController: BaseViewController {
                 self.targetToAdd.removeAll()
                 if selectedItems.count >= 1 {
                     selectedItems.forEach { indexPath in
-                        self.targetToAdd.append(self.multiselectionArray[indexPath.row].ISBN)
+//                        self.targetToAdd.append(self.multiselectionArray[indexPath.row].ISBN)
                     }
                 } else {
                     print("추가기능 비활성화")
@@ -153,10 +159,9 @@ extension BookSearchViewController: UITableViewDelegate, UITableViewDataSource {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: BookSearchViewCell.identifier , for: indexPath) as? BookSearchViewCell else { return UITableViewCell() }
         let url = URL(string: (bookInfoArray?[indexPath.row].image)!)
         cell.backgroundColor = .tableViewCellColor
-        let replacedAuthor = bookInfoArray?[indexPath.row].author.replacingOccurrences(of: "^", with: ", ")
         cell.bookImage.kf.setImage(with: url)
         cell.bookName.text = bookInfoArray?[indexPath.row].title
-        cell.bookAuthor.text = replacedAuthor
+        cell.bookAuthor.text = bookInfoArray?[indexPath.row].replacedAuthor
         return cell
     }
     
@@ -164,14 +169,9 @@ extension BookSearchViewController: UITableViewDelegate, UITableViewDataSource {
         navigationAttribute()
         guard let items = bookInfoArray?[indexPath.row] else { return }
         guard let categorySortCode = categorySortCode else { return categorySortCode = "" }
-    
-        if let selectedItems = mainView.tableView.indexPathsForSelectedRows,
-           selectedItems.count >= 1 {
-            multiselectionArray.removeAll()
-            selectedItems.forEach { indexPath in
-                multiselectionArray.append(BookData(lastUpdate: Date(), categorySortCode: categorySortCode, ISBN: (bookInfoArray?[indexPath.row].isbn)!, rating: 0, review: nil, memo: nil, title: (bookInfoArray?[indexPath.row].title)!, author: (bookInfoArray?[indexPath.row].author)!, publisher: (bookInfoArray?[indexPath.row].publisher)!, pubdate: (bookInfoArray?[indexPath.row].pubdate)!, linkURL: (bookInfoArray?[indexPath.row].link)!, imageURL: (bookInfoArray?[indexPath.row].image)!))
-            }
-        }
+        
+        multiselectionArray.insert(items.toBookData(lastUpate: Date(), categorySortCode: categorySortCode, review: nil, memo: nil))
+        print(multiselectionArray)
         print("multiselectionArray", multiselectionArray.count, multiselectionArray)
     }
     

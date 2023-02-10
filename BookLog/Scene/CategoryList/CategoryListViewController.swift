@@ -195,13 +195,15 @@ extension CategoryListViewController: UITableViewDelegate, UITableViewDataSource
     }
     
     func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
-        return
+        tableView.reloadData()
     }
     
     func tableView(_ tableView: UITableView, targetIndexPathForMoveFromRowAt sourceIndexPath: IndexPath, toProposedIndexPath proposedDestinationIndexPath: IndexPath) -> IndexPath {
         if proposedDestinationIndexPath.row == 0 {
             return sourceIndexPath
         } else {
+            // 여기에 구현
+            //realm에서 어떤 함수 제공하는지 확인해서 접근
             return proposedDestinationIndexPath
         }
     }

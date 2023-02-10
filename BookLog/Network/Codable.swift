@@ -23,12 +23,11 @@ struct Item: Codable {
     let pubdate: String
     let link: String
     let image: String
-    
-//    init(from decoder: Decoder) throws {
-//        author =
-//    }
+    var replacedAuthor: String {
+        author.replacingOccurrences(of: "^", with: ",")
+    }
     
     func toBookData(lastUpate: Date, categorySortCode: String, review: String?, memo: String?) -> BookData {
-        return BookData(lastUpdate: lastUpate, categorySortCode: categorySortCode, ISBN: self.isbn, rating: 0, review: review, memo: memo, title: self.title, author: self.author, publisher: self.publisher, pubdate: self.pubdate, linkURL: self.link, imageURL: self.image)
+        return BookData(lastUpdate: lastUpate, categorySortCode: categorySortCode, ISBN: self.isbn, rating: 0, review: review, memo: memo, title: self.title, author: self.replacedAuthor, publisher: self.publisher, pubdate: self.pubdate, linkURL: self.link, imageURL: self.image)
     }
 }

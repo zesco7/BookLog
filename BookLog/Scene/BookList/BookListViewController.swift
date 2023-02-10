@@ -319,10 +319,9 @@ extension BookListViewController: UITableViewDelegate, UITableViewDataSource {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: BookListViewCell.identifier , for: indexPath) as? BookListViewCell else { return UITableViewCell() }
         let url = URL(string: bookList[indexPath.row].imageURL)
         cell.backgroundColor = .tableViewCellColor
-        let replacedAuthor = bookList[indexPath.row].author.replacingOccurrences(of: "^", with: ", ")
         cell.bookImage.kf.setImage(with: url)
         cell.bookName.text = bookList[indexPath.row].title
-        cell.bookAuthor.text = replacedAuthor
+        cell.bookAuthor.text = bookList[indexPath.row].author
         
         if bookList[indexPath.row].rating >= 5 {
             cell.star1.image = UIImage(systemName: "star.fill")
@@ -421,10 +420,9 @@ extension BookListViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         switch categorySortType {
         case .all, .category(categoryCode: bookList[indexPath.row].categorySortCode):
-            let replacedAuthor = bookList[indexPath.row].author.replacingOccurrences(of: "^", with: ", ")
             let vc = BookMemoViewController(isbn: bookList[indexPath.row].ISBN, lastUpdate: bookList[indexPath.row].lastUpdate, review: bookList[indexPath.row].review, memo: bookList[indexPath.row].memo, bookMemo: bookList[indexPath.row], starRating: bookList[indexPath.row].rating, linkURL: bookList[indexPath.row].linkURL)
             vc.bookTitle = bookList[indexPath.row].title
-            vc.bookWriter = replacedAuthor
+            vc.bookWriter = bookList[indexPath.row].author
             if mainView.tableView.isEditing == false {
                 self.navigationController?.pushViewController(vc, animated: true)
             } else {
