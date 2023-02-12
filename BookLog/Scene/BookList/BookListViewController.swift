@@ -15,6 +15,7 @@ class BookListViewController: BaseViewController {
     var bookList : Results<BookData>!
     let categorySortType : BookSortType
     var navigationTitle : String?
+    var booksToMove = Set<String>()
     
     init(categorySortType: BookSortType, navigationTitle: String?) {
         self.categorySortType = categorySortType
@@ -111,13 +112,14 @@ class BookListViewController: BaseViewController {
                 self.bookList = bookLocalRealm.objects(BookData.self).filter("categorySortCode == '\(categoryCode)'")
             }
         case .withoutCategory(let categoryCode):
+            mainView.tableView.allowsMultipleSelection = true
             self.bookList = bookLocalRealm.objects(BookData.self).filter("categorySortCode != '\(categoryCode)'")
             let closeButton = UIBarButtonItem(title: "닫기", style: .plain, target: self, action: #selector(self.closeButtonClicked))
-            let dummyButton = UIBarButtonItem()
+            let moveButton = UIBarButtonItem(title: "이동", style: .plain, target: self, action: #selector(moveButtonClicked))
             self.navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.black]
             self.navigationController?.navigationBar.tintColor = .navigationBar
             self.navigationItem.leftBarButtonItem = closeButton
-            self.navigationItem.rightBarButtonItem = dummyButton
+            self.navigationItem.rightBarButtonItem = moveButton
         default:
             return
         }
@@ -134,16 +136,34 @@ class BookListViewController: BaseViewController {
     }
     
     func navigationAttribute() {
-        self.navigationItem.title = navigationTitle
-        self.navigationController!.navigationBar.tintColor = .navigationBar
-        let plusButton = self.navigationItem.makeSFSymbolButton(target: self, action: #selector(plusButtonClicked), symbolName: "plus")
-        let sortButton = self.navigationItem.makeSFSymbolButton(target: self, action: #selector(sortButtonClicked), symbolName: "list.bullet")
-        let deleteButton = self.navigationItem.makeSFSymbolButton(target: self, action: #selector(deleteButtonClicked), symbolName: "trash")
-        let deleteButtonForEditing = self.navigationItem.makeSFSymbolButton(target: self, action: #selector(deleteButtonForEditingClicked), symbolName: "trash.slash")
-        if mainView.tableView.isEditing == true {
-            self.navigationItem.rightBarButtonItems = [plusButton, sortButton, deleteButtonForEditing]
-        } else {
-            self.navigationItem.rightBarButtonItems = [plusButton, sortButton, deleteButton]
+        switch categorySortType {
+        case .all:
+            self.navigationItem.title = navigationTitle
+            self.navigationController!.navigationBar.tintColor = .navigationBar
+            let plusButton = self.navigationItem.makeSFSymbolButton(target: self, action: #selector(plusButtonClicked), symbolName: "plus")
+            let sortButton = self.navigationItem.makeSFSymbolButton(target: self, action: #selector(sortButtonClicked), symbolName: "list.bullet")
+            let deleteButton = self.navigationItem.makeSFSymbolButton(target: self, action: #selector(deleteButtonClicked), symbolName: "trash")
+            let deleteButtonForEditing = self.navigationItem.makeSFSymbolButton(target: self, action: #selector(deleteButtonForEditingClicked), symbolName: "trash.slash")
+            if mainView.tableView.isEditing == true {
+                self.navigationItem.rightBarButtonItems = [plusButton, sortButton, deleteButtonForEditing]
+            } else {
+                self.navigationItem.rightBarButtonItems = [plusButton, sortButton, deleteButton]
+            }
+        case .category(let categoryCode):
+            self.navigationItem.title = navigationTitle
+            self.navigationController!.navigationBar.tintColor = .navigationBar
+            let plusButton = self.navigationItem.makeSFSymbolButton(target: self, action: #selector(plusButtonClicked), symbolName: "plus")
+            let sortButton = self.navigationItem.makeSFSymbolButton(target: self, action: #selector(sortButtonClicked), symbolName: "list.bullet")
+            let deleteButton = self.navigationItem.makeSFSymbolButton(target: self, action: #selector(deleteButtonClicked), symbolName: "trash")
+            let deleteButtonForEditing = self.navigationItem.makeSFSymbolButton(target: self, action: #selector(deleteButtonForEditingClicked), symbolName: "trash.slash")
+            if mainView.tableView.isEditing == true {
+                self.navigationItem.rightBarButtonItems = [plusButton, sortButton, deleteButtonForEditing]
+            } else {
+                self.navigationItem.rightBarButtonItems = [plusButton, sortButton, deleteButton]
+            }
+        case .withoutCategory(let categoryCode):
+            self.navigationItem.title = navigationTitle
+            self.navigationController!.navigationBar.tintColor = .navigationBar
         }
     }
     
@@ -175,6 +195,28 @@ class BookListViewController: BaseViewController {
         toolbarAttribute(toolbarHidden: true)
     }
     
+    @objc func moveButtonClicked() {
+        switch categorySortType {
+        case .withoutCategory(let categoryCode):
+            let alert = UIAlertController(title: "선택한 책을 이동하시겠습니까?", message: nil, preferredStyle: .alert)
+            let ok = UIAlertAction(title: "확인", style: .default) { _ in
+                try! self.bookLocalRealm.write({
+                    self.booksToMove.forEach { isbn in
+                        var checkBooks = self.bookLocalRealm.object(ofType: BookData.self, forPrimaryKey: isbn)
+                        checkBooks?.categorySortCode = categoryCode
+                    }
+                })
+                self.dismiss(animated: true)
+            }
+            let cancel = UIAlertAction(title: "취소", style: .cancel)
+            alert.addAction(ok)
+            alert.addAction(cancel)
+            self.present(alert, animated: true)
+        default:
+            return
+        }
+    }
+    
     func toolbarAttribute(toolbarHidden: Bool) {
         self.navigationController?.isToolbarHidden = toolbarHidden
         self.navigationController?.toolbar.tintColor = .navigationBar
@@ -203,21 +245,6 @@ class BookListViewController: BaseViewController {
                 })
             }
             mainView.tableView.reloadData()
-//            var dummyBookList = Array<BookData>()
-//            for i in 0 ..< bookList.count {
-//                if selectedItems.contains(IndexPath(row: i, section: 0)) == false {
-//                    dummyBookList.append(bookList[i])
-//                    print("더미북리스트", dummyBookList)
-//                }
-//            }
-//            for i in 0 ..< dummyBookList.count {
-//                try! bookLocalRealm.write({
-//                    bookLocalRealm.delete(bookList)
-//                    bookLocalRealm.add(dummyBookList[0])
-//                    print("북리스트", bookList)
-//                })
-//            }
-//            mainView.tableView.reloadData()
         } else {
             let alert = UIAlertController(title: "삭제할 책을 선택해주세요.", message: nil, preferredStyle: .alert)
             let ok = UIAlertAction(title: "확인", style: .default)
@@ -429,20 +456,14 @@ extension BookListViewController: UITableViewDelegate, UITableViewDataSource {
                 return
             }
         case .withoutCategory(let categoryCode):
-            let alert = UIAlertController(title: "선택한 책을 이동하시겠습니까?", message: nil, preferredStyle: .alert)
-            let ok = UIAlertAction(title: "확인", style: .default) { _ in
-                try! self.bookLocalRealm.write({
-                    self.bookList[indexPath.row].categorySortCode = categoryCode
-                })
-                self.dismiss(animated: true)
-            }
-            let cancel = UIAlertAction(title: "취소", style: .cancel)
-            alert.addAction(ok)
-            alert.addAction(cancel)
-            self.present(alert, animated: true)
+            self.booksToMove.insert(self.bookList[indexPath.row].ISBN)
         default:
             return
         }
+    }
+    
+    func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
+        booksToMove.remove(bookList[indexPath.row].ISBN)
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
