@@ -23,6 +23,10 @@ extension UIColor {
     class var navigationBar: UIColor {
         return UIColor(red: 116/255, green: 0/255, blue: 36/255, alpha: 0.8)
     }
+    
+    class var selectionColor: UIColor {
+        return UIColor(red: 242/255, green: 242/255, blue: 247/255, alpha: 0.6)
+    }
 }
 
 

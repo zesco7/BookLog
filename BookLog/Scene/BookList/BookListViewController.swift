@@ -202,7 +202,7 @@ class BookListViewController: BaseViewController {
             let ok = UIAlertAction(title: "확인", style: .default) { _ in
                 try! self.bookLocalRealm.write({
                     self.booksToMove.forEach { isbn in
-                        var checkBooks = self.bookLocalRealm.object(ofType: BookData.self, forPrimaryKey: isbn)
+                        let checkBooks = self.bookLocalRealm.object(ofType: BookData.self, forPrimaryKey: isbn)
                         checkBooks?.categorySortCode = categoryCode
                     }
                 })
@@ -260,7 +260,7 @@ class BookListViewController: BaseViewController {
         switch categorySortType {
         case .all:
             bookList = bookLocalRealm.objects(BookData.self)
-            let actionSheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+            let actionSheet = UIAlertController(title: "정렬기준을 선택해주세요.", message: nil, preferredStyle: .actionSheet)
             let sortBytitle = UIAlertAction(title: "제목순", style: .default) { _ in
                 self.bookList = self.bookLocalRealm.objects(BookData.self).sorted(byKeyPath: "title", ascending: true)
                 UserDefaults.standard.set("title", forKey: "bookSort")

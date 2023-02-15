@@ -67,16 +67,11 @@ class CategoryListViewController: BaseViewController {
     }
         
     @objc func sortCategoryClicked() {
-        //sortCategoryList()
-        if mainView.tableView.isEditing == false {
-            mainView.tableView.isEditing = true
-        } else {
-            mainView.tableView.isEditing = false
-        }
+        sortCategoryList()
     }
 
     func sortCategoryList() {
-        let actionSheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        let actionSheet = UIAlertController(title: "정렬기준을 선택해주세요.", message: nil, preferredStyle: .actionSheet)
         let sortByTitleAscending = UIAlertAction(title: "가나다순", style: .default) { _ in
             self.categoryList = self.categoryLocalRealm.objects(CategoryData.self).sorted(byKeyPath: "category", ascending: true)
             UserDefaults.standard.set("ascending", forKey: "categorySort")
@@ -198,15 +193,15 @@ extension CategoryListViewController: UITableViewDelegate, UITableViewDataSource
         tableView.reloadData()
     }
     
-    func tableView(_ tableView: UITableView, targetIndexPathForMoveFromRowAt sourceIndexPath: IndexPath, toProposedIndexPath proposedDestinationIndexPath: IndexPath) -> IndexPath {
-        if proposedDestinationIndexPath.row == 0 {
-            return sourceIndexPath
-        } else {
-            // 여기에 구현
-            //realm에서 어떤 함수 제공하는지 확인해서 접근
-            return proposedDestinationIndexPath
-        }
-    }
+//    func tableView(_ tableView: UITableView, targetIndexPathForMoveFromRowAt sourceIndexPath: IndexPath, toProposedIndexPath proposedDestinationIndexPath: IndexPath) -> IndexPath {
+//        //리팩토링 예정: 카테고리 목록 이동 및 UI, Data synchronization
+//        if proposedDestinationIndexPath.row == 0 {
+//            return sourceIndexPath
+//        } else {
+//            //realm에서 어떤 함수 제공하는지 확인해서 접근
+//            return proposedDestinationIndexPath
+//        }
+//    }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 80
