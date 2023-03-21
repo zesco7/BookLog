@@ -16,6 +16,7 @@ class BookSearchViewController: BaseViewController {
     var categorySortCode : String?
     var bookInfoArray : [Item]?
     var selectionSet = Set<BookData>()
+    var selectedBook = Array<BookData>()
     var duplicatedBooks = Set<String>()
     var searchbarText : String?
     var totalCount = 0
@@ -24,6 +25,7 @@ class BookSearchViewController: BaseViewController {
     init(categorySortCode: String?) {
         self.categorySortCode = categorySortCode
         self.selectionSet = []
+        self.selectedBook = []
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -44,7 +46,6 @@ class BookSearchViewController: BaseViewController {
         mainView.tableView.prefetchDataSource = self
         bookSearchResults = bookSearchLocalRealm.objects(BookData.self)
         navigationAttribute()
-//        mainView.tableView.allowsMultipleSelection = true
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -80,7 +81,7 @@ class BookSearchViewController: BaseViewController {
     func alertForBookSearch() {
         let alert = UIAlertController(title: "선택한 책을 추가할까요?", message: nil, preferredStyle: .alert)
         let addBook = UIAlertAction(title: "추가", style: .default) { _ in
-            let bookDuplicationCheck = self.bookSearchResults.filter("ISBN == '\(self.selectionSet.first!.ISBN)'").count
+            let bookDuplicationCheck = self.bookSearchResults.filter("ISBN == '\(String(describing: self.selectionSet.first!.ISBN))'").count
             if bookDuplicationCheck > 0 {
                 self.view.makeToast("이미 추가한 책입니다.", duration: 0.5, position: .center)
             } else {
@@ -104,9 +105,10 @@ extension BookSearchViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        tableView.becomeFirstResponder()
         guard let cell = tableView.dequeueReusableCell(withIdentifier: BookSearchViewCell.identifier , for: indexPath) as? BookSearchViewCell else { return UITableViewCell() }
         guard let bookInfoArray = bookInfoArray else { return UITableViewCell() }
-        var isbn = bookInfoArray[indexPath.row].isbn
+        let isbn = bookInfoArray[indexPath.row].isbn
         
         if duplicatedBooks.contains(isbn) {
             cell.backgroundColor = .selectionColor
@@ -122,10 +124,12 @@ extension BookSearchViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        alertForBookSearch()
         guard let items = bookInfoArray?[indexPath.row] else { return }
         guard let categorySortCode = categorySortCode else { return categorySortCode = "" }
-        selectionSet.insert(items.toBookData(lastUpate: Date(), categorySortCode: categorySortCode, review: nil, memo: nil))
+        if selectionSet.first?.ISBN != items.isbn {
+            selectionSet.insert(items.toBookData(lastUpate: Date(), categorySortCode: categorySortCode, review: nil, memo: nil))
+        }
+        alertForBookSearch()
     }
     
     func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
@@ -134,7 +138,7 @@ extension BookSearchViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
         guard let bookInfoArray = bookInfoArray else { return indexPath }
-        var isbn = bookInfoArray[indexPath.row].isbn
+        let isbn = bookInfoArray[indexPath.row].isbn
         if duplicatedBooks.contains(isbn) {
             return nil
         } else {
@@ -154,12 +158,12 @@ extension BookSearchViewController: UITableViewDataSourcePrefetching {
             if bookInfoArray.count - 1 == i.row && bookInfoArray.count < self.totalCount {
                 APIManager.startCount += APIManager.displayCount
                 APIManager.requestBookInformation(query: searchbarText!) { [weak self] bookInfo, apiError in
-                    var prefetchedData = bookInfo.map { $0.items }
+                    let prefetchedData = bookInfo.map { $0.items }
                     guard let prefetchedData = prefetchedData else { return }
                     self!.bookInfoArray?.append(contentsOf: prefetchedData)
                     DispatchQueue.main.sync {
                         self!.bookInfoArray?.forEach({ item in
-                            var isDuplicatedBooks = self!.bookSearchLocalRealm.object(ofType: BookData.self, forPrimaryKey: item.isbn) != nil
+                            let isDuplicatedBooks = self!.bookSearchLocalRealm.object(ofType: BookData.self, forPrimaryKey: item.isbn) != nil
                             if isDuplicatedBooks {
                                 self!.duplicatedBooks.insert(item.isbn)
                             }
@@ -192,7 +196,7 @@ extension BookSearchViewController: UISearchBarDelegate {
                 self!.bookInfoArray = data
                 DispatchQueue.main.sync {
                     self!.bookInfoArray?.forEach({ item in
-                        var isDuplicatedBooks = self!.bookSearchLocalRealm.object(ofType: BookData.self, forPrimaryKey: item.isbn) != nil
+                        let isDuplicatedBooks = self!.bookSearchLocalRealm.object(ofType: BookData.self, forPrimaryKey: item.isbn) != nil
                         if isDuplicatedBooks {
                             self!.duplicatedBooks.insert(item.isbn)
                         }

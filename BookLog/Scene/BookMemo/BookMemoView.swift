@@ -291,7 +291,7 @@ class BookMemoView: BaseView {
             make.topMargin.equalTo(memoLabel.snp.bottom).offset(20)
             make.leadingMargin.equalTo(self).offset(10)
             make.trailingMargin.equalTo(self).offset(-10)
-            make.height.equalTo(self)
+            make.bottomMargin.equalTo(self).offset(-20)
         }
     }
 }
